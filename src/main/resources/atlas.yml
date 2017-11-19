@@ -21,6 +21,5 @@ flyway:
     sqlMigrationSuffix: .Final.sql
     schemas: atlas
 application:
-    database-schema: notification_engine
-    node:
-        id: node0
+    roles:
+      admin: app_user
