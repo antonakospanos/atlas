@@ -1,0 +1,26 @@
+logging:
+    config: logback.xml
+    #${catalina.base}/config-overrides/atlas-logback.xml
+endpoints:
+    jmx:
+        domain: atlas
+spring:
+    jpa:
+        generate-ddl: true
+        properties:
+            hibernate:
+                default_schema: atlas
+    datasource:
+        url: jdbc:postgresql://localhost:5432/atlas?currentSchema=atlas
+        username: atlas
+        password: atlas
+        driver-class-name: org.postgresql.Driver
+flyway:
+    enabled: true
+    table: DB_MIGRATION_HISTORY
+    sqlMigrationSuffix: .Final.sql
+    schemas: atlas
+application:
+    database-schema: notification_engine
+    node:
+        id: node0

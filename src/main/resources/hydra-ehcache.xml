@@ -1,0 +1,27 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true"
+		 monitoring="autodetect" dynamicConfig="true" name="atlas-cache">
+
+	<diskStore path="java.io.tmpdir/atlas-cache"/>
+
+	<defaultCache maxElementsInMemory="10000" eternal="false"
+				  overflowToDisk="false" timeToIdleSeconds="3600" timeToLiveSeconds="3600">
+		<cacheEventListenerFactory
+				class="org.antonakospanos.iot.atlas.support.ehcache.LoggingCacheListenerFactory"/>
+	</defaultCache>
+
+	<!-- DB Entities -->
+	<cache name="org.hibernate.cache.internal.StandardQueryCache"
+		   maxElementsInMemory="10000" eternal="false" overflowToDisk="false"
+		   timeToIdleSeconds="3600" timeToLiveSeconds="3600">
+		<cacheEventListenerFactory
+				class="org.antonakospanos.iot.atlas.support.ehcache.LoggingCacheListenerFactory"/>
+	</cache>
+
+	<cache name="atlas.query-cache" maxElementsInMemory="10000"
+		   eternal="false" overflowToDisk="false" timeToIdleSeconds="3600"
+		   timeToLiveSeconds="3600">
+		<cacheEventListenerFactory
+				class="org.antonakospanos.iot.atlas.support.ehcache.LoggingCacheListenerFactory"/>
+	</cache>
+</ehcache>
