@@ -1,3 +1,6 @@
 .idea/
 target/
 atlas.iml
+.classpath
+.project
+.settings/
