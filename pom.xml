@@ -102,6 +102,26 @@
 					</webResources>
 				</configuration>
 			</plugin>
+			<!-- Swagger codegen -->
+			<!-- <plugin>
+				<groupId>io.swagger</groupId>
+				<artifactId>swagger-codegen-maven-plugin</artifactId>
+				<version>2.2.3</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>src/main/resources/api/atlas-api-1.0.0.yaml</inputSpec>
+							<language>spring</language>
+							<configOptions>
+								<sourceFolder>src/main/java</sourceFolder>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin> -->
 			<!-- jgitflow plugin -->
 			<plugin>
 				<groupId>external.atlassian.jgitflow</groupId>
@@ -207,6 +227,25 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>${swagger.version}</version>
 		</dependency>
+		<!-- <dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-codegen-maven-plugin</artifactId>
+			<version>2.2.3</version>
+		</dependency> -->
+		<!-- Bean Validation API support -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.1.0.Final</version>
+		</dependency>
+
+		<!-- Commons -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.0</version>
+		</dependency>
+
 
 		<!-- JUnit 5-->
 		<dependency>

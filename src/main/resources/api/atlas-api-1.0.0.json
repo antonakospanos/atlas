@@ -1,0 +1,175 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This is the API of Internet of Things!",
+    "version" : "1.0.0",
+    "title" : "Internet of Things API",
+    "contact" : {
+      "email" : "antonakospanos@gmail.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags" : [ {
+    "name" : "admin",
+    "description" : "Secured Admin-only calls"
+  }, {
+    "name" : "devices",
+    "description" : "Methods supporting IoT GUI"
+  }, {
+    "name" : "events",
+    "description" : "Methods available to IoT devices"
+  } ],
+  "paths" : {
+    "/events/heartbeat" : {
+      "post" : {
+        "tags" : [ "events" ],
+        "summary" : "Consumes state events published by IoT devices",
+        "operationId" : "heartbeat",
+        "description" : "The device sends the statistics of their enabled sensors",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "heartbeat",
+          "description" : "Inventory item to add",
+          "schema" : {
+            "$ref" : "#/definitions/heartbeat"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "The event is created!",
+            "schema" : {
+              "$ref" : "#/definitions/heartbeatSuccessResponse"
+            }
+          },
+          "400" : {
+            "description" : "The request is invalid!",
+            "schema" : {
+              "$ref" : "#/definitions/heartbeatFailureResponse"
+            }
+          },
+          "500" : {
+            "description" : "server error",
+            "schema" : {
+              "$ref" : "#/definitions/heartbeatFailureResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "heartbeat" : {
+      "type" : "object",
+      "properties" : {
+        "timestamp" : {
+          "type" : "string",
+          "example" : "2017-11-19T16:52:40.000 UTC"
+        },
+        "device" : {
+          "$ref" : "#/definitions/device"
+        }
+      },
+      "required" : [ "timestamp", "device" ]
+    },
+    "device" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "1a-cd-3f-ac-42-34-ed-ab"
+        },
+        "version" : {
+          "type" : "string",
+          "example" : "1.0"
+        },
+        "modules" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/module"
+          }
+        }
+      },
+      "required" : [ "id", "version" ]
+    },
+    "module" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "example" : "thermometer"
+        },
+        "state" : {
+          "type" : "string",
+          "enum" : [ true, false, "ERROR" ],
+          "example" : true
+        },
+        "value" : {
+          "type" : "string",
+          "example" : "36C"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "responseSuccess" : {
+      "type" : "object",
+      "properties" : {
+        "result" : {
+          "type" : "string",
+          "enum" : [ "SUCCESS" ]
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "data" : {
+          "type" : "object"
+        }
+      },
+      "required" : [ "result", "description" ]
+    },
+    "responseFailure" : {
+      "type" : "object",
+      "properties" : {
+        "result" : {
+          "type" : "string",
+          "enum" : [ "BAD_REQUEST", "DUPLICATE_REQUEST", "TOO_MANY_REQUESTS", "UNAUTHORIZED", "GENERIC_ERROR" ]
+        },
+        "description" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "result", "description" ]
+    },
+    "heartbeatSuccessResponse" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/responseSuccess"
+      } ],
+      "properties" : {
+        "data" : {
+          "type" : "object",
+          "properties" : {
+            "actions" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/module"
+              }
+            }
+          },
+          "required" : [ "actions" ]
+        }
+      }
+    },
+    "heartbeatFailureResponse" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/responseFailure"
+      } ]
+    }
+  },
+  "host" : "virtserver.swaggerhub.com",
+  "basePath" : "/antonakospanos/IoT/1.0.0",
+  "schemes" : [ "https" ]
+}
