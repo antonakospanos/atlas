@@ -1,8 +1,6 @@
 package org.antonakospanos.iot.atlas.web.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -15,136 +13,75 @@ import java.util.Objects;
  */
 public class ModuleDto implements Dto {
 
-  @JsonProperty("type")
-  private String type = null;
+	@JsonProperty("type")
+	private String type = null;
 
-  /**
-   * Gets or Sets state
-   */
-  public enum StateEnum {
-    ERROR("ERROR");
+	@JsonProperty("state")
+	private Integer state = null;
 
-    private String value;
+	@JsonProperty("value")
+	private String value = null;
 
-    StateEnum(String value) {
-      this.value = value;
-    }
+	public ModuleDto() {
+	}
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+	public ModuleDto(String type, Integer state, String value) {
+		this.type = type;
+		this.state = state;
+		this.value = value;
+	}
 
-    @JsonCreator
-    public static StateEnum fromValue(String text) {
-      for (StateEnum b : StateEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
+	@ApiModelProperty(example = "thermometer", required = true)
+	@NotNull
+	public String getType() {
+		return type;
+	}
 
-  @JsonProperty("state")
-  private StateEnum state = null;
+	public void setType(String type) {
+		this.type = type;
+	}
 
-  @JsonProperty("value")
-  private String value = null;
+	@ApiModelProperty(example = "1")
+	public Integer getState() {
+		return state;
+	}
 
-  public ModuleDto type(String type) {
-    this.type = type;
-    return this;
-  }
+	public void setState(Integer state) {
+		this.state = state;
+	}
 
-   /**
-   * Get type
-   * @return type
-  **/
-  @ApiModelProperty(example = "thermometer", required = true, value = "")
-  @NotNull
-  public String getType() {
-    return type;
-  }
+	@ApiModelProperty(example = "36")
+	public String getValue() {
+		return value;
+	}
 
-  public void setType(String type) {
-    this.type = type;
-  }
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-  public ModuleDto state(StateEnum state) {
-    this.state = state;
-    return this;
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(type, state, value);
+	}
 
-   /**
-   * Get state
-   * @return state
-  **/
-  @ApiModelProperty(example = "true", value = "")
-  public StateEnum getState() {
-    return state;
-  }
+	@Override
+	public String toString() {
+		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	}
 
-  public void setState(StateEnum state) {
-    this.state = state;
-  }
+	@Override
+	public Object getId() {
+		return null;
+	}
 
-  public ModuleDto value(String value) {
-    this.value = value;
-    return this;
-  }
+	@Override
+	public Dto fromEntity(Object entity) {
+		return null;
+	}
 
-   /**
-   * Get value
-   * @return value
-  **/
-  @ApiModelProperty(example = "36C", value = "")
-  public String getValue() {
-    return value;
-  }
-
-  public void setValue(String value) {
-    this.value = value;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ModuleDto module = (ModuleDto) o;
-    return Objects.equals(this.type, module.type) &&
-        Objects.equals(this.state, module.state) &&
-        Objects.equals(this.value, module.value);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(type, state, value);
-  }
-
-  @Override
-  public String toString() {
-    return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
-  }
-
-  @Override
-  public Object getId() {
-    return null;
-  }
-
-  @Override
-  public Dto fromEntity(Object entity) {
-    return null;
-  }
-
-  @Override
-  public Object toEntity() {
-    return null;
-  }
+	@Override
+	public Object toEntity() {
+		return null;
+	}
 }
 

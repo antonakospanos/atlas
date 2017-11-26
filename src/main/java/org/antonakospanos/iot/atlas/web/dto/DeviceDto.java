@@ -28,8 +28,37 @@ public class DeviceDto implements Dto {
   @JsonProperty("modules")
   private List<ModuleDto> modules = null;
 
+  public DeviceDto() {
+  }
+
+  public DeviceDto(String id, Long uptime, String version, List<ModuleDto> modules) {
+    this.id = id;
+    this.uptime = uptime;
+    this.version = version;
+    this.modules = modules;
+  }
+
+  // Factory methods
   public DeviceDto id(String id) {
     this.id = id;
+    return this;
+  }
+
+  public DeviceDto version(String version) {
+    this.version = version;
+    return this;
+  }
+
+  public DeviceDto addModulesItem(ModuleDto modulesItem) {
+    if (this.modules == null) {
+      this.modules = new ArrayList<ModuleDto>();
+    }
+    this.modules.add(modulesItem);
+    return this;
+  }
+
+  public DeviceDto modules(List<ModuleDto> modules) {
+    this.modules = modules;
     return this;
   }
 
@@ -45,11 +74,6 @@ public class DeviceDto implements Dto {
 
   public void setId(String id) {
     this.id = id;
-  }
-
-  public DeviceDto version(String version) {
-    this.version = version;
-    return this;
   }
 
    /**
@@ -80,19 +104,6 @@ public class DeviceDto implements Dto {
     this.uptime = uptime;
   }
 
-  public DeviceDto modules(List<ModuleDto> modules) {
-    this.modules = modules;
-    return this;
-  }
-
-  public DeviceDto addModulesItem(ModuleDto modulesItem) {
-    if (this.modules == null) {
-      this.modules = new ArrayList<ModuleDto>();
-    }
-    this.modules.add(modulesItem);
-    return this;
-  }
-
    /**
    * Get modules
    * @return modules
@@ -107,19 +118,6 @@ public class DeviceDto implements Dto {
     this.modules = modules;
   }
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    DeviceDto device = (DeviceDto) o;
-    return Objects.equals(this.id, device.id) &&
-        Objects.equals(this.version, device.version) &&
-        Objects.equals(this.modules, device.modules);
-  }
 
   @Override
   public int hashCode() {
