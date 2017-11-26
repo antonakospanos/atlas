@@ -2,6 +2,8 @@ package org.antonakospanos.iot.atlas.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import org.antonakospanos.iot.atlas.dao.model.Module;
+import org.antonakospanos.iot.atlas.enums.ModuleState;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -11,7 +13,7 @@ import java.util.Objects;
 /**
  * ModuleDto
  */
-public class ModuleDto implements Dto {
+public class ModuleDto implements Dto<Module, Integer> {
 
 	@JsonProperty("type")
 	private String type = null;
@@ -70,18 +72,28 @@ public class ModuleDto implements Dto {
 	}
 
 	@Override
-	public Object getId() {
+	public Integer getId() {
 		return null;
 	}
 
 	@Override
-	public Dto fromEntity(Object entity) {
-		return null;
+	public ModuleDto fromEntity(Module module) {
+		this.type = module.getType();
+		this.state = ModuleState.valueOf(module.getState()).getNumber();
+		this.value = module.getValue();
+
+		return this;
 	}
 
 	@Override
-	public Object toEntity() {
-		return null;
+	public Module toEntity() {
+		Module module = new Module();
+
+		module.setState(ModuleState.lookup(this.getState()).name());
+		module.setType(this.getType());
+		module.setValue(this.getValue());
+
+		return module;
 	}
 }
 

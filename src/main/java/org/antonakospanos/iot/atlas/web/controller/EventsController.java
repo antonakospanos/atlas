@@ -1,9 +1,9 @@
 package org.antonakospanos.iot.atlas.web.controller;
 
 import io.swagger.annotations.*;
-import io.swagger.model.Heartbeat;
-import io.swagger.model.HeartbeatFailureResponse;
-import io.swagger.model.HeartbeatSuccessResponse;
+import org.antonakospanos.iot.atlas.web.dto.HeartbeatFailureResponse;
+import org.antonakospanos.iot.atlas.web.dto.HeartbeatRequest;
+import org.antonakospanos.iot.atlas.web.dto.HeartbeatSuccessResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -26,7 +26,7 @@ public class EventsController {
         produces = {"application/json"},
         consumes = {"application/json"},
         method = RequestMethod.POST)
-    public ResponseEntity<HeartbeatSuccessResponse> heartbeat(@ApiParam(value = "Inventory item to add"  )  @Valid @RequestBody Heartbeat heartbeat) {
+    public ResponseEntity<HeartbeatSuccessResponse> heartbeat(@ApiParam(value = "Inventory item to add"  )  @Valid @RequestBody HeartbeatRequest heartbeat) {
 
         // TODO
         return new ResponseEntity<HeartbeatSuccessResponse>(HttpStatus.OK);
