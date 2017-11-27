@@ -29,7 +29,7 @@ Make sure your hosts file maps atlas-rdbms to localhost
 Init or migrate the database schema
 
     Init the database
-    mvn clean install -DskipTests -Ddb.host=localhost -Ddb.port=5432 -Ddb.module.database.name=atlas -Ddb.module.userId=atlas -Ddb.module.password=atlas -Ddb.root.password=postgres -Dinit.database.skip=false flyway:migrate
+    mvn clean install -DskipTests -Ddb.host=localhost -Ddb.port=5432 -Ddb.module.database.name=atlas -Ddb.module.userId=atlas -Ddb.module.password=atlas -Dinit.database.skip=false flyway:migrate
     
     Migrate an existing database
     mvn clean install -DskipTests -Ddb.host=localhost -Ddb.port=5432 -Ddb.module.database.name=atlas -Ddb.module.userId=atlas -Ddb.module.password=atlas flyway:migrate
