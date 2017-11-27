@@ -19,8 +19,8 @@
 		<!--<spring.boot.version>1.5.8.RELEASE</spring.boot.version>-->
 
 		<db.module.url>jdbc:postgresql://${db.host}:${db.port}/${db.module.database.name}</db.module.url>
-		<db.module.userId>atlas</db.module.userId>
-		<db.module.password>atlas</db.module.password>
+		<db.module.userId>${module.userId}</db.module.userId>
+		<db.module.password>${module.password}</db.module.password>
 
 		<junit.jupiter.version>5.0.2</junit.jupiter.version>
 		<junit.platform.version>1.0.2</junit.platform.version>
