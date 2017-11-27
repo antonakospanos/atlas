@@ -6,13 +6,14 @@
 		</encoder>
 	</appender>
 
-	<!-- enable these for debugging 
+	<!-- enable these for debugging -->
 	<logger name="org.springframework.context.annotation.ClassPathBeanDefinitionScanner" level="debug"/>
 	<logger name="org.springframework.boot.context.config.ConfigFileApplicationListener" level="debug"/>
 	<logger name="org.springframework.boot.autoconfigure.logging.AutoConfigurationReportLoggingInitializer" level="debug"/>
 	<logger name="org.springframework" level="debug"/>
-	-->
-	
+
+	<logger name="org.hibernate.SQL" level="debug"/>
+
 	<logger name="org.antonakospanos.iot.atlas" level="debug"/>
 
 	<root level="info">

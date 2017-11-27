@@ -102,6 +102,17 @@
 					</webResources>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<!-- Swagger codegen -->
 			<!-- <plugin>
 				<groupId>io.swagger</groupId>
@@ -190,7 +201,7 @@
 					<dependency>
 						<groupId>postgresql</groupId>
 						<artifactId>postgresql</artifactId>
-						<version>9.1-901-1.jdbc4</version>
+						<version>9.1-901.jdbc4</version>
 					</dependency>
 				</dependencies>
 			</plugin>
@@ -232,14 +243,10 @@
 			<artifactId>spring-boot-starter-data-rest</artifactId>
 			<version>${spring.boot.version}</version>
 		</dependency>
-		<!--<dependency>-->
-			<!--<groupId>com.h2database</groupId>-->
-			<!--<artifactId>h2</artifactId>-->
-		<!--</dependency>-->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.4-1206-jdbc4</version>
+			<version>9.4-1206-jdbc42</version>
 		</dependency>
 		<!--<dependency>-->
 			<!--<groupId>org.hibernate</groupId>-->
@@ -273,12 +280,6 @@
 			<artifactId>swagger-codegen-maven-plugin</artifactId>
 			<version>2.2.3</version>
 		</dependency> -->
-		<!-- Bean Validation API support -->
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>1.1.0.Final</version>
-		</dependency>
 
 		<!-- Commons -->
 		<dependency>

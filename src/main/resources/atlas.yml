@@ -1,17 +1,19 @@
 logging:
-    config: logback.xml
+  config: logback.xml
     #${catalina.base}/config-overrides/atlas-logback.xml
 endpoints:
     jmx:
         domain: atlas
 spring:
     jpa:
+        #database-platform: org.hibernate.dialect.PostgreSQLDialect
         generate-ddl: true
-        properties:
-            hibernate:
-                default_schema: atlas
+        #properties:
+        #        default_schema: atlas
+        hibernate:
+                ddl-auto: create-drop
     datasource:
-        url: jdbc:postgresql://localhost:5432/atlas?currentSchema=atlas
+        url: jdbc:postgresql://localhost:5432/atlas #?currentSchema=atlas
         username: atlas
         password: atlas
         driver-class-name: org.postgresql.Driver
@@ -22,4 +24,4 @@ flyway:
     schemas: atlas
 application:
     roles:
-      admin: app_user
+        admin: app_user

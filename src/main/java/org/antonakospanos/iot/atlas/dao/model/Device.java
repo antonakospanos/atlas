@@ -1,12 +1,12 @@
 package org.antonakospanos.iot.atlas.dao.model;
 
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+@Entity
+@Table(name = "MODULE")
 public class Device {
 
 	@Id
