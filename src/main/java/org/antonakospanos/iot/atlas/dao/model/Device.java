@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "MODULE")
+@Table(name = "DEVICE")
 public class Device {
 
 	@Id
@@ -23,7 +23,7 @@ public class Device {
 
 	private ZonedDateTime lastContact;
 
-	@OneToMany(mappedBy = "module")
+	@OneToMany(mappedBy = "id")
 	private List<Module> modules;
 
 	public Device() {

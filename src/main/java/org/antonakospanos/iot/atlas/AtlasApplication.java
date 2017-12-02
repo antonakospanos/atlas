@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = {"org.antonakospanos.iot.atlas"})
 public class AtlasApplication extends SpringBootServletInitializer {
 
-	private static final String CONFIG_NAME = "application-atlas";
+	private static final String CONFIG_NAME = "atlas-application";
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
