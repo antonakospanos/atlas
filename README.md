@@ -20,16 +20,16 @@ The events describe the state of the devices and may result to an auto-executed 
 
 From a machine with docker installed + internet access, execute:
 
-    docker run -p 5432:5432 --name atlas-rdbms -e POSTGRES_PASSWORD=atlas -d postgres:9.4
+    docker run -p 5432:5432 --name rdbms -e POSTGRES_PASSWORD=atlas -d postgres:9.4
 
 Make sure your hosts file maps atlas-rdbms to localhost
 
-    127.0.0.1       localhost atlas-rdbms
+    127.0.0.1       localhost rdbms
 
 Init or migrate the database schema
 
     Init the database
-    mvn clean install -DskipTests -Ddb.host=localhost -Ddb.port=5432 -Ddb.module.database.name=atlas -Ddb.module.userId=atlas -Ddb.module.password=atlas -Dinit.database.skip=false flyway:migrate
+    mvn clean install -DskipTests -Ddb.host=localhost -Ddb.port=5432 -Ddb.module.database.name=atlas -Ddb.module.userId=atlas -Ddb.module.password=atlas -Ddb.root.password=postgres -Dinit.database.skip=false flyway:migrate
     
     Migrate an existing database
     mvn clean install -DskipTests -Ddb.host=localhost -Ddb.port=5432 -Ddb.module.database.name=atlas -Ddb.module.userId=atlas -Ddb.module.password=atlas flyway:migrate

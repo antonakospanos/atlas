@@ -18,6 +18,11 @@
 		<spring.boot.version>2.0.0.M6</spring.boot.version>
 		<!--<spring.boot.version>1.5.8.RELEASE</spring.boot.version>-->
 
+		<db.root.url>jdbc:postgresql://${db.host}:${db.port}/postgres</db.root.url>
+		<db.root.userId>postgres</db.root.userId>
+		<init.database.skip>true</init.database.skip>
+		<db.create_db_extra />
+
 		<db.module.url>jdbc:postgresql://${db.host}:${db.port}/${db.module.database.name}</db.module.url>
 		<db.module.userId>${module.userId}</db.module.userId>
 		<db.module.password>${module.password}</db.module.password>
@@ -178,6 +183,66 @@
 					</instrumentation>
 					<check/>
 				</configuration>
+			</plugin>
+			<!-- creates database user and schema, no schema objects (tables, etc) -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>sql-maven-plugin</artifactId>
+				<version>1.5</version>
+				<dependencies>
+					<dependency>
+						<groupId>postgresql</groupId>
+						<artifactId>postgresql</artifactId>
+						<version>9.1-901-1.jdbc4</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<driver>org.postgresql.Driver</driver>
+					<url>${db.root.url}</url>
+					<username>${db.root.userId}</username>
+					<password>${db.root.password}</password>
+					<enableFiltering>true</enableFiltering>
+					<autocommit>true</autocommit>
+					<orderFile>ascending</orderFile>
+				</configuration>
+				<executions>
+					<!-- need to connect with root user to create database and module user -->
+					<execution>
+						<id>init-db</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<sqlCommand>
+								DROP DATABASE IF EXISTS ${db.module.database.name};
+								DROP USER IF EXISTS ${db.module.userId};
+								CREATE USER ${db.module.userId} LOGIN PASSWORD '${db.module.password}' NOCREATEDB NOCREATEROLE NOREPLICATION VALID UNTIL 'infinity';
+								CREATE DATABASE ${db.module.database.name} WITH ENCODING='UTF8' ${db.create_db_extra} OWNER=${db.module.userId} CONNECTION LIMIT=-1;
+							</sqlCommand>
+							<skip>${init.database.skip}</skip>
+						</configuration>
+						<inherited>false</inherited>
+					</execution>
+					<!-- need to connect with module user in order to create schema in module database -->
+					<execution>
+						<id>init-db-schema</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<configuration>
+							<url>${db.module.url}</url>
+							<username>${db.module.userId}</username>
+							<password>${db.module.password}</password>
+							<sqlCommand>
+								CREATE SCHEMA atlas AUTHORIZATION ${db.module.userId};
+							</sqlCommand>
+							<skip>${init.database.skip}</skip>
+						</configuration>
+						<inherited>false</inherited>
+					</execution>
+				</executions>
 			</plugin>
 			<!-- Executes the sql scripts that initialize or migrate the database -->
 			<plugin>
