@@ -28,4 +28,9 @@ flyway:
   schemas: atlas
 application:
   roles:
-    admin: app_user
+    admin:
+      username: admin
+      password: iotac
+    user:
+      username: user
+      password: iotac

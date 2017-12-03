@@ -1,6 +1,5 @@
 package org.antonakospanos.iot.atlas.web.configuration;
 
-import com.google.common.base.Predicate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -12,30 +11,46 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
-// @EnableAutoConfiguration
 @EnableSwagger2
 public class SwaggerConfiguration {
 
-	@Bean
-	public Docket newsApi() {
+//	@Bean(name = "Admin API")
+//	public Docket adminApi() {
+//		return new Docket(DocumentationType.SWAGGER_2)
+//				.groupName("Admin API")
+//				.apiInfo(adminInfo())
+//				.select()
+//				.paths(regex(".*/(admin).*"))
+//				.build();
+//	}
+//
+//	private ApiInfo adminInfo() {
+//		return new ApiInfoBuilder()
+//				.title("Admin API")
+//				.contact("IoTac")
+//				.description("Atlas Administration Interface ")
+//				.build();
+//	}
+
+	@Bean(name = "Atlas API")
+	public Docket atlasApi() {
 		return new Docket(DocumentationType.SWAGGER_2)
-				.groupName("Internet-of-Things")
-				.apiInfo(apiInfo())
+				.groupName("Atlas API")
+				.apiInfo(atlasInfo())
 				.select()
-				.paths(paths())
+				.paths(regex(".*/(devices|actions|events).*"))
 				.build();
 	}
 
-	private ApiInfo apiInfo() {
+	private ApiInfo atlasInfo() {
 		return new ApiInfoBuilder()
 				.title("Atlas API")
-				.contact("itac developments")
-				.description("Atlas API handles events from Internet of Things (IoT) devices")
+				.contact("IoTac")
+				.description("Integration with Internet of Things (IoT) Devices")
 				.build();
 	}
 
-	private Predicate<String> paths() {
-		return regex(".*/(devices|events|actions).*");
-		// return or(regex("/*"));
-	}
+//	private Predicate<String> paths() {
+//		 return (regex("/*"));
+//	}
 }
