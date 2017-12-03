@@ -26,8 +26,6 @@ public class Device {
 	@OneToMany(mappedBy = "id")
 	private List<Module> modules;
 
-	public Device() {
-	}
 
 	public Long getId() {
 		return id;

@@ -2,7 +2,7 @@
 <configuration>
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>[ATLAS] - %d %5p %40.40c:%4L - %m%n</pattern>
+			<pattern>%boldBlue([ATLAS]) - %d %highlight(%-5level) %cyan(%50.50logger) - [%thread] %msg %n</pattern>
 		</encoder>
 	</appender>
 

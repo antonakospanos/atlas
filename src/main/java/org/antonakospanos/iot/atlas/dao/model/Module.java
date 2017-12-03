@@ -1,6 +1,7 @@
 package org.antonakospanos.iot.atlas.dao.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "MODULE")
@@ -14,10 +15,15 @@ public class Module {
 	@JoinColumn(name = "DEVICE_ID")
 	private Device device;
 
-	public Module() {
-	}
-
 	private String type;
+
+	private String state;
+
+	private String value;
+
+	@OneToMany(mappedBy = "id")
+	private List<Action> actions;
+
 
 	public Long getId() {
 		return id;
@@ -59,9 +65,13 @@ public class Module {
 		this.value = value;
 	}
 
-	private String state;
-	private String value;
+	public List<Action> getActions() {
+		return actions;
+	}
 
+	public void setActions(List<Action> actions) {
+		this.actions = actions;
+	}
 }
 
 
