@@ -10,4 +10,6 @@ public interface Dto<E extends Object, T extends Object> extends Serializable {
 
 	public E toEntity();
 
+	public E toEntity(E entity);
+
 }

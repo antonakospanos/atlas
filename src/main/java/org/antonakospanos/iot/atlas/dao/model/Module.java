@@ -1,5 +1,7 @@
 package org.antonakospanos.iot.atlas.dao.model;
 
+import org.antonakospanos.iot.atlas.enums.ModuleState;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -17,7 +19,8 @@ public class Module {
 
 	private String type;
 
-	private String state;
+	@Enumerated(EnumType.STRING)
+	private ModuleState state;
 
 	private String value;
 
@@ -49,11 +52,11 @@ public class Module {
 		this.type = type;
 	}
 
-	public String getState() {
+	public ModuleState getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(ModuleState state) {
 		this.state = state;
 	}
 

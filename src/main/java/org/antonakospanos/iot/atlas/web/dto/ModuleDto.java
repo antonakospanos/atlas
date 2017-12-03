@@ -19,7 +19,7 @@ public class ModuleDto implements Dto<Module, Integer> {
 	private String type = null;
 
 	@JsonProperty("state")
-	private Integer state = null;
+	private ModuleState state = null;
 
 	@JsonProperty("value")
 	private String value = null;
@@ -27,7 +27,7 @@ public class ModuleDto implements Dto<Module, Integer> {
 	public ModuleDto() {
 	}
 
-	public ModuleDto(String type, Integer state, String value) {
+	public ModuleDto(String type, ModuleState state, String value) {
 		this.type = type;
 		this.state = state;
 		this.value = value;
@@ -44,11 +44,11 @@ public class ModuleDto implements Dto<Module, Integer> {
 	}
 
 	@ApiModelProperty(example = "1")
-	public Integer getState() {
+	public ModuleState getState() {
 		return state;
 	}
 
-	public void setState(Integer state) {
+	public void setState(ModuleState state) {
 		this.state = state;
 	}
 
@@ -79,7 +79,7 @@ public class ModuleDto implements Dto<Module, Integer> {
 	@Override
 	public ModuleDto fromEntity(Module module) {
 		this.type = module.getType();
-		this.state = ModuleState.valueOf(module.getState()).getNumber();
+		this.state = module.getState();
 		this.value = module.getValue();
 
 		return this;
@@ -89,7 +89,12 @@ public class ModuleDto implements Dto<Module, Integer> {
 	public Module toEntity() {
 		Module module = new Module();
 
-		module.setState(ModuleState.lookup(this.getState()).name());
+		return toEntity(module);
+	}
+
+	@Override
+	public Module toEntity(Module module) {
+		module.setState(module.getState());
 		module.setType(this.getType());
 		module.setValue(this.getValue());
 

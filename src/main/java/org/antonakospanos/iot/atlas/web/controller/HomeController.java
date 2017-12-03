@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Home redirection to swagger api documentation 
  */
 @Controller
-public class HomeController {
+public class HomeController extends BaseAtlasController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() {

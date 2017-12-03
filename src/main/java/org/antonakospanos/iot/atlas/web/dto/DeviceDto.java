@@ -152,6 +152,12 @@ public class DeviceDto implements Dto<Device, String> {
 	public Device toEntity() {
 		Device device = new Device();
 
+		return toEntity(device);
+	}
+
+	@Override
+	public Device toEntity(Device device) {
+
 		device.setExternalId(this.getId());
 		device.setVersion(this.getVersion());
 		device.setLastContact(ZonedDateTime.ofInstant(Instant.ofEpochMilli(this.getUptime().longValue()), ZoneId.systemDefault()));

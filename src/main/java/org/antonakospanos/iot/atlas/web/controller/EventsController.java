@@ -1,9 +1,12 @@
 package org.antonakospanos.iot.atlas.web.controller;
 
 import io.swagger.annotations.*;
-import org.antonakospanos.iot.atlas.web.dto.HeartbeatFailureResponse;
-import org.antonakospanos.iot.atlas.web.dto.HeartbeatRequest;
-import org.antonakospanos.iot.atlas.web.dto.HeartbeatSuccessResponse;
+import org.antonakospanos.iot.atlas.service.EventsService;
+import org.antonakospanos.iot.atlas.web.dto.*;
+import org.antonakospanos.iot.atlas.web.enums.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +19,12 @@ import javax.validation.Valid;
 @RestController
 @Api(value = "Events API", tags = "events", position = 0 , description = "Consumes state events from IoT devices")
 @RequestMapping(value = "/events")
-public class EventsController {
+public class EventsController extends BaseAtlasController {
+
+    private final static Logger logger = LoggerFactory.getLogger(EventsController.class);
+
+    @Autowired
+    EventsService service;
 
     @ApiOperation(value = "Consumes state events published by IoT devices", response = HeartbeatSuccessResponse.class)
     @ApiResponses(value = {
@@ -27,10 +35,20 @@ public class EventsController {
         produces = {"application/json"},
         consumes = {"application/json"},
         method = RequestMethod.POST)
-    public ResponseEntity<HeartbeatSuccessResponse> heartbeat(@ApiParam(value = "Inventory item") @Valid @RequestBody HeartbeatRequest heartbeat) {
+    public ResponseEntity<ResponseBase> heartbeat(@ApiParam(value = "Inventory item") @Valid @RequestBody HeartbeatRequest heartbeat) {
+        logger.debug("Heartbeat: " + heartbeat);
+        ResponseEntity<ResponseBase> heartbeatResponse;
 
-        // TODO
-        return new ResponseEntity<HeartbeatSuccessResponse>(HttpStatus.OK);
+        try {
+            HeartbeatResponseData data = service.addEvent(heartbeat);
+
+            HeartbeatSuccessResponse response = HeartbeatSuccessResponse.Builder().build(Result.SUCCESS).data(data);
+            heartbeatResponse = ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            logger.error(e.getClass() + "Cause: " + e.getMessage() + ". Heartbeat: "  +heartbeat);
+            heartbeatResponse = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new HeartbeatSuccessResponse());
+        }
+
+        return heartbeatResponse;
     }
-
 }

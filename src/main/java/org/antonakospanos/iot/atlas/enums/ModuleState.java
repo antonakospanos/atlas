@@ -1,5 +1,8 @@
 package org.antonakospanos.iot.atlas.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,5 +33,20 @@ public enum ModuleState {
 
 	public static ModuleState lookup(Integer number) {
 		return map.get(number);
+	}
+
+	@JsonValue
+	public int toValue() {
+		return this.number;
+	}
+
+	@JsonCreator
+	public static ModuleState forValue(int number) {
+		for (ModuleState state : ModuleState.values()) {
+			if (state.getNumber() == number) {
+				return state;
+			}
+		}
+		return null;
 	}
 }

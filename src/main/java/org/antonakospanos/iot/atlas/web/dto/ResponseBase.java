@@ -10,9 +10,13 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
- * ResponseFailure
+ * ResponseBase
  */
-public class ResponseFailure   {
+public class ResponseBase {
+
+  public static ResponseBase Builder() {
+    return new ResponseBase();
+  }
 
   @JsonProperty("result")
   private Result result = null;
@@ -20,12 +24,21 @@ public class ResponseFailure   {
   @JsonProperty("description")
   private String description = null;
 
-  public ResponseFailure result(Result result) {
+  @JsonProperty("data")
+  private Object data = null;
+
+  public ResponseBase result(Result result) {
     this.result = result;
     return this;
   }
 
-   /**
+  public ResponseBase build(Result result) {
+    this.result = result;
+    this.description = result.getDescription();
+    return this;
+  }
+
+  /**
    * Get result
    * @return result
   **/
@@ -39,7 +52,7 @@ public class ResponseFailure   {
     this.result = result;
   }
 
-  public ResponseFailure description(String description) {
+  public ResponseBase description(String description) {
     this.description = description;
     return this;
   }
@@ -58,6 +71,24 @@ public class ResponseFailure   {
     this.description = description;
   }
 
+  public ResponseBase data(Object data) {
+    this.data = data;
+    return this;
+  }
+
+   /**
+   * Get data
+   * @return data
+  **/
+  @ApiModelProperty(value = "")
+  public Object getData() {
+    return data;
+  }
+
+  public void setData(Object data) {
+    this.data = data;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -66,14 +97,15 @@ public class ResponseFailure   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ResponseFailure responseFailure = (ResponseFailure) o;
-    return Objects.equals(this.result, responseFailure.result) &&
-        Objects.equals(this.description, responseFailure.description);
+    ResponseBase responseSuccess = (ResponseBase) o;
+    return Objects.equals(this.result, responseSuccess.result) &&
+        Objects.equals(this.description, responseSuccess.description) &&
+        Objects.equals(this.data, responseSuccess.data);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(result, description);
+    return Objects.hash(result, description, data);
   }
 
   @Override

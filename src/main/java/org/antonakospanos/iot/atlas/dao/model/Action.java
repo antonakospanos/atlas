@@ -1,6 +1,8 @@
 package org.antonakospanos.iot.atlas.dao.model;
 
 
+import org.antonakospanos.iot.atlas.enums.ModuleState;
+
 import javax.persistence.*;
 import java.time.ZonedDateTime;
 
@@ -22,13 +24,13 @@ public class Action {
 	@JoinColumn(name = "MODULE_ID")
 	private Module module;
 
-	private String condition;
-
-	private ZonedDateTime lastExecution;
-
 	private ZonedDateTime nextExecution;
 
 	private Long periodOfMinutes;
+
+	private ModuleState state;
+
+	private String value;
 
 
 	public Long getId() {
@@ -42,7 +44,6 @@ public class Action {
 	public Account getAccount() {
 		return account;
 	}
-
 	public void setAccount(Account account) {
 		this.account = account;
 	}
@@ -63,22 +64,6 @@ public class Action {
 		this.module = module;
 	}
 
-	public String getCondition() {
-		return condition;
-	}
-
-	public void setCondition(String condition) {
-		this.condition = condition;
-	}
-
-	public ZonedDateTime getLastExecution() {
-		return lastExecution;
-	}
-
-	public void setLastExecution(ZonedDateTime lastExecution) {
-		this.lastExecution = lastExecution;
-	}
-
 	public ZonedDateTime getNextExecution() {
 		return nextExecution;
 	}
@@ -93,5 +78,21 @@ public class Action {
 
 	public void setPeriodOfMinutes(Long periodOfMinutes) {
 		this.periodOfMinutes = periodOfMinutes;
+	}
+
+	public ModuleState getState() {
+		return state;
+	}
+
+	public void setState(ModuleState state) {
+		this.state = state;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 }

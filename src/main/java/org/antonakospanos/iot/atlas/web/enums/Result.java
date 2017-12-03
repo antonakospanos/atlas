@@ -5,32 +5,37 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum Result {
 
-	SUCCESS("SUCCESS"),
-	BAD_REQUEST("BAD_REQUEST"),
-	DUPLICATE_REQUEST("DUPLICATE_REQUEST"),
-	TOO_MANY_REQUESTS("TOO_MANY_REQUESTS"),
-	UNAUTHORIZED("UNAUTHORIZED"),
-	GENERIC_ERROR("GENERIC_ERROR");
+	SUCCESS("The request was handled successfully"),
+	BAD_REQUEST("The request is invalid"),
+	DUPLICATE_REQUEST("The request is duplicate"),
+	TOO_MANY_REQUESTS("Rate limit is violated"),
+	UNAUTHORIZED("The user is not authorized"),
+	GENERIC_ERROR("Internal Server Error");
 
-	private String value;
+	private String description;
 
-	Result(String value) {
-		this.value = value;
+	Result(String description) {
+		this.description = description;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 
 	@Override
 	@JsonValue
 	public String toString() {
-		return String.valueOf(value);
+		return this.name();
 	}
 
 	@JsonCreator
-	public static Result fromValue(String text) {
-		for (Result b : Result.values()) {
-			if (String.valueOf(b.value).equals(text)) {
-				return b;
+	public static Result forValue(String value) {
+		for (Result result : Result.values()) {
+			if (String.valueOf(result.name()).equals(value)) {
+				return result;
 			}
 		}
 		return null;
 	}
+
 }
