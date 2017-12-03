@@ -19,11 +19,9 @@ public class Device {
 
 	private String externalId;
 
-	private ZonedDateTime firstContact;
-
 	private ZonedDateTime lastContact;
 
-	@OneToMany(mappedBy = "id")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Module> modules;
 
 
@@ -57,14 +55,6 @@ public class Device {
 
 	public void setExternalId(String externalId) {
 		this.externalId = externalId;
-	}
-
-	public ZonedDateTime getFirstContact() {
-		return firstContact;
-	}
-
-	public void setFirstContact(ZonedDateTime firstContact) {
-		this.firstContact = firstContact;
 	}
 
 	public ZonedDateTime getLastContact() {

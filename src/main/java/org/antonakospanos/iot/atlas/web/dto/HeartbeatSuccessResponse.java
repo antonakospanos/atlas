@@ -38,11 +38,6 @@ public class HeartbeatSuccessResponse extends ResponseBase {
 		return data;
 	}
 
-	@Override
-	public void setData(Object data) {
-		this.data = (HeartbeatResponseData) data;
-	}
-
 	public void setData(HeartbeatResponseData data) {
 		this.data = data;
 	}

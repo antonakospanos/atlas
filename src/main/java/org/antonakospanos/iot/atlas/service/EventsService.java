@@ -3,7 +3,6 @@ package org.antonakospanos.iot.atlas.service;
 import org.antonakospanos.iot.atlas.dao.model.Action;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.model.Module;
-import org.antonakospanos.iot.atlas.dao.repository.ActionRepository;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
 import org.antonakospanos.iot.atlas.web.dto.DeviceDto;
 import org.antonakospanos.iot.atlas.web.dto.HeartbeatRequest;
@@ -14,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -26,10 +24,10 @@ public class EventsService {
 	private final static Logger logger = LoggerFactory.getLogger(EventsService.class);
 
 	@Autowired
-	DeviceRepository deviceRepository;
+	ActionService actionService;
 
 	@Autowired
-	ActionRepository actionRepository;
+	DeviceRepository deviceRepository;
 
 	public HeartbeatResponseData addEvent(HeartbeatRequest request) {
 		HeartbeatResponseData responseData = null;
@@ -45,21 +43,24 @@ public class EventsService {
 			deviceRepository.save(deviceDto.toEntity(device));
 			logger.debug("Device is updated: " + deviceDto);
 
-			// Check for planned actions in DB
+			// Check for planned actions for device's modules
 			List<ModuleDto> moduleActions = new ArrayList<>();
 			for (Module module : device.getModules()) {
-				List<Action> actions = actionRepository.findByModuleId(module.getId());
+				List<Action> plannedActions = actionService.findPlannedActions(module.getId());
 
-				Optional<Action> action =
-				actions.stream()
-						.filter(a -> a.getNextExecution().isBefore(ZonedDateTime.now()))
+				Optional<Action> plannedAction =
+				plannedActions.stream()
 						.sorted(Comparator.comparing(Action::getNextExecution, Comparator.reverseOrder()))
 						.findFirst();
 
-				if (action.isPresent()) {
-					ModuleDto moduleAction = new ModuleDto(module.getType(), action.get().getState(), action.get().getValue());
+				// Add latest module's action on the response
+				if (plannedAction.isPresent()) {
+					Action triggeredAction = plannedAction.get();
+					ModuleDto moduleAction = new ModuleDto(module.getType(), triggeredAction.getState(), triggeredAction.getValue());
 					moduleActions.add(moduleAction);
 				}
+
+				actionService.rescheduleActions(plannedActions);
 			}
 
 			responseData.setActions(moduleActions);

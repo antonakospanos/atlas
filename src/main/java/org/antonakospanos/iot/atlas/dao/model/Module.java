@@ -24,7 +24,7 @@ public class Module {
 
 	private String value;
 
-	@OneToMany(mappedBy = "id")
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Action> actions;
 
 

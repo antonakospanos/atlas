@@ -9,8 +9,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,6 +126,18 @@ public class DeviceDto implements Dto<Device, String> {
 		this.modules = modules;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		DeviceDto deviceDto = (DeviceDto) o;
+
+		if (id != null ? !id.equals(deviceDto.id) : deviceDto.id != null) return false;
+		if (uptime != null ? !uptime.equals(deviceDto.uptime) : deviceDto.uptime != null) return false;
+		if (version != null ? !version.equals(deviceDto.version) : deviceDto.version != null) return false;
+		return modules != null ? modules.equals(deviceDto.modules) : deviceDto.modules == null;
+	}
 
 	@Override
 	public int hashCode() {
@@ -160,17 +170,18 @@ public class DeviceDto implements Dto<Device, String> {
 
 		device.setExternalId(this.getId());
 		device.setVersion(this.getVersion());
-		device.setLastContact(ZonedDateTime.ofInstant(Instant.ofEpochMilli(this.getUptime().longValue()), ZoneId.systemDefault()));
+		device.setLastContact(ZonedDateTime.now());
 
 		List<Module> modules = this.getModules()
 				.stream()
-				.map(dto -> {
-					Module module = dto.toEntity();
-					module.setDevice(device);
-
-					return module;
-				})
+				.map(dto -> dto.toEntity())
 				.collect(Collectors.toList());
+
+//		{
+//			Module module = dto.toEntity();
+//			module.setDevice(device);
+//			return module;
+//		}
 
 		device.setModules(modules);
 

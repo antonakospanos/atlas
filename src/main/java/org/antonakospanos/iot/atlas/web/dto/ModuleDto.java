@@ -62,6 +62,18 @@ public class ModuleDto implements Dto<Module, Integer> {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		ModuleDto moduleDto = (ModuleDto) o;
+
+		if (type != null ? !type.equals(moduleDto.type) : moduleDto.type != null) return false;
+		if (state != moduleDto.state) return false;
+		return value != null ? value.equals(moduleDto.value) : moduleDto.value == null;
+	}
+
+	@Override
 	public int hashCode() {
 		return Objects.hash(type, state, value);
 	}
@@ -94,7 +106,7 @@ public class ModuleDto implements Dto<Module, Integer> {
 
 	@Override
 	public Module toEntity(Module module) {
-		module.setState(module.getState());
+		module.setState(this.getState());
 		module.setType(this.getType());
 		module.setValue(this.getValue());
 

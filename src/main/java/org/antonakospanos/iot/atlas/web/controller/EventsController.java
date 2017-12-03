@@ -2,6 +2,7 @@ package org.antonakospanos.iot.atlas.web.controller;
 
 import io.swagger.annotations.*;
 import org.antonakospanos.iot.atlas.service.EventsService;
+import org.antonakospanos.iot.atlas.support.LoggingHelper;
 import org.antonakospanos.iot.atlas.web.dto.*;
 import org.antonakospanos.iot.atlas.web.enums.Result;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public class EventsController extends BaseAtlasController {
         consumes = {"application/json"},
         method = RequestMethod.POST)
     public ResponseEntity<ResponseBase> heartbeat(@ApiParam(value = "Inventory item") @Valid @RequestBody HeartbeatRequest heartbeat) {
-        logger.debug("Heartbeat: " + heartbeat);
+        logger.debug(LoggingHelper.logInboundRequest(heartbeat));
         ResponseEntity<ResponseBase> heartbeatResponse;
 
         try {
@@ -46,8 +47,11 @@ public class EventsController extends BaseAtlasController {
             heartbeatResponse = ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
             logger.error(e.getClass() + "Cause: " + e.getMessage() + ". Heartbeat: "  +heartbeat);
-            heartbeatResponse = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new HeartbeatSuccessResponse());
+            HeartbeatFailureResponse response = HeartbeatFailureResponse.Builder().build(Result.GENERIC_ERROR);
+            heartbeatResponse = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+
+        logger.debug(LoggingHelper.logInboundResponse(heartbeatResponse));
 
         return heartbeatResponse;
     }

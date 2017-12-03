@@ -27,7 +27,7 @@ public class SwaggerConfiguration {
 //	private ApiInfo adminInfo() {
 //		return new ApiInfoBuilder()
 //				.title("Admin API")
-//				.contact("IoTac")
+//				.contact("iotac")
 //				.description("Atlas Administration Interface ")
 //				.build();
 //	}
@@ -45,7 +45,7 @@ public class SwaggerConfiguration {
 	private ApiInfo atlasInfo() {
 		return new ApiInfoBuilder()
 				.title("Atlas API")
-				.contact("IoTac")
+				.contact("iotac")
 				.description("Integration with Internet of Things (IoT) Devices")
 				.build();
 	}

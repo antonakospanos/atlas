@@ -14,8 +14,6 @@ public class Action {
 	@GeneratedValue
 	private Long id;
 
-	private String type;
-
 	@ManyToOne
 	@JoinColumn(name = "ACCOUNT_ID")
 	private Account account;
@@ -44,16 +42,9 @@ public class Action {
 	public Account getAccount() {
 		return account;
 	}
+
 	public void setAccount(Account account) {
 		this.account = account;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public Module getModule() {
