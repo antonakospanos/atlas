@@ -46,7 +46,7 @@ public class EventsController extends BaseAtlasController {
             HeartbeatSuccessResponse response = HeartbeatSuccessResponse.Builder().build(Result.SUCCESS).data(data);
             heartbeatResponse = ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
-            logger.error(e.getClass() + "Cause: " + e.getMessage() + ". Heartbeat: "  +heartbeat);
+            logger.error(e.getClass() + " Cause: " + e.getCause() + " Message: " + e.getMessage() + ". Heartbeat request: " + heartbeat, e);
             HeartbeatFailureResponse response = HeartbeatFailureResponse.Builder().build(Result.GENERIC_ERROR);
             heartbeatResponse = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }

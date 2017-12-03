@@ -2,6 +2,8 @@ package org.antonakospanos.iot.atlas.service;
 
 import org.antonakospanos.iot.atlas.dao.model.Action;
 import org.antonakospanos.iot.atlas.dao.repository.ActionRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ActionService {
+
+	private final static Logger logger = LoggerFactory.getLogger(ActionService.class);
 
 	@Autowired
 	ActionRepository actionRepository;
@@ -24,12 +28,17 @@ public class ActionService {
 			if (action.getPeriodOfMinutes() != null) {
 				// Schedule the next action
 				action.setNextExecution(action.getNextExecution().plusMinutes(action.getPeriodOfMinutes()));
+				logger.debug("Rescheduled action: " + action);
 			} else {
 				// Remove the action from the iterator and the list
 				iterator.remove();
+				logger.debug("Removed action: " + action);
 			}
 		}
-		actionRepository.saveAll(actions);
+
+		if (!actions.isEmpty()) {
+			actionRepository.saveAll(actions);
+		}
 	}
 
 	public List<Action> findPlannedActions(Long moduleId) {

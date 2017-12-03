@@ -172,16 +172,17 @@ public class DeviceDto implements Dto<Device, String> {
 		device.setVersion(this.getVersion());
 		device.setLastContact(ZonedDateTime.now());
 
-		List<Module> modules = this.getModules()
-				.stream()
-				.map(dto -> dto.toEntity())
+		List<Module> modules =
+				this.getModules()
+				.stream() //.map(dto -> dto.toEntity())
+				.map(dto ->	{
+					Module module = dto.toEntity();
+					module.setDevice(device);
+
+					return module;
+				})
 				.collect(Collectors.toList());
 
-//		{
-//			Module module = dto.toEntity();
-//			module.setDevice(device);
-//			return module;
-//		}
 
 		device.setModules(modules);
 

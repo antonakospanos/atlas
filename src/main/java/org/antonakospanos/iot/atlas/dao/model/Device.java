@@ -10,7 +10,7 @@ import java.util.List;
 public class Device {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String name;
@@ -21,7 +21,7 @@ public class Device {
 
 	private ZonedDateTime lastContact;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Module> modules;
 
 

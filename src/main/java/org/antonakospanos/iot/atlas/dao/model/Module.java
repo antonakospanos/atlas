@@ -10,7 +10,7 @@ import java.util.List;
 public class Module {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne
@@ -24,7 +24,7 @@ public class Module {
 
 	private String value;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Action> actions;
 
 

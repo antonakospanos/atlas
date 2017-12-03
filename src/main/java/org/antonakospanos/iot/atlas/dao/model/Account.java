@@ -9,7 +9,7 @@ import java.util.Set;
 public class Account {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String username;
@@ -33,7 +33,7 @@ public class Account {
 			)
 	public Set<Device> devices;
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "id", fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL , fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Action> actions;
 
 

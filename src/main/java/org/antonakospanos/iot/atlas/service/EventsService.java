@@ -4,6 +4,7 @@ import org.antonakospanos.iot.atlas.dao.model.Action;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.model.Module;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
+import org.antonakospanos.iot.atlas.dao.repository.ModuleRepository;
 import org.antonakospanos.iot.atlas.web.dto.DeviceDto;
 import org.antonakospanos.iot.atlas.web.dto.HeartbeatRequest;
 import org.antonakospanos.iot.atlas.web.dto.HeartbeatResponseData;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -29,18 +31,29 @@ public class EventsService {
 	@Autowired
 	DeviceRepository deviceRepository;
 
+	@Autowired
+	ModuleRepository moduleRepository;
+
+	@Transactional
 	public HeartbeatResponseData addEvent(HeartbeatRequest request) {
-		HeartbeatResponseData responseData = null;
+		HeartbeatResponseData responseData = new HeartbeatResponseData();
 
 		DeviceDto deviceDto = request.getDevice();
 		Device device = deviceRepository.findByExternalId(deviceDto.getId());
 
 		if (device == null) {
-			deviceRepository.save(deviceDto.toEntity());
+			// Add new Device in DB
+			device = deviceDto.toEntity();
+
+			deviceRepository.save(device);
+
 			logger.info("New Device added: " + deviceDto);
+
 		} else {
 			// Update Device information in DB
-			deviceRepository.save(deviceDto.toEntity(device));
+			device = deviceDto.toEntity();
+
+			deviceRepository.save(device);
 			logger.debug("Device is updated: " + deviceDto);
 
 			// Check for planned actions for device's modules
@@ -48,19 +61,22 @@ public class EventsService {
 			for (Module module : device.getModules()) {
 				List<Action> plannedActions = actionService.findPlannedActions(module.getId());
 
-				Optional<Action> plannedAction =
-				plannedActions.stream()
-						.sorted(Comparator.comparing(Action::getNextExecution, Comparator.reverseOrder()))
-						.findFirst();
+				if (!plannedActions.isEmpty()) {
 
-				// Add latest module's action on the response
-				if (plannedAction.isPresent()) {
-					Action triggeredAction = plannedAction.get();
-					ModuleDto moduleAction = new ModuleDto(module.getType(), triggeredAction.getState(), triggeredAction.getValue());
-					moduleActions.add(moduleAction);
+					Optional<Action> plannedAction = plannedActions.stream()
+									.sorted(Comparator.comparing(Action::getNextExecution, Comparator.reverseOrder()))
+									.findFirst();
+
+					// Add latest module's action on the response
+					if (plannedAction.isPresent()) {
+						Action triggeredAction = plannedAction.get();
+						ModuleDto moduleAction = new ModuleDto(module.getType(), triggeredAction.getState(), triggeredAction.getValue());
+						moduleActions.add(moduleAction);
+						logger.debug("Returned action: " + moduleAction);
+					}
+
+					actionService.rescheduleActions(plannedActions);
 				}
-
-				actionService.rescheduleActions(plannedActions);
 			}
 
 			responseData.setActions(moduleActions);
