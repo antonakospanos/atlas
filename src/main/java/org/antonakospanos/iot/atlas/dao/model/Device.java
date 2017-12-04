@@ -24,6 +24,16 @@ public class Device {
 	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Module> modules;
 
+	public Device() {
+	}
+
+	public Device(String name, String version, String externalId, ZonedDateTime lastContact, List<Module> modules) {
+		this.name = name;
+		this.version = version;
+		this.externalId = externalId;
+		this.lastContact = lastContact;
+		this.modules = modules;
+	}
 
 	public Long getId() {
 		return id;

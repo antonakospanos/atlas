@@ -42,8 +42,7 @@ public class EventsService {
 
 		if (device == null) {
 			// Add new Device in DB
-			device = deviceDto.toEntity();
-
+			device = deviceDto.toEntity(); // deviceConverter.createDevice(deviceDto);
 			deviceRepository.save(device);
 
 			logger.info("New Device added: " + deviceDto);

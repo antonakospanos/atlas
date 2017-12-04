@@ -27,6 +27,16 @@ public class Module {
 	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Action> actions;
 
+	public Module() {
+	}
+
+	public Module(Device device, String type, ModuleState state, String value, List<Action> actions) {
+		this.device = device;
+		this.type = type;
+		this.state = state;
+		this.value = value;
+		this.actions = actions;
+	}
 
 	public Long getId() {
 		return id;
