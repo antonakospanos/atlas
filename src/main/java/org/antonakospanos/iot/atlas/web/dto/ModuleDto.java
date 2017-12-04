@@ -84,11 +84,6 @@ public class ModuleDto implements Dto<Module, Integer> {
 	}
 
 	@Override
-	public Integer getId() {
-		return null;
-	}
-
-	@Override
 	public ModuleDto fromEntity(Module module) {
 		this.type = module.getType();
 		this.state = module.getState();

@@ -1,15 +1,17 @@
 package org.antonakospanos.iot.atlas.service;
 
 import org.antonakospanos.iot.atlas.dao.model.Action;
+import org.antonakospanos.iot.atlas.dao.model.Device;
+import org.antonakospanos.iot.atlas.dao.model.Module;
 import org.antonakospanos.iot.atlas.dao.repository.ActionRepository;
+import org.antonakospanos.iot.atlas.web.dto.ModuleDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,6 +21,42 @@ public class ActionService {
 
 	@Autowired
 	ActionRepository actionRepository;
+
+	public List<ModuleDto> findActions(Device device) {
+
+		List<ModuleDto> moduleActions = new ArrayList<>();
+
+		for (Module module : device.getModules()) {
+			List<Action> plannedActions = findPlannedActions(module.getId());
+
+			if (!plannedActions.isEmpty()) {
+				Optional<Action> plannedAction = plannedActions.stream()
+						.sorted(Comparator.comparing(Action::getNextExecution, Comparator.reverseOrder()))
+						.findFirst();
+
+				// Add latest module's action on the response
+				if (plannedAction.isPresent()) {
+					Action triggeredAction = plannedAction.get();
+					ModuleDto moduleAction = new ModuleDto(module.getType(), triggeredAction.getState(), triggeredAction.getValue());
+					moduleActions.add(moduleAction);
+					logger.debug("Returned action: " + moduleAction);
+				}
+
+				rescheduleActions(plannedActions);
+			}
+		}
+
+		return moduleActions;
+	}
+
+	public List<Action> findPlannedActions(Long moduleId) {
+		List<Action> actions = actionRepository.findByModuleId(moduleId);
+
+		return actions.stream()
+				.filter(a -> a.getNextExecution().isBefore(ZonedDateTime.now()))
+				.collect(Collectors.toList());
+	}
+
 
 	public void rescheduleActions(List<Action> actions) {
 
@@ -39,13 +77,5 @@ public class ActionService {
 		if (!actions.isEmpty()) {
 			actionRepository.saveAll(actions);
 		}
-	}
-
-	public List<Action> findPlannedActions(Long moduleId) {
-		List<Action> actions = actionRepository.findByModuleId(moduleId);
-
-		return actions.stream()
-				.filter(a -> a.getNextExecution().isBefore(ZonedDateTime.now()))
-				.collect(Collectors.toList());
 	}
 }
