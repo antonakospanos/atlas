@@ -1,9 +1,10 @@
-logging:
-  config: 'classpath:atlas-logback.xml'
-  # config: ${catalina.base}/config-overrides/atlas-atlas-logback.xml
+server:
+  contextPath: /hydra
 endpoints:
   jmx:
     domain: atlas
+logging:
+  config: 'classpath:atlas-logback.xml'
 spring:
   jpa:
     generate-ddl: true
@@ -11,11 +12,17 @@ spring:
     hibernate:
       ddl-auto: create # create-drop
     properties:
+      net.sf.ehcache.configurationResourceName: atlas-ehcache.xml
       hibernate:
         default_schema: atlas
+        generate_statistics: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
         temp:
           use_jdbc_metadata_defaults: false
+        cache:
+          use_query_cache: true
+          use_second_level_cache: true
+          region.factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
   datasource:
     url: 'jdbc:postgresql://192.168.1.7:5432/atlas?currentSchema=atlas'
     username: atlas

@@ -313,10 +313,11 @@
 		</dependency>
 
 		<!-- Cache -->
-		<!--<dependency>-->
-			<!--<groupId>org.hibernate</groupId>-->
-			<!--<artifactId>hibernate-ehcache</artifactId>-->
-		<!--</dependency>-->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-ehcache</artifactId>
+			<version>5.2.12.Final</version> <!-- Compatible with org.hibernate.hibernate-core included by spring-boot-starter-data-jpa  -->
+		</dependency>
 
 		<!-- Swagger Dependencies -->
 		<dependency>
