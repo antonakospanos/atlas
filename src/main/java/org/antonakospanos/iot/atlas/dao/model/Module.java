@@ -33,7 +33,7 @@ public class Module implements Serializable {
 
 	private String value;
 
-	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "module", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Action> actions;
 
 	public Module() {

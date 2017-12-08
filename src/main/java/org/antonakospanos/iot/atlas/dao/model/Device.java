@@ -30,7 +30,7 @@ public class Device implements Serializable {
 
 	private ZonedDateTime lastContact;
 
-	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "device", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Module> modules;
 
 	public Device() {
