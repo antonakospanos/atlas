@@ -1,13 +1,22 @@
 package org.antonakospanos.iot.atlas.dao.model;
 
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 @Entity
+@Cacheable
+@DynamicUpdate
+@DynamicInsert
 @Table(name = "DEVICE")
-public class Device {
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "atlas.entity-cache")
+public class Device implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

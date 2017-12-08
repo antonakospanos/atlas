@@ -1,13 +1,22 @@
 package org.antonakospanos.iot.atlas.dao.model;
 
 import org.antonakospanos.iot.atlas.enums.ModuleState;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
+@Cacheable
+@DynamicUpdate
+@DynamicInsert
 @Table(name = "MODULE")
-public class Module {
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "atlas.entity-cache")
+public class Module implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
