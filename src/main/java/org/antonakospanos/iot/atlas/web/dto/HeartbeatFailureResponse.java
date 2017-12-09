@@ -1,10 +1,14 @@
 package org.antonakospanos.iot.atlas.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.antonakospanos.iot.atlas.web.enums.Result;
 
 /**
  * HeartbeatFailureResponse
  */
+@JsonPropertyOrder({ "result", "description", "data" })
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class HeartbeatFailureResponse extends ResponseBase {
 
 	public static HeartbeatFailureResponse Builder() {

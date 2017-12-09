@@ -1,6 +1,7 @@
 package org.antonakospanos.iot.atlas.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.Module;
 import org.antonakospanos.iot.atlas.enums.ModuleState;
@@ -13,6 +14,7 @@ import java.util.Objects;
 /**
  * ModuleDto
  */
+@JsonPropertyOrder({ "type", "state", "value" })
 public class ModuleDto implements Dto<Module, Integer> {
 
 	@JsonProperty("type")

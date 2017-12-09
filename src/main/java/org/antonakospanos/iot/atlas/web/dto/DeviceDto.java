@@ -1,6 +1,7 @@
 package org.antonakospanos.iot.atlas.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.model.Module;
@@ -18,13 +19,11 @@ import java.util.stream.Collectors;
 /**
  * DeviceDto
  */
+@JsonPropertyOrder({ "id", "version", "modules" })
 public class DeviceDto implements Dto<Device, String> {
 
 	@JsonProperty("id")
 	private String id = null;
-
-	@JsonProperty("uptime")
-	private Long uptime = null;
 
 	@JsonProperty("version")
 	private String version = null;
@@ -35,9 +34,8 @@ public class DeviceDto implements Dto<Device, String> {
 	public DeviceDto() {
 	}
 
-	public DeviceDto(String id, Long uptime, String version, List<ModuleDto> modules) {
+	public DeviceDto(String id, String version, List<ModuleDto> modules) {
 		this.id = id;
-		this.uptime = uptime;
 		this.version = version;
 		this.modules = modules;
 	}
@@ -97,21 +95,6 @@ public class DeviceDto implements Dto<Device, String> {
 	}
 
 	/**
-	 * Get uptime
-	 *
-	 * @return uptime
-	 **/
-	@ApiModelProperty(example = "10", required = true, value = "")
-	@NotNull
-	public Long getUptime() {
-		return uptime;
-	}
-
-	public void setUptime(Long uptime) {
-		this.uptime = uptime;
-	}
-
-	/**
 	 * Get modules
 	 *
 	 * @return modules
@@ -134,7 +117,6 @@ public class DeviceDto implements Dto<Device, String> {
 		DeviceDto deviceDto = (DeviceDto) o;
 
 		if (id != null ? !id.equals(deviceDto.id) : deviceDto.id != null) return false;
-		if (uptime != null ? !uptime.equals(deviceDto.uptime) : deviceDto.uptime != null) return false;
 		if (version != null ? !version.equals(deviceDto.version) : deviceDto.version != null) return false;
 		return modules != null ? modules.equals(deviceDto.modules) : deviceDto.modules == null;
 	}

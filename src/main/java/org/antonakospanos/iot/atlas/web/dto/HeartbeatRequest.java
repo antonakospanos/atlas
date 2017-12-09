@@ -1,6 +1,7 @@
 package org.antonakospanos.iot.atlas.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -12,6 +13,7 @@ import java.util.Objects;
 /**
  * HeartbeatRequest
  */
+@JsonPropertyOrder({ "device", "device" })
 public class HeartbeatRequest {
 
   @JsonProperty("timestamp")
