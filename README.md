@@ -20,9 +20,9 @@ The events describe the state of the devices and may result to an auto-executed 
 
 From a machine with docker installed + internet access, execute:
 
-    docker run -p 5432:5432 --name rdbms -e POSTGRES_PASSWORD=atlas -d postgres:9.4
+    docker run -p 5432:5432 --name rdbms -e POSTGRES_PASSWORD=postgres -d postgres:9.4
 
-Make sure your hosts file maps atlas-rdbms to localhost
+Make sure your hosts file maps rdbms to localhost
 
     127.0.0.1       localhost rdbms
 
