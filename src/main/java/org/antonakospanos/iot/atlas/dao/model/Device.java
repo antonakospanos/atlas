@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -90,5 +91,31 @@ public class Device implements Serializable {
 
 	public void setModules(List<Module> modules) {
 		this.modules = modules;
+	}
+
+	public boolean addModule(Module module) {
+		boolean addition = false;
+
+		if (this.modules == null) {
+			this.modules = new ArrayList<Module>();
+		}
+
+		if (this.modules.add(module)) {
+			module.setDevice(this);
+			addition = true;
+		}
+
+		return addition;
+	}
+
+	public boolean removeModule(Module module) {
+		boolean remove = false;
+
+		if ((this.modules != null) && this.modules.remove(module)) {
+			module.setDevice(null);
+			remove = true;
+		}
+
+		return remove;
 	}
 }

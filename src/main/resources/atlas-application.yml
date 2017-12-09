@@ -15,7 +15,7 @@ spring:
       net.sf.ehcache.configurationResourceName: atlas-ehcache.xml
       hibernate:
         default_schema: atlas
-        generate_statistics: true
+        generate_statistics: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
         temp:
           use_jdbc_metadata_defaults: false
