@@ -49,8 +49,7 @@ public class EventsService {
 
 		} else {
 			// Update Device information in DB
-			// deviceDto.toEntity(device);
-			deviceConverter.updateDevice(deviceDto, device);
+			deviceConverter.updateDevice(deviceDto, device); // deviceDto.toEntity(device);
 			deviceRepository.save(device);
 
 			logger.debug("Device is updated: " + deviceDto);

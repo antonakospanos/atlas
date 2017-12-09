@@ -5,6 +5,7 @@ import org.antonakospanos.iot.atlas.service.EventsService;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
 import org.antonakospanos.iot.atlas.web.dto.*;
 import org.antonakospanos.iot.atlas.web.enums.Result;
+import org.antonakospanos.iot.atlas.web.validator.EventsValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ public class EventsController extends BaseAtlasController {
         logger.debug(LoggingHelper.logInboundRequest(heartbeat));
         ResponseEntity<ResponseBase> heartbeatResponse;
 
+        EventsValidator.validateHeartBeat(heartbeat);
         try {
             HeartbeatResponseData data = service.addEvent(heartbeat);
 
