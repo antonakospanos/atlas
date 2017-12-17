@@ -1,6 +1,6 @@
 package org.antonakospanos.iot.atlas.web.validator;
 
-import org.antonakospanos.iot.atlas.web.dto.HeartbeatRequest;
+import org.antonakospanos.iot.atlas.web.dto.events.HeartbeatRequest;
 
 import java.util.HashSet;
 import java.util.List;

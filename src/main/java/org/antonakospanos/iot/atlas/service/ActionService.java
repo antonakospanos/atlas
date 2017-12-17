@@ -4,7 +4,7 @@ import org.antonakospanos.iot.atlas.dao.model.Action;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.model.Module;
 import org.antonakospanos.iot.atlas.dao.repository.ActionRepository;
-import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
+import org.antonakospanos.iot.atlas.web.dto.events.ModuleActionDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

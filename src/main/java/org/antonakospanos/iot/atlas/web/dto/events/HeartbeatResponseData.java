@@ -1,4 +1,4 @@
-package org.antonakospanos.iot.atlas.web.dto;
+package org.antonakospanos.iot.atlas.web.dto.events;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
