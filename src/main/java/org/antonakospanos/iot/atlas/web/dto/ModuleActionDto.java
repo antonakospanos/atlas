@@ -1,4 +1,4 @@
-package org.antonakospanos.iot.atlas.web.dto.events;
+package org.antonakospanos.iot.atlas.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

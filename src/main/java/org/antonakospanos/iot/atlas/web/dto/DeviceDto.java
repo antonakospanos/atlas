@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * DeviceDto
  */
 @JsonPropertyOrder({ "id", "version", "modules" })
-public class DeviceDto implements Dto<Device, String> {
+public class DeviceDto implements Dto<Device> {
 
 	@JsonProperty("id")
 	private String id = null;

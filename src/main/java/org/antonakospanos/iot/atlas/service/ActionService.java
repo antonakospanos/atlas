@@ -4,8 +4,11 @@ import org.antonakospanos.iot.atlas.dao.model.Action;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.model.Module;
 import org.antonakospanos.iot.atlas.dao.repository.ActionRepository;
+import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
 import org.antonakospanos.iot.atlas.dao.repository.ModuleRepository;
-import org.antonakospanos.iot.atlas.web.dto.events.ModuleActionDto;
+import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
+import org.antonakospanos.iot.atlas.web.dto.actions.ActionDto;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,60 @@ public class ActionService {
 
 	@Autowired
 	ModuleRepository moduleRepository;
+
+	@Autowired
+	DeviceRepository deviceRepository;
+
+	@Transactional
+	public List<ActionDto> list(String username, String deviceId, String moduleId) {
+			List<ActionDto> actionDtos = new ArrayList<>();
+
+			if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(deviceId) && StringUtils.isNotBlank(moduleId)) {
+				// Fetch all user's actions for the declared device and module
+				Device device = deviceRepository.findByExternalId(deviceId);
+
+				actionDtos = device.getModules().stream()
+						.map(module -> module.getExternalId())
+						.map(externalId -> actionRepository.findByAccount_Username_AndModule_ExternalId(username, externalId))
+						.flatMap(List::stream)
+						.map(action -> new ActionDto().fromEntity(action))
+						.collect(Collectors.toList());
+
+			} else if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(deviceId)) {
+				// Fetch all user's actions for the declared device
+				List<Module> modules = moduleRepository.findByDevice_ExternalId(deviceId);
+
+				actionDtos = modules.stream()
+						.map(module -> module.getExternalId())
+						.map(externalId -> actionRepository.findByAccount_Username_AndModule_ExternalId(username, externalId))
+						.flatMap(List::stream)
+						.map(action -> new ActionDto().fromEntity(action))
+						.collect(Collectors.toList());
+
+			} else if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(moduleId)) {
+				// Fetch all user's actions for the declared module
+				List<Action> actions = actionRepository.findByAccount_Username_AndModule_ExternalId(username, moduleId);
+				actionDtos = actions.stream()
+						.map(action -> new ActionDto().fromEntity(action))
+						.collect(Collectors.toList());
+
+			} else if (StringUtils.isNotBlank(username)) {
+				// Fetch all user's actions
+				List<Action> actions = actionRepository.findByAccount_Username(username);
+				actionDtos = actions.stream()
+						.map(action -> new ActionDto().fromEntity(action))
+						.collect(Collectors.toList());
+
+			} else {
+				// Fetch all actions
+				List<Action> actions = actionRepository.findAll();
+				actionDtos = actions.stream()
+						.map(action -> new ActionDto().fromEntity(action))
+						.collect(Collectors.toList());
+			}
+
+			return actionDtos;
+		}
 
 	@Transactional
 	public List<ModuleActionDto> findActions(Device device) {
@@ -56,7 +113,7 @@ public class ActionService {
 	}
 
 	public List<Action> findPlannedActions(Long moduleId) {
-		List<Action> actions = actionRepository.findByModuleId(moduleId);
+		List<Action> actions = actionRepository.findByModule_Id(moduleId);
 
 		return actions.stream()
 				.filter(a -> a.getNextExecution().isBefore(ZonedDateTime.now()))

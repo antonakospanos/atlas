@@ -7,6 +7,13 @@ import java.util.List;
 
 public interface ActionRepository extends JpaRepository<Action, Long> {
 
-	List<Action> findByModuleId(Long moduleId);
+	List<Action> findByModule_Id(Long moduleId);
+
+	List<Action> findByModule_ExternalId(String externalId);
+
+	List<Action> findByAccount_Username(String username);
+
+	List<Action> findByAccount_Username_AndModule_ExternalId(String username, String externalId);
+
 
 }

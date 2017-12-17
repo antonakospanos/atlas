@@ -15,6 +15,8 @@ public abstract class BaseAtlasController {
 
 	private final static Logger logger = LoggerFactory.getLogger(BaseAtlasController.class);
 
+	protected final static String RESPONSE = "Not available yet!";
+
 	@ExceptionHandler(MissingServletRequestParameterException.class)
 	@ResponseBody
 	@ResponseStatus(HttpStatus.BAD_REQUEST)

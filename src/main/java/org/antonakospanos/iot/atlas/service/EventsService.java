@@ -7,7 +7,7 @@ import org.antonakospanos.iot.atlas.dao.repository.ModuleRepository;
 import org.antonakospanos.iot.atlas.web.dto.DeviceDto;
 import org.antonakospanos.iot.atlas.web.dto.events.HeartbeatRequest;
 import org.antonakospanos.iot.atlas.web.dto.events.HeartbeatResponseData;
-import org.antonakospanos.iot.atlas.web.dto.events.ModuleActionDto;
+import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

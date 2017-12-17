@@ -15,7 +15,7 @@ import java.util.Objects;
  * ModuleDto
  */
 @JsonPropertyOrder({ "id", "name", "type", "state", "value" })
-public class ModuleDto implements Dto<Module, Integer> {
+public class ModuleDto implements Dto<Module> {
 
 	@NotNull
 	@JsonProperty("id")
