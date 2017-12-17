@@ -1,6 +1,5 @@
 package org.antonakospanos.iot.atlas.dao.model;
 
-
 import org.antonakospanos.iot.atlas.enums.ModuleState;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -9,43 +8,38 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
-import java.util.List;
 
 /**
- * Changes the module's state & value
+ * ConditionConjunctive combined with AND operator
  */
 @Entity
 @Cacheable
 @DynamicUpdate
 @DynamicInsert
+@Table(name = "CONDITION_CONJUNCTIVE")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "atlas.entity-cache")
-@Table(name = "ACTION")
-public class Action implements Serializable {
+public class ConditionConjunctive implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "ACCOUNT_ID")
-	private Account account;
+	@JoinColumn(name = "CONDITION_ID")
+	private Condition condition;
 
 	@ManyToOne
 	@JoinColumn(name = "MODULE_ID")
 	private Module module;
-
-	private ZonedDateTime nextExecution;
-
-	private Long periodOfMinutes;
 
 	@Enumerated(EnumType.STRING)
 	private ModuleState state;
 
 	private String value;
 
-	@OneToMany(mappedBy = "action", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	private List<Condition> conditions;
+	private Integer minValue;
+
+	private Integer maxValue;
 
 
 	public Long getId() {
@@ -56,12 +50,12 @@ public class Action implements Serializable {
 		this.id = id;
 	}
 
-	public Account getAccount() {
-		return account;
+	public Condition getCondition() {
+		return condition;
 	}
 
-	public void setAccount(Account account) {
-		this.account = account;
+	public void setCondition(Condition condition) {
+		this.condition = condition;
 	}
 
 	public Module getModule() {
@@ -70,22 +64,6 @@ public class Action implements Serializable {
 
 	public void setModule(Module module) {
 		this.module = module;
-	}
-
-	public ZonedDateTime getNextExecution() {
-		return nextExecution;
-	}
-
-	public void setNextExecution(ZonedDateTime nextExecution) {
-		this.nextExecution = nextExecution;
-	}
-
-	public Long getPeriodOfMinutes() {
-		return periodOfMinutes;
-	}
-
-	public void setPeriodOfMinutes(Long periodOfMinutes) {
-		this.periodOfMinutes = periodOfMinutes;
 	}
 
 	public ModuleState getState() {
@@ -104,11 +82,19 @@ public class Action implements Serializable {
 		this.value = value;
 	}
 
-	public List<Condition> getConditions() {
-		return conditions;
+	public Integer getMinValue() {
+		return minValue;
 	}
 
-	public void setConditions(List<Condition> conditions) {
-		this.conditions = conditions;
+	public void setMinValue(Integer minValue) {
+		this.minValue = minValue;
+	}
+
+	public Integer getMaxValue() {
+		return maxValue;
+	}
+
+	public void setMaxValue(Integer maxValue) {
+		this.maxValue = maxValue;
 	}
 }

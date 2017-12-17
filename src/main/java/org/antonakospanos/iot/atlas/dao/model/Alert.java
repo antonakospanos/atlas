@@ -1,27 +1,24 @@
 package org.antonakospanos.iot.atlas.dao.model;
 
 
-import org.antonakospanos.iot.atlas.enums.ModuleState;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
- * Changes the module's state & value
+ * Alerts the user for the module's state & value
  */
 @Entity
 @Cacheable
 @DynamicUpdate
 @DynamicInsert
+@Table(name = "ALERT")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "atlas.entity-cache")
-@Table(name = "ACTION")
-public class Action implements Serializable {
+public class Alert {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,18 +32,8 @@ public class Action implements Serializable {
 	@JoinColumn(name = "MODULE_ID")
 	private Module module;
 
-	private ZonedDateTime nextExecution;
-
-	private Long periodOfMinutes;
-
-	@Enumerated(EnumType.STRING)
-	private ModuleState state;
-
-	private String value;
-
-	@OneToMany(mappedBy = "action", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@OneToMany(mappedBy = "alert", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<Condition> conditions;
-
 
 	public Long getId() {
 		return id;
@@ -70,38 +57,6 @@ public class Action implements Serializable {
 
 	public void setModule(Module module) {
 		this.module = module;
-	}
-
-	public ZonedDateTime getNextExecution() {
-		return nextExecution;
-	}
-
-	public void setNextExecution(ZonedDateTime nextExecution) {
-		this.nextExecution = nextExecution;
-	}
-
-	public Long getPeriodOfMinutes() {
-		return periodOfMinutes;
-	}
-
-	public void setPeriodOfMinutes(Long periodOfMinutes) {
-		this.periodOfMinutes = periodOfMinutes;
-	}
-
-	public ModuleState getState() {
-		return state;
-	}
-
-	public void setState(ModuleState state) {
-		this.state = state;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
 	}
 
 	public List<Condition> getConditions() {
