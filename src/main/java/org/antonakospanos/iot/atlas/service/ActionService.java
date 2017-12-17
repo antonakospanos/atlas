@@ -4,7 +4,7 @@ import org.antonakospanos.iot.atlas.dao.model.Action;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.model.Module;
 import org.antonakospanos.iot.atlas.dao.repository.ActionRepository;
-import org.antonakospanos.iot.atlas.web.dto.ModuleDto;
+import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +22,9 @@ public class ActionService {
 	@Autowired
 	ActionRepository actionRepository;
 
-	public List<ModuleDto> findActions(Device device) {
+	public List<ModuleActionDto> findActions(Device device) {
 
-		List<ModuleDto> moduleActions = new ArrayList<>();
+		List<ModuleActionDto> moduleActions = new ArrayList<>();
 
 		for (Module module : device.getModules()) {
 			List<Action> plannedActions = findPlannedActions(module.getId());
@@ -37,7 +37,7 @@ public class ActionService {
 				// Add latest module's action on the response
 				if (plannedAction.isPresent()) {
 					Action triggeredAction = plannedAction.get();
-					ModuleDto moduleAction = new ModuleDto(module.getExternalId(), triggeredAction.getState(), triggeredAction.getValue());
+					ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), triggeredAction.getState(), triggeredAction.getValue());
 					moduleActions.add(moduleAction);
 					logger.debug("Returned action: " + moduleAction);
 				}

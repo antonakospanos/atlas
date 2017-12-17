@@ -15,8 +15,6 @@ public class HeartbeatSuccessResponse extends ResponseBase {
 		return new HeartbeatSuccessResponse();
 	}
 
-	private HeartbeatResponseData data;
-
 	public HeartbeatSuccessResponse build(Result result) {
 		super.build(result);
 		return this;
@@ -39,11 +37,11 @@ public class HeartbeatSuccessResponse extends ResponseBase {
 
 	@Override
 	public HeartbeatResponseData getData() {
-		return data;
+		return (HeartbeatResponseData) super.getData();
 	}
 
 	public void setData(HeartbeatResponseData data) {
-		this.data = data;
+		super.setData(data);
 	}
 }
 

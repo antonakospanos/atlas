@@ -7,7 +7,7 @@ import org.antonakospanos.iot.atlas.dao.repository.ModuleRepository;
 import org.antonakospanos.iot.atlas.web.dto.DeviceDto;
 import org.antonakospanos.iot.atlas.web.dto.HeartbeatRequest;
 import org.antonakospanos.iot.atlas.web.dto.HeartbeatResponseData;
-import org.antonakospanos.iot.atlas.web.dto.ModuleDto;
+import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +55,8 @@ public class EventsService {
 			logger.debug("Device is updated: " + deviceDto);
 
 			// Check for planned actions for device's modules
-			List<ModuleDto> moduleActions = actionService.findActions(device);
-			responseData.setActions(moduleActions);
+			List<ModuleActionDto> actions = actionService.findActions(device);
+			responseData.setActions(actions);
 		}
 
 		return responseData;

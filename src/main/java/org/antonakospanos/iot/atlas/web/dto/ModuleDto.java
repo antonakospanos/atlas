@@ -49,12 +49,6 @@ public class ModuleDto implements Dto<Module, Integer> {
 		this.value = value;
 	}
 
-	public ModuleDto(String id, ModuleState state, String value) {
-		this.id = id;
-		this.state = state;
-		this.value = value;
-	}
-
 	public String getId() {
 		return id;
 	}
