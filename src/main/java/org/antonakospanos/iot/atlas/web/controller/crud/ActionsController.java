@@ -44,9 +44,10 @@ public class ActionsController extends BaseAtlasController {
 	public ResponseEntity<Iterable> list(@RequestParam (required=false) String username,
 	                                     @RequestParam (required=false) String deviceId,
 	                                     @RequestParam (required=false) String moduleId) {
-		logger.debug(LoggingHelper.logInboundRequest("/actions?username=" + username + "&deviceId=" + deviceId + "&moduleId=" + moduleId));
-		ResponseEntity<Iterable> response = null;
 
+		logger.debug(LoggingHelper.logInboundRequest("/actions?username=" + username + "&deviceId=" + deviceId + "&moduleId=" + moduleId));
+
+		ResponseEntity<Iterable> response = null;
 		try {
 			List<ActionDto> actions = service.list(username, deviceId, moduleId);
 

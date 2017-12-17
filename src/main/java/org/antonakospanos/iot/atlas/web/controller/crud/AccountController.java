@@ -39,12 +39,32 @@ public class AccountController extends BaseAtlasController {
 	@Autowired
 	AccountService service;
 
+	@ApiOperation(value = "Lists all accounts of the integrated IoT devices", response = AccountDto.class, responseContainer="List")
+	@RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.GET)
+	public ResponseEntity<Iterable> listAll() {
+		logger.debug(LoggingHelper.logInboundRequest("/accounts"));
+
+		ResponseEntity<Iterable> response = list(null);
+
+		logger.debug(LoggingHelper.logInboundResponse(response));
+
+		return response;
+	}
+
 	@ApiOperation(value = "Lists the accounts of the integrated IoT devices", response = AccountDto.class, responseContainer="List")
 	@RequestMapping(value = "/{username}", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<Iterable> list(@PathVariable (required=false) String username ) {
+	public ResponseEntity<Iterable> listAccount(@PathVariable String username) {
 		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username));
-		ResponseEntity<Iterable> response = null;
 
+		ResponseEntity<Iterable> response = list(username);
+
+		logger.debug(LoggingHelper.logInboundResponse(response));
+
+		return response;
+	}
+
+	public ResponseEntity<Iterable> list(String username) {
+		ResponseEntity<Iterable> response = null;
 		try {
 			List<AccountDto> accounts = service.list(username);
 
@@ -56,8 +76,7 @@ public class AccountController extends BaseAtlasController {
 		} catch (Exception e) {
 			logger.error(e.getClass() + " Cause: " + e.getCause() + " Message: " + e.getMessage(), e);
 		}
-		logger.debug(LoggingHelper.logInboundResponse(response));
 
-		return response;
+		return  response;
 	}
 }
