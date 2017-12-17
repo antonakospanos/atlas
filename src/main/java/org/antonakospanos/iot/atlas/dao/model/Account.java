@@ -43,7 +43,7 @@ public class Account implements Serializable {
 			)
 	public Set<Device> devices;
 
-	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL , fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL , fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<Action> actions;
 
 
