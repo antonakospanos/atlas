@@ -8,7 +8,7 @@ import java.util.Map;
 
 public enum ModuleState {
 
-	ENABLED(0), DISABLED(1), ERROR(2);
+	ENABLED(0), DISABLED(1), ARMED(2), DISARMED(3), ERROR(4);
 
 	private static Map<Integer, ModuleState> map = new HashMap<>();
 	static {

@@ -35,6 +35,7 @@ public class Action implements Serializable {
 
 	private Long periodOfMinutes;
 
+	@Enumerated(EnumType.STRING)
 	private ModuleState state;
 
 	private String value;
