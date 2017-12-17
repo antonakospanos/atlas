@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ModuleRepository extends JpaRepository<Module, Long> {
 
-	List<Module> findByDeviceIdAndType(Long deviceId, String moduleType);
+	List<Module> findByExternalIdAndDeviceId(String externalId, Long deviceId);
 
 }

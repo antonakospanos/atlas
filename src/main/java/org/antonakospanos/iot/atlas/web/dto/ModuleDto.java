@@ -14,29 +14,63 @@ import java.util.Objects;
 /**
  * ModuleDto
  */
-@JsonPropertyOrder({ "type", "state", "value" })
+@JsonPropertyOrder({ "id", "name", "type", "state", "value" })
 public class ModuleDto implements Dto<Module, Integer> {
 
+	@NotNull
+	@JsonProperty("id")
+	@ApiModelProperty(example = "thermometer_01", required = true)
+	private String id = null;
+
+	@JsonProperty("name")
+	@ApiModelProperty(example = "living room thermometer")
+	private String name = null;
+
 	@JsonProperty("type")
+	@ApiModelProperty(example = "thermometer")
 	private String type = null;
 
 	@JsonProperty("state")
+	@ApiModelProperty(example = "1")
 	private ModuleState state = null;
 
 	@JsonProperty("value")
+	@ApiModelProperty(example = "36")
 	private String value = null;
 
 	public ModuleDto() {
 	}
 
-	public ModuleDto(String type, ModuleState state, String value) {
+	public ModuleDto(String id, String name, String type, ModuleState state, String value) {
+		this.id = id;
+		this.name = name;
 		this.type = type;
 		this.state = state;
 		this.value = value;
 	}
 
-	@ApiModelProperty(example = "thermometer", required = true)
-	@NotNull
+	public ModuleDto(String id, ModuleState state, String value) {
+		this.id = id;
+		this.state = state;
+		this.value = value;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getType() {
 		return type;
 	}
@@ -45,7 +79,6 @@ public class ModuleDto implements Dto<Module, Integer> {
 		this.type = type;
 	}
 
-	@ApiModelProperty(example = "1")
 	public ModuleState getState() {
 		return state;
 	}
@@ -54,7 +87,6 @@ public class ModuleDto implements Dto<Module, Integer> {
 		this.state = state;
 	}
 
-	@ApiModelProperty(example = "36")
 	public String getValue() {
 		return value;
 	}
@@ -70,6 +102,8 @@ public class ModuleDto implements Dto<Module, Integer> {
 
 		ModuleDto moduleDto = (ModuleDto) o;
 
+		if (id != null ? !id.equals(moduleDto.id) : moduleDto.id != null) return false;
+		if (name != null ? !name.equals(moduleDto.name) : moduleDto.name != null) return false;
 		if (type != null ? !type.equals(moduleDto.type) : moduleDto.type != null) return false;
 		if (state != moduleDto.state) return false;
 		return value != null ? value.equals(moduleDto.value) : moduleDto.value == null;
@@ -77,7 +111,7 @@ public class ModuleDto implements Dto<Module, Integer> {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(type, state, value);
+		return Objects.hash(id, name, type, state, value);
 	}
 
 	@Override
@@ -87,6 +121,8 @@ public class ModuleDto implements Dto<Module, Integer> {
 
 	@Override
 	public ModuleDto fromEntity(Module module) {
+		this.id = module.getExternalId();
+		this.name = module.getName();
 		this.type = module.getType();
 		this.state = module.getState();
 		this.value = module.getValue();
@@ -103,6 +139,8 @@ public class ModuleDto implements Dto<Module, Integer> {
 
 	@Override
 	public Module toEntity(Module module) {
+		module.setExternalId(this.getId());
+		module.setName(this.getName());
 		module.setState(this.getState());
 		module.setType(this.getType());
 		module.setValue(this.getValue());

@@ -37,7 +37,7 @@ public class ActionService {
 				// Add latest module's action on the response
 				if (plannedAction.isPresent()) {
 					Action triggeredAction = plannedAction.get();
-					ModuleDto moduleAction = new ModuleDto(module.getType(), triggeredAction.getState(), triggeredAction.getValue());
+					ModuleDto moduleAction = new ModuleDto(module.getExternalId(), triggeredAction.getState(), triggeredAction.getValue());
 					moduleActions.add(moduleAction);
 					logger.debug("Returned action: " + moduleAction);
 				}

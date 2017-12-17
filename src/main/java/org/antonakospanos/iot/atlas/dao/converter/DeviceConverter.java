@@ -25,7 +25,7 @@ public class DeviceConverter {
 		deviceDto.getModules()
 				.stream()
 				.forEach(dto ->	{
-					Module module = new Module(device, dto.getType(), dto.getState(), dto.getValue(), null);
+					Module module = new Module(device, dto.getId(), dto.getName(), dto.getType(), dto.getState(), dto.getValue(), null);
 					modules.add(module);
 				});
 
@@ -38,20 +38,20 @@ public class DeviceConverter {
 		device.setVersion(deviceDto.getVersion());
 		device.setLastContact(ZonedDateTime.now());
 
-		Map<String, ModuleDto> newModuleTypes = deviceDto.getModules().stream().collect(Collectors.toMap(ModuleDto::getType, Function.identity()));
-		Map<String, Module> oldModuleTypes = device.getModules().stream().collect(Collectors.toMap(Module::getType, Function.identity()));
+		Map<String, ModuleDto> newModules = deviceDto.getModules().stream().collect(Collectors.toMap(ModuleDto::getId, Function.identity()));
+		Map<String, Module> oldModules = device.getModules().stream().collect(Collectors.toMap(Module::getExternalId, Function.identity()));
 
 		deviceDto.getModules()
 				.stream()
 				.forEach(moduleDto -> {
 
-							if (!oldModuleTypes.containsKey(moduleDto.getType())) {
+							if (!oldModules.containsKey(moduleDto.getId())) {
 								// Add new module
 								Module newModule = moduleDto.toEntity();
 								device.addModule(newModule);
-							} else if (oldModuleTypes.containsKey(moduleDto.getType())) {
+							} else if (oldModules.containsKey(moduleDto.getId())) {
 								// Update old module
-								Module oldModule = oldModuleTypes.get(moduleDto.getType());
+								Module oldModule = oldModules.get(moduleDto.getId());
 								moduleDto.toEntity(oldModule);
 							}
 						}
@@ -60,7 +60,7 @@ public class DeviceConverter {
 		// Remove missing modules
 		for (Iterator<Module> i = device.getModules().listIterator(); i.hasNext(); ) {
 			Module module = i.next();
-			if (!newModuleTypes.containsKey(module.getType())) {
+			if (!newModules.containsKey(module.getExternalId())) {
 				i.remove();
 			}
 		}

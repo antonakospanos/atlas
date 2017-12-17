@@ -26,6 +26,10 @@ public class Module implements Serializable {
 	@JoinColumn(name = "DEVICE_ID")
 	private Device device;
 
+	private String name;
+
+	private String externalId;
+
 	private String type;
 
 	@Enumerated(EnumType.STRING)
@@ -39,8 +43,10 @@ public class Module implements Serializable {
 	public Module() {
 	}
 
-	public Module(Device device, String type, ModuleState state, String value, List<Action> actions) {
+	public Module(Device device, String externalId, String name, String type, ModuleState state, String value, List<Action> actions) {
 		this.device = device;
+		this.externalId = externalId;
+		this.name = name;
 		this.type = type;
 		this.state = state;
 		this.value = value;
@@ -53,6 +59,22 @@ public class Module implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(String externalId) {
+		this.externalId = externalId;
 	}
 
 	public Device getDevice() {

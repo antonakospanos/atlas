@@ -11,15 +11,15 @@ public class EventsValidator {
 
 	public static void validateHeartBeat(HeartbeatRequest heartbeat) {
 
-		List<String> moduleTypeList = heartbeat.getDevice().getModules()
+		List<String> moduleList = heartbeat.getDevice().getModules()
 				.stream()
-				.map(module -> module.getType())
+				.map(module -> module.getId())
 				.collect(Collectors.toList());
 
-		Set<String> moduleTypeSet = new HashSet<String>(moduleTypeList);
+		Set<String> moduleSet = new HashSet<String>(moduleList);
 
-		if (moduleTypeList.size() > moduleTypeSet.size()) {
-			throw new IllegalArgumentException("Device's module types shall differ: " + moduleTypeList);
+		if (moduleList.size() > moduleSet.size()) {
+			throw new IllegalArgumentException("Device's Module IDs shall differ: " + moduleList);
 		}
 	}
 }
