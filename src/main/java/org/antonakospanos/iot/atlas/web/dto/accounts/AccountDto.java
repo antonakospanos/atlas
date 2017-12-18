@@ -72,18 +72,72 @@ public class AccountDto implements Dto<Account> {
 		return this;
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getCellphone() {
+		return cellphone;
+	}
+
+	public void setCellphone(String cellphone) {
+		this.cellphone = cellphone;
+	}
+
 	@Override
-	public AccountDto fromEntity(Account entity) {
-		return null;
+	public AccountDto fromEntity(Account account) {
+		this.username = account.getUsername();
+		this.password = account.getPassword();
+		this.name = account.getName();
+		this.email = account.getEmail();
+		this.cellphone= account.getCellphone();
+
+		return this;
 	}
 
 	@Override
 	public Account toEntity() {
-		return null;
+		Account account = new Account();
+
+		return toEntity(account);
 	}
 
 	@Override
-	public Account toEntity(Account entity) {
-		return null;
+	public Account toEntity(Account account) {
+		account.setUsername(this.getUsername());
+		account.setPassword(this.getPassword());
+		account.setName(this.getName());
+		account.setEmail(this.getEmail());
+		account.setCellphone(this.getCellphone());
+
+		return account;
 	}
 }

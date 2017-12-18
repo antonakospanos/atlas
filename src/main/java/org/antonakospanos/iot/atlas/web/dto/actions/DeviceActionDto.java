@@ -15,6 +15,14 @@ public class DeviceActionDto implements Serializable {
 	@NotNull
 	private ModuleActionDto module;
 
+	public DeviceActionDto() {
+	}
+
+	public DeviceActionDto(@NotNull String id, @NotNull ModuleActionDto module) {
+		this.id = id;
+		this.module = module;
+	}
+
 	public String getId() {
 		return id;
 	}

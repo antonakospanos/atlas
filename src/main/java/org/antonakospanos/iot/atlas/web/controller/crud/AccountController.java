@@ -2,11 +2,14 @@ package org.antonakospanos.iot.atlas.web.controller.crud;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.antonakospanos.iot.atlas.service.AccountService;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
 import org.antonakospanos.iot.atlas.web.controller.BaseAtlasController;
 import org.antonakospanos.iot.atlas.web.dto.ResponseBase;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountDto;
+import org.antonakospanos.iot.atlas.web.dto.actions.ActionRequest;
+import org.antonakospanos.iot.atlas.web.dto.actions.ActionResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -26,8 +30,8 @@ public class AccountController extends BaseAtlasController {
 	@ApiOperation(value = "Not available yet", response = ResponseBase.class)
 	@ResponseStatus(HttpStatus.CREATED)
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Object> add() {
-		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(RESPONSE);
+	public ResponseEntity<ActionResponse> add(@ApiParam(value = "Scheduled action") @Valid @RequestBody ActionRequest request) {
+		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(null);
 	}
 
 	@ApiOperation(value = "Not available yet", response = ResponseBase.class)

@@ -10,15 +10,23 @@ import java.io.Serializable;
 public class RecurringActionDto implements Serializable {
 
 	@NotNull
-	private String period;
+	private Long period;
 
 	private String unit = Unit.MINUTES.toString();
 
-	public String getPeriod() {
+	public RecurringActionDto() {
+	}
+
+	public RecurringActionDto(@NotNull Long period, String unit) {
+		this.period = period;
+		this.unit = unit;
+	}
+
+	public Long getPeriod() {
 		return period;
 	}
 
-	public void setPeriod(String period) {
+	public void setPeriod(Long period) {
 		this.period = period;
 	}
 

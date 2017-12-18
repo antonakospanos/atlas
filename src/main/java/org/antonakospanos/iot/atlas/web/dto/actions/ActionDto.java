@@ -2,13 +2,17 @@ package org.antonakospanos.iot.atlas.web.dto.actions;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.antonakospanos.iot.atlas.dao.model.Action;
+import org.antonakospanos.iot.atlas.dao.model.Module;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
+import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
+import org.antonakospanos.iot.atlas.web.enums.Unit;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * ActionDto
@@ -86,8 +90,24 @@ public class ActionDto implements Dto<Action> {
 	}
 
 	@Override
-	public ActionDto fromEntity(Action entity) {
-		return null;
+	public ActionDto fromEntity(Action action) {
+
+		this.date = action.getNextExecution();
+		if (action.getPeriodOfMinutes() != null && action.getPeriodOfMinutes() != 0) {
+			this.recurring = new RecurringActionDto(action.getPeriodOfMinutes(), Unit.MINUTES.toString());
+		}
+
+		Module module = action.getModule();
+		String deviceId = module.getDevice().getExternalId();
+		ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), module.getState(), module.getValue());
+		DeviceActionDto deviceAction = new DeviceActionDto(deviceId, moduleAction);
+		this.device = deviceAction;
+		this.conditions = action.getConditions()
+				.stream()
+				.map(condition -> new ConditionDto().fromEntity(condition))
+				.collect(Collectors.toList());
+
+		return  this;
 	}
 
 	@Override

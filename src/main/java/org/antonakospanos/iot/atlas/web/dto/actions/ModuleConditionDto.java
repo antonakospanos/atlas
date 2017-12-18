@@ -20,6 +20,17 @@ public class ModuleConditionDto implements Serializable {
 
 	private Double maxValue;
 
+	public ModuleConditionDto() {
+	}
+
+	public ModuleConditionDto(@NotNull String id, ModuleState state, String value, Double minValue, Double maxValue) {
+		this.id = id;
+		this.state = state;
+		this.value = value;
+		this.minValue = minValue;
+		this.maxValue = maxValue;
+	}
+
 	public String getId() {
 		return id;
 	}

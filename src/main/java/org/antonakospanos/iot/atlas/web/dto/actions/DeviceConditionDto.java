@@ -14,6 +14,14 @@ public class DeviceConditionDto implements Serializable {
 	@NotNull
 	private ModuleConditionDto module;
 
+	public DeviceConditionDto() {
+	}
+
+	public DeviceConditionDto(@NotNull String id, @NotNull ModuleConditionDto module) {
+		this.id = id;
+		this.module = module;
+	}
+
 	public String getId() {
 		return id;
 	}
