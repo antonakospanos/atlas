@@ -99,7 +99,7 @@ public class ActionDto implements Dto<Action> {
 
 		Module module = action.getModule();
 		String deviceId = module.getDevice().getExternalId();
-		ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), module.getState(), module.getValue());
+		ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), action.getState(), action.getValue());
 		DeviceActionDto deviceAction = new DeviceActionDto(deviceId, moduleAction);
 		this.device = deviceAction;
 		this.conditions = action.getConditions()
@@ -107,7 +107,7 @@ public class ActionDto implements Dto<Action> {
 				.map(condition -> new ConditionDto().fromEntity(condition))
 				.collect(Collectors.toList());
 
-		return  this;
+		return this;
 	}
 
 	@Override
