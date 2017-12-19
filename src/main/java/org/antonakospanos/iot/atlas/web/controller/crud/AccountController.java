@@ -72,7 +72,7 @@ public class AccountController extends BaseAtlasController {
 		try {
 			List<AccountDto> accounts = service.list(username);
 
-			if (accounts != null && accounts.isEmpty()) {
+			if (accounts != null && !accounts.isEmpty()) {
 				response = ResponseEntity.status(HttpStatus.OK).body(accounts);
 			} else {
 				response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(accounts);

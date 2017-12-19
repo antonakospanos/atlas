@@ -79,7 +79,7 @@ public class DeviceController extends BaseAtlasController {
 		try {
 			List<DeviceDto> devices = service.list(deviceId, username);
 
-			if (devices != null && devices.isEmpty()) {
+			if (devices != null && !devices.isEmpty()) {
 				response = ResponseEntity.status(HttpStatus.OK).body(devices);
 			} else {
 				response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(devices);

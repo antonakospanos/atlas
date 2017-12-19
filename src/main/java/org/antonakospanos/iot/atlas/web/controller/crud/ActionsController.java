@@ -51,7 +51,7 @@ public class ActionsController extends BaseAtlasController {
 		try {
 			List<ActionDto> actions = service.list(username, deviceId, moduleId);
 
-			if (actions != null && actions.isEmpty()) {
+			if (actions != null && !actions.isEmpty()) {
 				response = ResponseEntity.status(HttpStatus.OK).body(actions);
 			} else {
 				response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(actions);

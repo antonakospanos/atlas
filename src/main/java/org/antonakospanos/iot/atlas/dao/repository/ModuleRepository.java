@@ -15,5 +15,4 @@ public interface ModuleRepository extends JpaRepository<Module, Long> {
 
 	List<Module> findByDevice_ExternalId(String externalId);
 
-
 }
