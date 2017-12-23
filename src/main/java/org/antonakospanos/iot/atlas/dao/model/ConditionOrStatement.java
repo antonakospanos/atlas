@@ -1,39 +1,35 @@
 package org.antonakospanos.iot.atlas.dao.model;
 
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Set;
 
 /**
- * Alerts the user for the module's state & value
+ * Action's disjunctive condition statement
  */
 @Entity
 @Cacheable
 @DynamicUpdate
 @DynamicInsert
-@Table(name = "ALERT")
+@Table(name = "CONDITION_OR_STATEMENT")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "atlas.entity-cache")
-public class Alert {
+public class ConditionOrStatement implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne
-	@JoinColumn(name = "ACCOUNT_ID")
-	private Account account;
-
-	@ManyToOne
-	@JoinColumn(name = "MODULE_ID")
-	private Module module;
-
-	@OneToOne(mappedBy = "alert", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	@JoinColumn(name = "CONDITION_ID")
 	private Condition condition;
 
+	@OneToMany(mappedBy = "conditionOrStatement", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	private Set<ConditionAndStatement> conditionAndStatements;
 
 	public Long getId() {
 		return id;
@@ -43,27 +39,19 @@ public class Alert {
 		this.id = id;
 	}
 
-	public Account getAccount() {
-		return account;
-	}
-
-	public void setAccount(Account account) {
-		this.account = account;
-	}
-
-	public Module getModule() {
-		return module;
-	}
-
-	public void setModule(Module module) {
-		this.module = module;
-	}
-
 	public Condition getCondition() {
 		return condition;
 	}
 
 	public void setCondition(Condition condition) {
 		this.condition = condition;
+	}
+
+	public Set<ConditionAndStatement> getConditionAndStatements() {
+		return conditionAndStatements;
+	}
+
+	public void setConditionAndStatements(Set<ConditionAndStatement> conditionAndStatements) {
+		this.conditionAndStatements = conditionAndStatements;
 	}
 }

@@ -10,23 +10,23 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * ConditionConjunctive combined with AND operator
+ * Action's condition statement
  */
 @Entity
 @Cacheable
 @DynamicUpdate
 @DynamicInsert
-@Table(name = "CONDITION_CONJUNCTIVE")
+@Table(name = "CONDITION_STATEMENT")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE, region = "atlas.entity-cache")
-public class ConditionConjunctive implements Serializable {
+public class ConditionStatement implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "CONDITION_ID")
-	private Condition condition;
+	@OneToOne
+	@JoinColumn(name = "CONDITION_AND_STATEMENT_ID")
+	private ConditionAndStatement conditionAndStatement;
 
 	@ManyToOne
 	@JoinColumn(name = "MODULE_ID")
@@ -41,7 +41,6 @@ public class ConditionConjunctive implements Serializable {
 
 	private Double maxValue;
 
-
 	public Long getId() {
 		return id;
 	}
@@ -50,12 +49,12 @@ public class ConditionConjunctive implements Serializable {
 		this.id = id;
 	}
 
-	public Condition getCondition() {
-		return condition;
+	public ConditionAndStatement getConditionAndStatement() {
+		return conditionAndStatement;
 	}
 
-	public void setCondition(Condition condition) {
-		this.condition = condition;
+	public void setConditionAndStatement(ConditionAndStatement conditionAndStatement) {
+		this.conditionAndStatement = conditionAndStatement;
 	}
 
 	public Module getModule() {

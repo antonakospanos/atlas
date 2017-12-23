@@ -1,27 +1,16 @@
 package org.antonakospanos.iot.atlas.web.dto.actions;
 
 import org.antonakospanos.iot.atlas.dao.model.Condition;
-import org.antonakospanos.iot.atlas.dao.model.ConditionConjunctive;
+import org.antonakospanos.iot.atlas.dao.model.ConditionOrStatement;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ConditionDto implements Dto<Condition> {
 
-	@NotNull
-	List<ConjunctiveConditionDto> conjunctives;
-
-	public List<ConjunctiveConditionDto> getConjunctives() {
-		return conjunctives;
-	}
-
-	public void setConjunctives(List<ConjunctiveConditionDto> conjunctives) {
-		this.conjunctives = conjunctives;
-	}
+	private List<ConditionOrStatementDto> orLegs;
 
 	@Override
 	public boolean equals(Object o) {
@@ -30,25 +19,28 @@ public class ConditionDto implements Dto<Condition> {
 
 		ConditionDto that = (ConditionDto) o;
 
-		return conjunctives.equals(that.conjunctives);
+		return orLegs != null ? orLegs.equals(that.orLegs) : that.orLegs == null;
 	}
 
 	@Override
 	public int hashCode() {
-		return conjunctives.hashCode();
+		return orLegs != null ? orLegs.hashCode() : 0;
 	}
 
-	@Override
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
+	public List<ConditionOrStatementDto> getOrLegs() {
+		return orLegs;
 	}
+
+	public void setOrLegs(List<ConditionOrStatementDto> orLegs) {
+		this.orLegs = orLegs;
+	}
+
 
 	@Override
 	public ConditionDto fromEntity(Condition condition) {
-
-		this.conjunctives = condition.getConditionConjunctives()
+		this.orLegs = condition.getConditionOrStatements()
 				.stream()
-				.map(conditionConjunctive -> new ConjunctiveConditionDto().fromEntity(conditionConjunctive))
+				.map(conditionOrStatementDto -> new ConditionOrStatementDto().fromEntity(conditionOrStatementDto))
 				.collect(Collectors.toList());
 
 		return this;
@@ -64,12 +56,12 @@ public class ConditionDto implements Dto<Condition> {
 	@Override
 	public Condition toEntity(Condition condition) {
 
-		List<ConditionConjunctive> conditions = this.getConjunctives()
+		Set<ConditionOrStatement> conditionOrStatements = this.getOrLegs()
 				.stream()
-				.map(conditionDto -> conditionDto.toEntity())
-				.collect(Collectors.toList());
+				.map(conditionOrStatementDto -> conditionOrStatementDto.toEntity())
+				.collect(Collectors.toSet());
 
-		condition.setConditionConjunctives(conditions);
+		condition.setConditionOrStatements(conditionOrStatements);
 
 		return condition;
 	}

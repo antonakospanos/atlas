@@ -7,10 +7,10 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 /**
- * ConditionConjunctive combined with OR operator
+ *  Action's condition
  */
 @Entity
 @Cacheable
@@ -24,16 +24,16 @@ public class Condition implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "ACTION_ID")
 	private Action action;
 
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "ALERT_ID")
 	private Alert alert;
 
 	@OneToMany(mappedBy = "condition", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-	private List<ConditionConjunctive> conditionConjunctives;
+	private Set<ConditionOrStatement> conditionOrStatements;
 
 	public Long getId() {
 		return id;
@@ -59,11 +59,11 @@ public class Condition implements Serializable {
 		this.alert = alert;
 	}
 
-	public List<ConditionConjunctive> getConditionConjunctives() {
-		return conditionConjunctives;
+	public Set<ConditionOrStatement> getConditionOrStatements() {
+		return conditionOrStatements;
 	}
 
-	public void setConditionConjunctives(List<ConditionConjunctive> conditionConjunctives) {
-		this.conditionConjunctives = conditionConjunctives;
+	public void setConditionOrStatements(Set<ConditionOrStatement> conditionOrStatements) {
+		this.conditionOrStatements = conditionOrStatements;
 	}
 }

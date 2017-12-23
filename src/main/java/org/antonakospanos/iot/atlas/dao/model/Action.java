@@ -10,7 +10,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.List;
 
 /**
  * Changes the module's state & value
@@ -44,8 +43,8 @@ public class Action implements Serializable {
 
 	private String value;
 
-	@OneToMany(mappedBy = "action", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-	private List<Condition> conditions;
+	@OneToOne(mappedBy = "action", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private Condition condition;
 
 
 	public Long getId() {
@@ -104,11 +103,11 @@ public class Action implements Serializable {
 		this.value = value;
 	}
 
-	public List<Condition> getConditions() {
-		return conditions;
+	public Condition getCondition() {
+		return condition;
 	}
 
-	public void setConditions(List<Condition> conditions) {
-		this.conditions = conditions;
+	public void setCondition(Condition condition) {
+		this.condition = condition;
 	}
 }

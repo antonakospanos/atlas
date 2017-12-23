@@ -1,5 +1,6 @@
 package org.antonakospanos.iot.atlas.web.dto.actions;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.antonakospanos.iot.atlas.dao.model.Action;
 import org.antonakospanos.iot.atlas.dao.model.Module;
@@ -11,13 +12,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * ActionDto
  */
-@JsonPropertyOrder({"date", "recurring", "device", "conditions"})
+@JsonPropertyOrder({"date", "recurring", "device", "condition"})
 public class ActionDto implements Dto<Action> {
 
 	@NotNull
@@ -28,8 +27,9 @@ public class ActionDto implements Dto<Action> {
 	@NotNull
 	private DeviceActionDto device;
 
-	private List<ConditionDto> conditions;
+	private ConditionDto condition;
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 	public ZonedDateTime getDate() {
 		return date;
 	}
@@ -54,12 +54,12 @@ public class ActionDto implements Dto<Action> {
 		this.device = device;
 	}
 
-	public List<ConditionDto> getConditions() {
-		return conditions;
+	public ConditionDto getCondition() {
+		return condition;
 	}
 
-	public void setConditions(List<ConditionDto> conditions) {
-		this.conditions = conditions;
+	public void setCondition(ConditionDto condition) {
+		this.condition = condition;
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class ActionDto implements Dto<Action> {
 		if (!date.equals(actionDto.date)) return false;
 		if (recurring != null ? !recurring.equals(actionDto.recurring) : actionDto.recurring != null) return false;
 		if (!device.equals(actionDto.device)) return false;
-		return conditions != null ? conditions.equals(actionDto.conditions) : actionDto.conditions == null;
+		return condition != null ? condition.equals(actionDto.condition) : actionDto.condition == null;
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class ActionDto implements Dto<Action> {
 		int result = date.hashCode();
 		result = 31 * result + (recurring != null ? recurring.hashCode() : 0);
 		result = 31 * result + device.hashCode();
-		result = 31 * result + (conditions != null ? conditions.hashCode() : 0);
+		result = 31 * result + (condition != null ? condition.hashCode() : 0);
 		return result;
 	}
 
@@ -102,10 +102,7 @@ public class ActionDto implements Dto<Action> {
 		ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), action.getState(), action.getValue());
 		DeviceActionDto deviceAction = new DeviceActionDto(deviceId, moduleAction);
 		this.device = deviceAction;
-		this.conditions = action.getConditions()
-				.stream()
-				.map(condition -> new ConditionDto().fromEntity(condition))
-				.collect(Collectors.toList());
+		this.condition = new ConditionDto().fromEntity(action.getCondition());
 
 		return this;
 	}

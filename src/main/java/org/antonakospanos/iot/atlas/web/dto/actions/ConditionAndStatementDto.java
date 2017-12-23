@@ -1,13 +1,14 @@
 package org.antonakospanos.iot.atlas.web.dto.actions;
 
-import org.antonakospanos.iot.atlas.dao.model.ConditionConjunctive;
+import org.antonakospanos.iot.atlas.dao.model.ConditionAndStatement;
+import org.antonakospanos.iot.atlas.dao.model.ConditionStatement;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.validation.constraints.NotNull;
 
-public class ConjunctiveConditionDto implements Dto<ConditionConjunctive> {
+public class ConditionAndStatementDto implements Dto<ConditionAndStatement> {
 
 	@NotNull
 	DeviceConditionDto device;
@@ -23,9 +24,9 @@ public class ConjunctiveConditionDto implements Dto<ConditionConjunctive> {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof ConjunctiveConditionDto)) return false;
+		if (!(o instanceof ConditionAndStatementDto)) return false;
 
-		ConjunctiveConditionDto that = (ConjunctiveConditionDto) o;
+		ConditionAndStatementDto that = (ConditionAndStatementDto) o;
 
 		return device.equals(that.device);
 	}
@@ -41,9 +42,9 @@ public class ConjunctiveConditionDto implements Dto<ConditionConjunctive> {
 	}
 
 	@Override
-	public ConjunctiveConditionDto fromEntity(ConditionConjunctive condition) {
+	public ConditionAndStatementDto fromEntity(ConditionAndStatement conditionAndStatement) {
 
-		String deviceId = condition.getModule().getDevice().getExternalId();
+		ConditionStatement condition = conditionAndStatement.getConditionStatement();
 
 		ModuleConditionDto moduleConditionDto = new ModuleConditionDto();
 		moduleConditionDto.setId(condition.getModule().getExternalId());
@@ -52,29 +53,31 @@ public class ConjunctiveConditionDto implements Dto<ConditionConjunctive> {
 		moduleConditionDto.setValue(condition.getValue());
 		moduleConditionDto.setState(condition.getState());
 
+		String deviceId = condition.getModule().getDevice().getExternalId();
 		this.setDevice(new DeviceConditionDto(deviceId, moduleConditionDto));
 
 		return this;
 	}
 
 	@Override
-	public ConditionConjunctive toEntity() {
-		ConditionConjunctive conditionConjunctive = new ConditionConjunctive();
+	public ConditionAndStatement toEntity() {
+		ConditionAndStatement conditionAndStatement = new ConditionAndStatement();
 
-		return toEntity(conditionConjunctive);
+		return toEntity(conditionAndStatement);
 	}
 
 	@Override
-	public ConditionConjunctive toEntity(ConditionConjunctive condition) {
+	public ConditionAndStatement toEntity(ConditionAndStatement conditionAndStatement) {
 
 		ModuleConditionDto module = this.getDevice().getModule();
+
+		ConditionStatement condition = conditionAndStatement.getConditionStatement();
 		condition.setMaxValue(module.getMaxValue());
 		condition.setMinValue(module.getMinValue());
 		condition.setValue(module.getValue());
 		condition.setState(module.getState());
 		// DAO: condition.setModule();
-		// DAO: condition.setCondition();
 
-		return condition;
+		return conditionAndStatement;
 	}
 }
