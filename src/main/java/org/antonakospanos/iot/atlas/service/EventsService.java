@@ -34,7 +34,7 @@ public class EventsService {
 	DeviceConverter deviceConverter;
 
 	@Transactional
-	public HeartbeatResponseData addEvent(HeartbeatRequest request) {
+	public HeartbeatResponseData create(HeartbeatRequest request) {
 		HeartbeatResponseData responseData = new HeartbeatResponseData();
 
 		DeviceDto deviceDto = request.getDevice();

@@ -1,13 +1,15 @@
 package org.antonakospanos.iot.atlas.service;
 
-import org.antonakospanos.iot.atlas.dao.model.Action;
-import org.antonakospanos.iot.atlas.dao.model.Device;
+import org.antonakospanos.iot.atlas.dao.model.*;
 import org.antonakospanos.iot.atlas.dao.model.Module;
+import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
 import org.antonakospanos.iot.atlas.dao.repository.ActionRepository;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
 import org.antonakospanos.iot.atlas.dao.repository.ModuleRepository;
 import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.antonakospanos.iot.atlas.web.dto.actions.ActionDto;
+import org.antonakospanos.iot.atlas.web.dto.actions.ActionRequest;
+import org.antonakospanos.iot.atlas.web.dto.actions.ActionResponseData;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +30,79 @@ public class ActionService {
 	ActionRepository actionRepository;
 
 	@Autowired
+	AccountRepository accountRepository;
+
+	@Autowired
 	ModuleRepository moduleRepository;
 
 	@Autowired
 	DeviceRepository deviceRepository;
 
 	@Transactional
+	public ActionResponseData create(ActionRequest request) {
+
+		ActionDto actionDto = request.getAction();
+		String actionDeviceId = actionDto.getDevice().getId();
+		String actionModuleId = actionDto.getDevice().getModule().getId();
+
+		Device device = deviceRepository.findByExternalId(actionDeviceId);
+		Module module = moduleRepository.findByExternalId_AndDevice_ExternalId(actionModuleId, actionDeviceId);
+		Account account = accountRepository.findByUsername(request.getUsername());
+
+		if (device == null) {
+			throw new IllegalArgumentException("Device '" + actionDeviceId + "' does not exist!");
+		}	else if (module == null) {
+			throw new IllegalArgumentException("Module '" + actionModuleId + "' does not exist!");
+		}	else if (account == null) {
+			throw new IllegalArgumentException("Account with username '" + request.getUsername() + "' does not exist!");
+		} else {
+			// Add new Action in DB
+			Action action = actionDto.toEntity();
+			action.setAccount(account);
+			action.setModule(module);
+
+			Condition condition = actionDto.getCondition().toEntity();
+			action.setCondition(condition);
+
+			condition.getConditionOrStatements()
+					.stream()
+					.forEach(conditionOrStatement -> {
+
+						conditionOrStatement.getConditionAndStatements()
+								.stream()
+								.forEach(conditionAndStatement -> {
+									ConditionStatement statement = conditionAndStatement.getConditionStatement();
+
+									String conditionalDeviceId = statement.getDeviceExternalId();
+									String conditionalModuleId = statement.getModuleExternalId();
+									Module conditionalModule = moduleRepository.findByExternalId_AndDevice_ExternalId(conditionalModuleId, conditionalDeviceId);
+
+									if (conditionalModule != null) {
+										statement.setModule(conditionalModule);
+									} else {
+										throw new IllegalArgumentException("Module '" + conditionalModuleId + "' of device '" + conditionalDeviceId + "' does not exist!");
+									}
+								});
+					});
+
+			actionRepository.save(action);
+
+			return new ActionResponseData(action.getExternalId().toString());
+		}
+	}
+
+	@Transactional
+	public void delete(UUID actionId) {
+		Action action = actionRepository.findByExternalId(actionId);
+
+		if (action == null) {
+			throw new IllegalArgumentException("Action '" + actionId + "' does not exist!");
+		} else {
+			actionRepository.delete(action);
+		}
+	}
+
+		@Transactional
 	public List<ActionDto> list(String username, String deviceId, String moduleId) {
 			List<ActionDto> actionDtos = new ArrayList<>();
 

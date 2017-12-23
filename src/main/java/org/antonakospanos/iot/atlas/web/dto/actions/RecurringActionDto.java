@@ -34,10 +34,6 @@ public class RecurringActionDto implements Serializable {
 		return unit;
 	}
 
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

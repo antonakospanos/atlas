@@ -5,14 +5,21 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class ActionResponseData {
 
-	private String actionId;
+	private String id;
 
-	public String getActionId() {
-		return actionId;
+	public ActionResponseData() {
 	}
 
-	public void setActionId(String actionId) {
-		this.actionId = actionId;
+	public ActionResponseData(String id) {
+		this.id = id;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	@Override

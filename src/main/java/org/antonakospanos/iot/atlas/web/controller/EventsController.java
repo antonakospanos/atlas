@@ -45,7 +45,7 @@ public class EventsController extends BaseAtlasController {
 
         EventsValidator.validateHeartBeat(heartbeat);
         try {
-            HeartbeatResponseData data = service.addEvent(heartbeat);
+            HeartbeatResponseData data = service.create(heartbeat);
 
             HeartbeatSuccessResponse heartbeatSuccessResponse = HeartbeatSuccessResponse.Builder().build(Result.SUCCESS).data(data);
             response = ResponseEntity.status(HttpStatus.CREATED).body(heartbeatSuccessResponse);

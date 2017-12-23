@@ -32,6 +32,12 @@ public class ConditionStatement implements Serializable {
 	@JoinColumn(name = "MODULE_ID")
 	private Module module;
 
+	/**  Added by DTO deserializer before finding the DB relationship	*/
+	private transient String deviceExternalId;
+
+	/**  Added by DTO deserializer before finding the DB relationship	*/
+	private transient String moduleExternalId;
+
 	@Enumerated(EnumType.STRING)
 	private ModuleState state;
 
@@ -95,5 +101,21 @@ public class ConditionStatement implements Serializable {
 
 	public void setMaxValue(Double maxValue) {
 		this.maxValue = maxValue;
+	}
+
+	public String getDeviceExternalId() {
+		return deviceExternalId;
+	}
+
+	public void setDeviceExternalId(String deviceExternalId) {
+		this.deviceExternalId = deviceExternalId;
+	}
+
+	public String getModuleExternalId() {
+		return moduleExternalId;
+	}
+
+	public void setModuleExternalId(String moduleExternalId) {
+		this.moduleExternalId = moduleExternalId;
 	}
 }

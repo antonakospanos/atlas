@@ -19,9 +19,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @Api(value = "Actions API", tags = "actions", position = 1, description = "Action Management")
@@ -33,26 +36,24 @@ public class ActionsController extends BaseAtlasController {
 	@Autowired
 	ActionService service;
 
-	@RequestMapping(
-			produces = {"application/json"},
-			consumes = {"application/json"},
-			method = RequestMethod.POST)
+	@RequestMapping(value = "", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.POST)
 	@ApiOperation(value = "Creates actions to be executed by the integrated IoT devices", response = ActionResponse.class)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "The action is created!", response = ActionResponse.class),
 			@ApiResponse(code = 400, message = "The request is invalid!"),
 			@ApiResponse(code = 500, message = "server error")})
-	public ResponseEntity<ActionResponse> add(@Valid @RequestBody ActionRequest request) {
+	public ResponseEntity<ActionResponse> create(UriComponentsBuilder uriBuilder, @Valid @RequestBody ActionRequest request) {
 		logger.debug(LoggingHelper.logInboundRequest(request));
-		ResponseEntity<ActionResponse> response;
 
+		ResponseEntity<ActionResponse> response;
 		ActionsValidator.validateAction(request);
 		try {
-			ActionResponseData data = service.add(request);
+			ActionResponseData data = service.create(request);
 
+			UriComponents uriComponents =	uriBuilder.path("/{id}").buildAndExpand(data.getId());
 			ActionResponse actionResponse = ActionResponse.Builder().build(Result.SUCCESS).data(data);
-			response = ResponseEntity.status(HttpStatus.CREATED).body(actionResponse);
+			response = ResponseEntity.created(uriComponents.toUri()).body(actionResponse);
 		} catch (Exception e) {
 			logger.error(e.getClass() + " Cause: " + e.getCause() + " Message: " + e.getMessage() + ". Action request: " + request, e);
 			ActionResponse actionResponse = ActionResponse.Builder().build(Result.GENERIC_ERROR);
@@ -65,12 +66,11 @@ public class ActionsController extends BaseAtlasController {
 	}
 
 	@ApiOperation(value = "Deletes the scheduled action for the integrated IoT device", response = ActionResponse.class)
-	@RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<ActionResponse> delete(@PathVariable String actionId) {
-
+	@RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.DELETE)
+	public ResponseEntity<ActionResponse> delete(@PathVariable UUID actionId) {
 		logger.debug(LoggingHelper.logInboundRequest("/actions/" + actionId));
-		ResponseEntity<ActionResponse> response;
 
+		ResponseEntity<ActionResponse> response;
 		try {
 			service.delete(actionId);
 			ActionResponse actionResponse = ActionResponse.Builder().build(Result.SUCCESS);
@@ -91,8 +91,8 @@ public class ActionsController extends BaseAtlasController {
 	public ResponseEntity<Iterable> list(@RequestParam (required=false) String username,
 	                                     @RequestParam (required=false) String deviceId,
 	                                     @RequestParam (required=false) String moduleId) {
-
 		logger.debug(LoggingHelper.logInboundRequest("/actions?username=" + username + "&deviceId=" + deviceId + "&moduleId=" + moduleId));
+
 		ResponseEntity<Iterable> response = null;
 		try {
 			List<ActionDto> actions = service.list(username, deviceId, moduleId);

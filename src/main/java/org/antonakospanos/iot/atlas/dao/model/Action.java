@@ -10,6 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 /**
  * Changes the module's state & value
@@ -22,9 +23,15 @@ import java.time.ZonedDateTime;
 @Table(name = "ACTION")
 public class Action implements Serializable {
 
+	public Action() {
+		this.externalId = UUID.randomUUID();
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	private UUID externalId;
 
 	@ManyToOne
 	@JoinColumn(name = "ACCOUNT_ID")
@@ -53,6 +60,14 @@ public class Action implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public UUID getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(UUID externalId) {
+		this.externalId = externalId;
 	}
 
 	public Account getAccount() {

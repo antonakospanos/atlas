@@ -16,11 +16,11 @@ import java.time.ZonedDateTime;
 /**
  * ActionDto
  */
-@JsonPropertyOrder({"date", "recurring", "device", "condition"})
+@JsonPropertyOrder({"execution", "recurring", "device", "condition"})
 public class ActionDto implements Dto<Action> {
 
 	@NotNull
-	private ZonedDateTime date;
+	private ZonedDateTime execution;
 
 	private RecurringActionDto recurring;
 
@@ -30,12 +30,12 @@ public class ActionDto implements Dto<Action> {
 	private ConditionDto condition;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-	public ZonedDateTime getDate() {
-		return date;
+	public ZonedDateTime getExecution() {
+		return execution;
 	}
 
-	public void setDate(ZonedDateTime date) {
-		this.date = date;
+	public void setExecution(ZonedDateTime execution) {
+		this.execution = execution;
 	}
 
 	public RecurringActionDto getRecurring() {
@@ -69,7 +69,7 @@ public class ActionDto implements Dto<Action> {
 
 		ActionDto actionDto = (ActionDto) o;
 
-		if (!date.equals(actionDto.date)) return false;
+		if (!execution.equals(actionDto.execution)) return false;
 		if (recurring != null ? !recurring.equals(actionDto.recurring) : actionDto.recurring != null) return false;
 		if (!device.equals(actionDto.device)) return false;
 		return condition != null ? condition.equals(actionDto.condition) : actionDto.condition == null;
@@ -77,7 +77,7 @@ public class ActionDto implements Dto<Action> {
 
 	@Override
 	public int hashCode() {
-		int result = date.hashCode();
+		int result = execution.hashCode();
 		result = 31 * result + (recurring != null ? recurring.hashCode() : 0);
 		result = 31 * result + device.hashCode();
 		result = 31 * result + (condition != null ? condition.hashCode() : 0);
@@ -92,7 +92,7 @@ public class ActionDto implements Dto<Action> {
 	@Override
 	public ActionDto fromEntity(Action action) {
 
-		this.date = action.getNextExecution();
+		this.execution = action.getNextExecution();
 		if (action.getPeriodOfMinutes() != null && action.getPeriodOfMinutes() != 0) {
 			this.recurring = new RecurringActionDto(action.getPeriodOfMinutes(), Unit.MINUTES.toString());
 		}
@@ -109,11 +109,23 @@ public class ActionDto implements Dto<Action> {
 
 	@Override
 	public Action toEntity() {
-		return null;
+		Action action = new Action();
+
+		return toEntity(action);
 	}
 
 	@Override
-	public Action toEntity(Action entity) {
-		return null;
+	public Action toEntity(Action action) {
+		action.setNextExecution(this.execution);
+
+		if (recurring != null) {
+			action.setPeriodOfMinutes(recurring.getPeriod());
+		}
+		action.setCondition(this.condition.toEntity());
+		action.setState(this.getDevice().getModule().getState());
+		action.setValue(this.getDevice().getModule().getValue());
+		// DAO: accountId, moduleId
+
+		return action;
 	}
 }

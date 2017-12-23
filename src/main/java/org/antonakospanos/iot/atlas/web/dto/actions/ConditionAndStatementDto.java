@@ -76,7 +76,9 @@ public class ConditionAndStatementDto implements Dto<ConditionAndStatement> {
 		condition.setMinValue(module.getMinValue());
 		condition.setValue(module.getValue());
 		condition.setState(module.getState());
-		// DAO: condition.setModule();
+		// Temp delegation:
+		condition.setDeviceExternalId(this.getDevice().getId());
+		condition.setModuleExternalId(module.getId());
 
 		return conditionAndStatement;
 	}

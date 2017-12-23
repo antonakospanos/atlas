@@ -4,8 +4,11 @@ import org.antonakospanos.iot.atlas.dao.model.Action;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ActionRepository extends JpaRepository<Action, Long> {
+
+	Action findByExternalId(UUID externalId);
 
 	List<Action> findByModule_Id(Long moduleId);
 
@@ -14,6 +17,5 @@ public interface ActionRepository extends JpaRepository<Action, Long> {
 	List<Action> findByAccount_Username(String username);
 
 	List<Action> findByAccount_Username_AndModule_ExternalId(String username, String externalId);
-
 
 }

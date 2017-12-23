@@ -45,11 +45,10 @@ public class AccountController extends BaseAtlasController {
 
 	@ApiOperation(value = "Lists all accounts of the integrated IoT devices", response = AccountDto.class, responseContainer="List")
 	@RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<Iterable> listAll() {
+	public ResponseEntity<Iterable> listAllAccounts() {
+
 		logger.debug(LoggingHelper.logInboundRequest("/accounts"));
-
 		ResponseEntity<Iterable> response = list(null);
-
 		logger.debug(LoggingHelper.logInboundResponse(response));
 
 		return response;
@@ -58,10 +57,9 @@ public class AccountController extends BaseAtlasController {
 	@ApiOperation(value = "Lists the accounts of the integrated IoT devices", response = AccountDto.class, responseContainer="List")
 	@RequestMapping(value = "/{username}", produces = {"application/json"},	method = RequestMethod.GET)
 	public ResponseEntity<Iterable> listAccount(@PathVariable String username) {
+
 		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username));
-
 		ResponseEntity<Iterable> response = list(username);
-
 		logger.debug(LoggingHelper.logInboundResponse(response));
 
 		return response;
