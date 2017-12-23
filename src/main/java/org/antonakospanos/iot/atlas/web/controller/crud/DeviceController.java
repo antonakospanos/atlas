@@ -71,16 +71,12 @@ public class DeviceController extends BaseAtlasController {
 
 	private ResponseEntity<Iterable> list (String deviceId, String username) {
 		ResponseEntity<Iterable> response = null;
-		try {
-			List<DeviceDto> devices = service.list(deviceId, username);
 
-			if (devices != null && !devices.isEmpty()) {
-				response = ResponseEntity.status(HttpStatus.OK).body(devices);
-			} else {
-				response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(devices);
-			}
-		} catch (Exception e) {
-			logger.error(e.getClass() + " Cause: " + e.getCause() + " Message: " + e.getMessage(), e);
+		List<DeviceDto> devices = service.list(deviceId, username);
+		if (devices != null && !devices.isEmpty()) {
+			response = ResponseEntity.status(HttpStatus.OK).body(devices);
+		} else {
+			response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(devices);
 		}
 
 		return response;

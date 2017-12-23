@@ -1,5 +1,6 @@
 package org.antonakospanos.iot.atlas.web.dto.actions;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.web.enums.Unit;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -12,6 +13,7 @@ public class RecurringActionDto implements Serializable {
 	@NotNull
 	private Long period;
 
+	@ApiModelProperty(example = "minutes")
 	private String unit = Unit.MINUTES.toString();
 
 	public RecurringActionDto() {

@@ -67,16 +67,12 @@ public class AccountController extends BaseAtlasController {
 
 	public ResponseEntity<Iterable> list(String username) {
 		ResponseEntity<Iterable> response = null;
-		try {
-			List<AccountDto> accounts = service.list(username);
 
-			if (accounts != null && !accounts.isEmpty()) {
-				response = ResponseEntity.status(HttpStatus.OK).body(accounts);
-			} else {
-				response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(accounts);
-			}
-		} catch (Exception e) {
-			logger.error(e.getClass() + " Cause: " + e.getCause() + " Message: " + e.getMessage(), e);
+		List<AccountDto> accounts = service.list(username);
+		if (accounts != null && !accounts.isEmpty()) {
+			response = ResponseEntity.status(HttpStatus.OK).body(accounts);
+		} else {
+			response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(accounts);
 		}
 
 		return  response;

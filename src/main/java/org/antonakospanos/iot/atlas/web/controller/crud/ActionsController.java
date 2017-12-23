@@ -44,21 +44,15 @@ public class ActionsController extends BaseAtlasController {
 			@ApiResponse(code = 400, message = "The request is invalid!"),
 			@ApiResponse(code = 500, message = "server error")})
 	public ResponseEntity<ActionResponse> create(UriComponentsBuilder uriBuilder, @Valid @RequestBody ActionRequest request) {
+		ResponseEntity<ActionResponse> response;
 		logger.debug(LoggingHelper.logInboundRequest(request));
 
-		ResponseEntity<ActionResponse> response;
 		ActionsValidator.validateAction(request);
-		try {
-			ActionResponseData data = service.create(request);
 
-			UriComponents uriComponents =	uriBuilder.path("/{id}").buildAndExpand(data.getId());
-			ActionResponse actionResponse = ActionResponse.Builder().build(Result.SUCCESS).data(data);
-			response = ResponseEntity.created(uriComponents.toUri()).body(actionResponse);
-		} catch (Exception e) {
-			logger.error(e.getClass() + " Cause: " + e.getCause() + " Message: " + e.getMessage() + ". Action request: " + request, e);
-			ActionResponse actionResponse = ActionResponse.Builder().build(Result.GENERIC_ERROR);
-			response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(actionResponse);
-		}
+		ActionResponseData data = service.create(request);
+		UriComponents uriComponents =	uriBuilder.path("/{id}").buildAndExpand(data.getId());
+		ActionResponse actionResponse = ActionResponse.Builder().build(Result.SUCCESS).data(data);
+		response = ResponseEntity.created(uriComponents.toUri()).body(actionResponse);
 
 		logger.debug(LoggingHelper.logInboundResponse(response));
 
@@ -68,18 +62,12 @@ public class ActionsController extends BaseAtlasController {
 	@ApiOperation(value = "Deletes the scheduled action for the integrated IoT device", response = ActionResponse.class)
 	@RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.DELETE)
 	public ResponseEntity<ActionResponse> delete(@PathVariable UUID actionId) {
+		ResponseEntity<ActionResponse> response;
 		logger.debug(LoggingHelper.logInboundRequest("/actions/" + actionId));
 
-		ResponseEntity<ActionResponse> response;
-		try {
-			service.delete(actionId);
-			ActionResponse actionResponse = ActionResponse.Builder().build(Result.SUCCESS);
-			response = ResponseEntity.status(HttpStatus.CREATED).body(actionResponse);
-		} catch (Exception e) {
-			logger.error(e.getClass() + " Cause: " + e.getCause() + " Message: " + e.getMessage() + ". Action request to be deleted: " + actionId, e);
-			ActionResponse actionResponse = ActionResponse.Builder().build(Result.GENERIC_ERROR);
-			response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(actionResponse);
-		}
+		service.delete(actionId);
+		ActionResponse actionResponse = ActionResponse.Builder().build(Result.SUCCESS);
+		response = ResponseEntity.status(HttpStatus.CREATED).body(actionResponse);
 
 		logger.debug(LoggingHelper.logInboundResponse(response));
 
@@ -91,19 +79,14 @@ public class ActionsController extends BaseAtlasController {
 	public ResponseEntity<Iterable> list(@RequestParam (required=false) String username,
 	                                     @RequestParam (required=false) String deviceId,
 	                                     @RequestParam (required=false) String moduleId) {
+		ResponseEntity<Iterable> response = null;
 		logger.debug(LoggingHelper.logInboundRequest("/actions?username=" + username + "&deviceId=" + deviceId + "&moduleId=" + moduleId));
 
-		ResponseEntity<Iterable> response = null;
-		try {
-			List<ActionDto> actions = service.list(username, deviceId, moduleId);
-
-			if (actions != null && !actions.isEmpty()) {
-				response = ResponseEntity.status(HttpStatus.OK).body(actions);
-			} else {
-				response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(actions);
-			}
-		} catch (Exception e) {
-			logger.error(e.getClass() + " Cause: " + e.getCause() + " Message: " + e.getMessage(), e);
+		List<ActionDto> actions = service.list(username, deviceId, moduleId);
+		if (actions != null && !actions.isEmpty()) {
+			response = ResponseEntity.status(HttpStatus.OK).body(actions);
+		} else {
+			response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(actions);
 		}
 
 		logger.debug(LoggingHelper.logInboundResponse(response));

@@ -39,7 +39,7 @@ public abstract class BaseAtlasController {
 
 		validationError.setResult(Result.BAD_REQUEST);
 		validationError.setDescription(exception.getMessage());
-		logger.error(validationError.getResult() + ": " + validationError.getDescription(), exception);
+		logger.error(exception.getClass() + " Cause: " + exception.getCause() + " Message: " + exception.getMessage());
 
 		return new ResponseEntity<>(validationError, HttpStatus.BAD_REQUEST);
 	}

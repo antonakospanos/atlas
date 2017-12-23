@@ -1,6 +1,6 @@
 package org.antonakospanos.iot.atlas.web.dto.actions;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.antonakospanos.iot.atlas.dao.model.Action;
 import org.antonakospanos.iot.atlas.dao.model.Module;
@@ -9,9 +9,11 @@ import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.antonakospanos.iot.atlas.web.enums.Unit;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 /**
  * ActionDto
@@ -19,7 +21,11 @@ import java.time.ZonedDateTime;
 @JsonPropertyOrder({"execution", "recurring", "device", "condition"})
 public class ActionDto implements Dto<Action> {
 
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	private UUID id;
+
 	@NotNull
+	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS ZZZ")
 	private ZonedDateTime execution;
 
 	private RecurringActionDto recurring;
@@ -29,7 +35,10 @@ public class ActionDto implements Dto<Action> {
 
 	private ConditionDto condition;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+	public UUID getId() {
+		return id;
+	}
+
 	public ZonedDateTime getExecution() {
 		return execution;
 	}
@@ -69,6 +78,7 @@ public class ActionDto implements Dto<Action> {
 
 		ActionDto actionDto = (ActionDto) o;
 
+		if (id != null ? !id.equals(actionDto.id) : actionDto.id != null) return false;
 		if (!execution.equals(actionDto.execution)) return false;
 		if (recurring != null ? !recurring.equals(actionDto.recurring) : actionDto.recurring != null) return false;
 		if (!device.equals(actionDto.device)) return false;
@@ -77,7 +87,8 @@ public class ActionDto implements Dto<Action> {
 
 	@Override
 	public int hashCode() {
-		int result = execution.hashCode();
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + execution.hashCode();
 		result = 31 * result + (recurring != null ? recurring.hashCode() : 0);
 		result = 31 * result + device.hashCode();
 		result = 31 * result + (condition != null ? condition.hashCode() : 0);
@@ -92,6 +103,7 @@ public class ActionDto implements Dto<Action> {
 	@Override
 	public ActionDto fromEntity(Action action) {
 
+		this.id = action.getExternalId();
 		this.execution = action.getNextExecution();
 		if (action.getPeriodOfMinutes() != null && action.getPeriodOfMinutes() != 0) {
 			this.recurring = new RecurringActionDto(action.getPeriodOfMinutes(), Unit.MINUTES.toString());
