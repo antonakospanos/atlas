@@ -61,29 +61,32 @@ public class ActionService {
 			action.setAccount(account);
 			action.setModule(module);
 
-			Condition condition = actionDto.getCondition().toEntity();
-			action.setCondition(condition);
+			if (actionDto.getCondition() != null) {
 
-			condition.getConditionOrStatements()
-					.stream()
-					.forEach(conditionOrStatement -> {
+				Condition condition = actionDto.getCondition().toEntity();
+				action.setCondition(condition);
 
-						conditionOrStatement.getConditionAndStatements()
-								.stream()
-								.forEach(conditionAndStatement -> {
-									ConditionStatement statement = conditionAndStatement.getConditionStatement();
+				condition.getConditionOrStatements()
+						.stream()
+						.forEach(conditionOrStatement -> {
 
-									String conditionalDeviceId = statement.getDeviceExternalId();
-									String conditionalModuleId = statement.getModuleExternalId();
-									Module conditionalModule = moduleRepository.findByExternalId_AndDevice_ExternalId(conditionalModuleId, conditionalDeviceId);
+							conditionOrStatement.getConditionAndStatements()
+									.stream()
+									.forEach(conditionAndStatement -> {
+										ConditionStatement statement = conditionAndStatement.getConditionStatement();
 
-									if (conditionalModule != null) {
-										statement.setModule(conditionalModule);
-									} else {
-										throw new IllegalArgumentException("Module '" + conditionalModuleId + "' of device '" + conditionalDeviceId + "' does not exist!");
-									}
-								});
-					});
+										String conditionalDeviceId = statement.getDeviceExternalId();
+										String conditionalModuleId = statement.getModuleExternalId();
+										Module conditionalModule = moduleRepository.findByExternalId_AndDevice_ExternalId(conditionalModuleId, conditionalDeviceId);
+
+										if (conditionalModule != null) {
+											statement.setModule(conditionalModule);
+										} else {
+											throw new IllegalArgumentException("Module '" + conditionalModuleId + "' of device '" + conditionalDeviceId + "' does not exist!");
+										}
+									});
+						});
+			}
 
 			actionRepository.save(action);
 

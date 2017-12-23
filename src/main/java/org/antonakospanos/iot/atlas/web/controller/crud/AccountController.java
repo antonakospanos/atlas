@@ -49,7 +49,7 @@ public class AccountController extends BaseAtlasController {
 		AccountsValidator.validateAccount(request);
 
 		service.create(request);
-		UriComponents uriComponents =	uriBuilder.path("/{username}").buildAndExpand(request.getAccountDto().getUsername());
+		UriComponents uriComponents =	uriBuilder.path("/{username}").buildAndExpand(request.getAccount().getUsername());
 		ResponseBase createResponse = ResponseBase.Builder().build(Result.SUCCESS);
 		response = ResponseEntity.created(uriComponents.toUri()).body(createResponse);
 
@@ -58,15 +58,17 @@ public class AccountController extends BaseAtlasController {
 		return response;
 	}
 
-	@ApiOperation(value = "Deletes the user's account owning an IoT device", response = CreateResponse.class)
-	@RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.DELETE)
+	@ApiOperation(value = "Deletes the user's account owning an IoT device", response = ResponseBase.class)
+	@RequestMapping(value = "/{username}", produces = {"application/json"},	method = RequestMethod.DELETE)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<ResponseBase> delete(@PathVariable String username) {
 		ResponseEntity<ResponseBase> response;
 		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username));
 
 		service.delete(username);
-		ResponseBase responseBase = CreateResponse.Builder().build(Result.SUCCESS);
-		response = ResponseEntity.status(HttpStatus.CREATED).body(responseBase);
+		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
+		response = ResponseEntity.status(HttpStatus.OK).body(responseBase);
 
 		logger.debug(LoggingHelper.logInboundResponse(response));
 

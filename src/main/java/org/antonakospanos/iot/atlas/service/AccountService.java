@@ -34,7 +34,7 @@ public class AccountService {
 	@Transactional
 	public void create(AccountRequest request) {
 
-		AccountDto accountDto = request.getAccountDto();
+		AccountDto accountDto = request.getAccount();
 		Account account = accountRepository.findByUsername(accountDto.getUsername());
 
 		if (account != null) {

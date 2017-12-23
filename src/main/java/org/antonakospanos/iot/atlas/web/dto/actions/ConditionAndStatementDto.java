@@ -71,7 +71,7 @@ public class ConditionAndStatementDto implements Dto<ConditionAndStatement> {
 
 		ModuleConditionDto module = this.getDevice().getModule();
 
-		ConditionStatement condition = conditionAndStatement.getConditionStatement();
+		ConditionStatement condition = new ConditionStatement();
 		condition.setMaxValue(module.getMaxValue());
 		condition.setMinValue(module.getMinValue());
 		condition.setValue(module.getValue());
@@ -79,6 +79,8 @@ public class ConditionAndStatementDto implements Dto<ConditionAndStatement> {
 		// Temp delegation:
 		condition.setDeviceExternalId(this.getDevice().getId());
 		condition.setModuleExternalId(module.getId());
+
+		conditionAndStatement.setConditionStatement(condition);
 
 		return conditionAndStatement;
 	}

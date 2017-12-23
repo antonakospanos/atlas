@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.antonakospanos.iot.atlas.dao.model.Action;
 import org.antonakospanos.iot.atlas.dao.model.Module;
+import org.antonakospanos.iot.atlas.enums.ModuleState;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
 import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.antonakospanos.iot.atlas.web.enums.Unit;
@@ -114,7 +115,10 @@ public class ActionDto implements Dto<Action> {
 		ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), action.getState(), action.getValue());
 		DeviceActionDto deviceAction = new DeviceActionDto(deviceId, moduleAction);
 		this.device = deviceAction;
-		this.condition = new ConditionDto().fromEntity(action.getCondition());
+
+		if (action.getCondition() != null) {
+			this.condition = new ConditionDto().fromEntity(action.getCondition());
+		}
 
 		return this;
 	}
@@ -133,9 +137,17 @@ public class ActionDto implements Dto<Action> {
 		if (recurring != null) {
 			action.setPeriodOfMinutes(recurring.getPeriod());
 		}
-		action.setCondition(this.condition.toEntity());
-		action.setState(this.getDevice().getModule().getState());
-		action.setValue(this.getDevice().getModule().getValue());
+		if (condition != null) {
+			action.setCondition(this.condition.toEntity());
+		}
+		ModuleState state = this.getDevice().getModule().getState();
+		if (state != null) {
+			action.setState(state);
+		}
+		String value = this.getDevice().getModule().getValue();
+		if (value != null) {
+			action.setValue(value);
+		}
 		// DAO: accountId, moduleId
 
 		return action;

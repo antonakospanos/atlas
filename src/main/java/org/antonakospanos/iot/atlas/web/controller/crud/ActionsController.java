@@ -60,15 +60,17 @@ public class ActionsController extends BaseAtlasController {
 		return response;
 	}
 
-	@ApiOperation(value = "Deletes the scheduled action for the integrated IoT device", response = CreateResponse.class)
-	@RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.DELETE)
+	@ApiOperation(value = "Deletes the scheduled action for the integrated IoT device", response = ResponseBase.class)
+	@RequestMapping(value = "/{actionId}", produces = {"application/json"},	method = RequestMethod.DELETE)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<ResponseBase> delete(@PathVariable UUID actionId) {
 		ResponseEntity<ResponseBase> response;
 		logger.debug(LoggingHelper.logInboundRequest("/actions/" + actionId));
 
 		service.delete(actionId);
 		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
-		response = ResponseEntity.status(HttpStatus.CREATED).body(responseBase);
+		response = ResponseEntity.status(HttpStatus.OK).body(responseBase);
 
 		logger.debug(LoggingHelper.logInboundResponse(response));
 
