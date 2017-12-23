@@ -3,7 +3,7 @@ package org.antonakospanos.iot.atlas.web.controller;
 import io.swagger.annotations.*;
 import org.antonakospanos.iot.atlas.service.EventsService;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
-import org.antonakospanos.iot.atlas.web.dto.ResponseBase;
+import org.antonakospanos.iot.atlas.web.dto.response.ResponseBase;
 import org.antonakospanos.iot.atlas.web.dto.events.HeartbeatFailureResponse;
 import org.antonakospanos.iot.atlas.web.dto.events.HeartbeatRequest;
 import org.antonakospanos.iot.atlas.web.dto.events.HeartbeatResponseData;

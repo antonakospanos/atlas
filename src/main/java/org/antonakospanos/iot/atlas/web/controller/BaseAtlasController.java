@@ -1,6 +1,6 @@
 package org.antonakospanos.iot.atlas.web.controller;
 
-import org.antonakospanos.iot.atlas.web.dto.ResponseBase;
+import org.antonakospanos.iot.atlas.web.dto.response.ResponseBase;
 import org.antonakospanos.iot.atlas.web.enums.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

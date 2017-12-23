@@ -1,16 +1,16 @@
-package org.antonakospanos.iot.atlas.web.dto.actions;
+package org.antonakospanos.iot.atlas.web.dto.response;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class ActionResponseData {
+public class CreateResponseData {
 
 	private String id;
 
-	public ActionResponseData() {
+	public CreateResponseData() {
 	}
 
-	public ActionResponseData(String id) {
+	public CreateResponseData(String id) {
 		this.id = id;
 	}
 

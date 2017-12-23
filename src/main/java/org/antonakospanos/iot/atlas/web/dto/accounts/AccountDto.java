@@ -6,6 +6,8 @@ import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * AccountDto
@@ -34,16 +36,19 @@ public class AccountDto implements Dto<Account> {
 	@JsonProperty("cellphone")
 	private String cellphone;
 
+	private List<String> devices;
+
 
 	public AccountDto() {
 	}
 
-	public AccountDto(String username, String password, String name, String email, String cellphone) {
+	public AccountDto(String username, String password, String name, String email, String cellphone, List<String> devices) {
 		this.username = username;
 		this.password = password;
 		this.name = name;
 		this.email = email;
 		this.cellphone = cellphone;
+		this.devices = devices;
 	}
 
 	// Factory methods
@@ -69,6 +74,11 @@ public class AccountDto implements Dto<Account> {
 
 	public AccountDto cellphone(String cellphone) {
 		this.cellphone = cellphone;
+		return this;
+	}
+
+	public AccountDto devices(List<String> devices) {
+		this.devices= devices;
 		return this;
 	}
 
@@ -112,13 +122,25 @@ public class AccountDto implements Dto<Account> {
 		this.cellphone = cellphone;
 	}
 
+	public List<String> getDevices() {
+		return devices;
+	}
+
+	public void setDevices(List<String> devices) {
+		this.devices = devices;
+	}
+
 	@Override
 	public AccountDto fromEntity(Account account) {
 		this.username = account.getUsername();
 		this.password = account.getPassword();
 		this.name = account.getName();
 		this.email = account.getEmail();
-		this.cellphone= account.getCellphone();
+		this.cellphone = account.getCellphone();
+		this.devices = account.getDevices()
+				.stream()
+				.map(device -> device.getExternalId())
+				.collect(Collectors.toList());
 
 		return this;
 	}
@@ -137,6 +159,7 @@ public class AccountDto implements Dto<Account> {
 		account.setName(this.getName());
 		account.setEmail(this.getEmail());
 		account.setCellphone(this.getCellphone());
+		// DAO: Add devices relationship
 
 		return account;
 	}

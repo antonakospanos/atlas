@@ -9,7 +9,7 @@ import org.antonakospanos.iot.atlas.dao.repository.ModuleRepository;
 import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.antonakospanos.iot.atlas.web.dto.actions.ActionDto;
 import org.antonakospanos.iot.atlas.web.dto.actions.ActionRequest;
-import org.antonakospanos.iot.atlas.web.dto.actions.ActionResponseData;
+import org.antonakospanos.iot.atlas.web.dto.response.CreateResponseData;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public class ActionService {
 	DeviceRepository deviceRepository;
 
 	@Transactional
-	public ActionResponseData create(ActionRequest request) {
+	public CreateResponseData create(ActionRequest request) {
 
 		ActionDto actionDto = request.getAction();
 		String actionDeviceId = actionDto.getDevice().getId();
@@ -87,7 +87,7 @@ public class ActionService {
 
 			actionRepository.save(action);
 
-			return new ActionResponseData(action.getExternalId().toString());
+			return new CreateResponseData(action.getExternalId().toString());
 		}
 	}
 

@@ -2,7 +2,7 @@ package org.antonakospanos.iot.atlas.web.dto.events;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.antonakospanos.iot.atlas.web.dto.ResponseBase;
+import org.antonakospanos.iot.atlas.web.dto.response.ResponseBase;
 import org.antonakospanos.iot.atlas.web.enums.Result;
 
 /**

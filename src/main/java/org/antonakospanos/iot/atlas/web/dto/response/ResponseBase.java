@@ -1,4 +1,4 @@
-package org.antonakospanos.iot.atlas.web.dto;
+package org.antonakospanos.iot.atlas.web.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
