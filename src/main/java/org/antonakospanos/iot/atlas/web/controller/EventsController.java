@@ -41,22 +41,22 @@ public class EventsController extends BaseAtlasController {
         method = RequestMethod.POST)
     public ResponseEntity<ResponseBase> heartbeat(@ApiParam(value = "Inventory item") @Valid @RequestBody HeartbeatRequest heartbeat) {
         logger.debug(LoggingHelper.logInboundRequest(heartbeat));
-        ResponseEntity<ResponseBase> heartbeatResponse;
+        ResponseEntity<ResponseBase> response;
 
         EventsValidator.validateHeartBeat(heartbeat);
         try {
             HeartbeatResponseData data = service.addEvent(heartbeat);
 
-            HeartbeatSuccessResponse response = HeartbeatSuccessResponse.Builder().build(Result.SUCCESS).data(data);
-            heartbeatResponse = ResponseEntity.status(HttpStatus.CREATED).body(response);
+            HeartbeatSuccessResponse heartbeatSuccessResponse = HeartbeatSuccessResponse.Builder().build(Result.SUCCESS).data(data);
+            response = ResponseEntity.status(HttpStatus.CREATED).body(heartbeatSuccessResponse);
         } catch (Exception e) {
             logger.error(e.getClass() + " Cause: " + e.getCause() + " Message: " + e.getMessage() + ". Heartbeat request: " + heartbeat, e);
-            HeartbeatFailureResponse response = HeartbeatFailureResponse.Builder().build(Result.GENERIC_ERROR);
-            heartbeatResponse = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            HeartbeatFailureResponse heartbeatFailureResponse = HeartbeatFailureResponse.Builder().build(Result.GENERIC_ERROR);
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(heartbeatFailureResponse);
         }
 
-        logger.debug(LoggingHelper.logInboundResponse(heartbeatResponse));
+        logger.debug(LoggingHelper.logInboundResponse(response));
 
-        return heartbeatResponse;
+        return response;
     }
 }

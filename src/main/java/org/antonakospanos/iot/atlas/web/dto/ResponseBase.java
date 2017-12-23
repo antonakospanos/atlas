@@ -38,6 +38,11 @@ public class ResponseBase {
     return this;
   }
 
+  public ResponseBase data(Object data) {
+    this.data = data;
+    return this;
+  }
+
   /**
    * Get result
    * @return result
@@ -69,11 +74,6 @@ public class ResponseBase {
 
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public ResponseBase data(Object data) {
-    this.data = data;
-    return this;
   }
 
    /**

@@ -75,7 +75,6 @@ public class DeviceController extends BaseAtlasController {
 
 	private ResponseEntity<Iterable> list (String deviceId, String username) {
 		ResponseEntity<Iterable> response = null;
-
 		try {
 			List<DeviceDto> devices = service.list(deviceId, username);
 
