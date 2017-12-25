@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Cacheable
@@ -28,6 +29,8 @@ public class Account implements Serializable {
 	 * Hashed password
 	 */
 	private String password;
+
+	private UUID externalId;
 
 	private String name;
 
@@ -69,6 +72,14 @@ public class Account implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public UUID getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(UUID externalId) {
+		this.externalId = externalId;
 	}
 
 	public String getName() {

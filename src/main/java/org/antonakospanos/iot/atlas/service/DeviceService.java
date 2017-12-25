@@ -22,6 +22,9 @@ public class DeviceService {
 	private final static Logger logger = LoggerFactory.getLogger(DeviceService.class);
 
 	@Autowired
+	AccountService accountService;
+
+	@Autowired
 	AccountRepository accountRepository;
 
 	@Autowired
@@ -30,6 +33,10 @@ public class DeviceService {
 	@Transactional
 	public List<DeviceDto> list(String deviceId, String username) {
 		List<DeviceDto> deviceDtos = new ArrayList<>();
+
+		// Validate listed resources
+		validateDevice(deviceId);
+		accountService.validateActionByUsername(username);
 
 		if (StringUtils.isNotBlank(deviceId) && StringUtils.isNotBlank(username)) {
 			// Fetch user's device with the declared id
@@ -62,5 +69,15 @@ public class DeviceService {
 		}
 
 		return deviceDtos;
+	}
+
+	@Transactional
+	public void validateDevice(String deviceId) {
+		if (StringUtils.isNotBlank(deviceId)) {
+			Device device = deviceRepository.findByExternalId(deviceId);
+			if (device == null) {
+				throw new IllegalArgumentException("Device '" + deviceId + "' does not exist!");
+			}
+		}
 	}
 }

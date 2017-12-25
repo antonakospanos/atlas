@@ -27,6 +27,12 @@ public class ActionService {
 	private final static Logger logger = LoggerFactory.getLogger(ActionService.class);
 
 	@Autowired
+	DeviceService deviceService;
+
+	@Autowired
+	AccountService accountService;
+
+	@Autowired
 	ActionRepository actionRepository;
 
 	@Autowired
@@ -109,13 +115,18 @@ public class ActionService {
 	public List<ActionDto> list(String username, String deviceId, String moduleId) {
 			List<ActionDto> actionDtos = new ArrayList<>();
 
+			// Validate listed resources
+			deviceService.validateDevice(deviceId);
+			accountService.validateActionByUsername(username);
+
 			if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(deviceId) && StringUtils.isNotBlank(moduleId)) {
 				// Fetch all user's actions for the declared device and module
 				Device device = deviceRepository.findByExternalId(deviceId);
 
 				actionDtos = device.getModules().stream()
 						.map(module -> module.getExternalId())
-						.map(externalId -> actionRepository.findByAccount_Username_AndModule_ExternalId(username, externalId))
+						.filter(moduleExternalId -> moduleId.equals(moduleExternalId))
+						.map(moduleExternalId -> actionRepository.findByAccount_Username_AndModule_ExternalId(username, moduleExternalId))
 						.flatMap(List::stream)
 						.map(action -> new ActionDto().fromEntity(action))
 						.collect(Collectors.toList());
@@ -126,7 +137,7 @@ public class ActionService {
 
 				actionDtos = modules.stream()
 						.map(module -> module.getExternalId())
-						.map(externalId -> actionRepository.findByAccount_Username_AndModule_ExternalId(username, externalId))
+						.map(moduleExternalId -> actionRepository.findByAccount_Username_AndModule_ExternalId(username, moduleExternalId))
 						.flatMap(List::stream)
 						.map(action -> new ActionDto().fromEntity(action))
 						.collect(Collectors.toList());
@@ -238,5 +249,15 @@ public class ActionService {
 
 		module.setActions(actions);
 		moduleRepository.save(module);
+	}
+
+	@Transactional
+	public void validateAction(UUID actionId) {
+		if (actionId != null) {
+			Action action = actionRepository.findByExternalId(actionId);
+			if (action == null) {
+				throw new IllegalArgumentException("Action '" + action + "' does not exist!");
+			}
+		}
 	}
 }

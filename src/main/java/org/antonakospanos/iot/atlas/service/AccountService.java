@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,5 +87,25 @@ public class AccountService {
 		}
 
 		return accountDtos;
+	}
+
+	@Transactional
+	public void validateActionByUsername(String username) {
+		if (StringUtils.isNotBlank(username)) {
+			Account account = accountRepository.findByUsername(username);
+			if (account == null) {
+				throw new IllegalArgumentException("Account '" + account + "' does not exist!");
+			}
+		}
+	}
+
+	@Transactional
+	public void validateActionById(UUID accountId) {
+		if (accountId != null) {
+			Account account = accountRepository.findByExternalId(accountId);
+			if (account == null) {
+				throw new IllegalArgumentException("Account '" + account + "' does not exist!");
+			}
+		}
 	}
 }
