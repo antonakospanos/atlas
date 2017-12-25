@@ -13,8 +13,8 @@ public class RecurringActionDto implements Serializable {
 	@NotNull
 	private Long period;
 
-	@ApiModelProperty(example = "minutes")
-	private String unit = Unit.MINUTES.toString();
+	@ApiModelProperty(example = "seconds")
+	private String unit = Unit.SECONDS.toString();
 
 	public RecurringActionDto() {
 	}

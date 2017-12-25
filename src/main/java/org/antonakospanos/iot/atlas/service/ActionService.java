@@ -201,9 +201,9 @@ public class ActionService {
 
 		for (Action action : actions) {
 
-			if (action.getPeriodOfMinutes() != null) {
+			if (action.getPeriodInSecods() != null) {
 				// Schedule the action's next execution
-				action.setNextExecution(action.getNextExecution().plusMinutes(action.getPeriodOfMinutes()));
+				action.setNextExecution(action.getNextExecution().plusSeconds(action.getPeriodInSecods()));
 				actionRepository.save(action);
 				logger.debug("Rescheduled action: " + action);
 			} else {
@@ -225,9 +225,9 @@ public class ActionService {
 		for (Iterator<Action> iterator = actions.iterator(); iterator.hasNext(); ) {
 			Action action = iterator.next();
 
-			if (action.getPeriodOfMinutes() != null) {
+			if (action.getPeriodInSecods() != null) {
 				// Schedule the next action
-				action.setNextExecution(action.getNextExecution().plusMinutes(action.getPeriodOfMinutes()));
+				action.setNextExecution(action.getNextExecution().plusSeconds(action.getPeriodInSecods()));
 				logger.debug("Rescheduled action: " + action);
 			} else {
 				// Remove the action from the iterator and the list

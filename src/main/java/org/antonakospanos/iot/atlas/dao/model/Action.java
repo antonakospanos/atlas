@@ -43,7 +43,7 @@ public class Action implements Serializable {
 
 	private ZonedDateTime nextExecution;
 
-	private Long periodOfMinutes;
+	private Long periodInSecods;
 
 	@Enumerated(EnumType.STRING)
 	private ModuleState state;
@@ -94,12 +94,12 @@ public class Action implements Serializable {
 		this.nextExecution = nextExecution;
 	}
 
-	public Long getPeriodOfMinutes() {
-		return periodOfMinutes;
+	public Long getPeriodInSecods() {
+		return periodInSecods;
 	}
 
-	public void setPeriodOfMinutes(Long periodOfMinutes) {
-		this.periodOfMinutes = periodOfMinutes;
+	public void setPeriodInSecods(Long periodInSecods) {
+		this.periodInSecods = periodInSecods;
 	}
 
 	public ModuleState getState() {

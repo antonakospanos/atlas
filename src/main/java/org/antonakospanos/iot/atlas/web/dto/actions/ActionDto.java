@@ -106,8 +106,8 @@ public class ActionDto implements Dto<Action> {
 
 		this.id = action.getExternalId();
 		this.execution = action.getNextExecution();
-		if (action.getPeriodOfMinutes() != null && action.getPeriodOfMinutes() != 0) {
-			this.recurring = new RecurringActionDto(action.getPeriodOfMinutes(), Unit.MINUTES.toString());
+		if (action.getPeriodInSecods() != null && action.getPeriodInSecods() != 0) {
+			this.recurring = new RecurringActionDto(action.getPeriodInSecods(), Unit.SECONDS.toString());
 		}
 
 		Module module = action.getModule();
@@ -135,7 +135,7 @@ public class ActionDto implements Dto<Action> {
 		action.setNextExecution(this.execution);
 
 		if (recurring != null) {
-			action.setPeriodOfMinutes(recurring.getPeriod());
+			action.setPeriodInSecods(recurring.getPeriod());
 		}
 		if (condition != null) {
 			action.setCondition(this.condition.toEntity());

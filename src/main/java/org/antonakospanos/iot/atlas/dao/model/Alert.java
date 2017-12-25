@@ -23,17 +23,22 @@ public class Alert {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	private String externalId;
+
 	@ManyToOne
 	@JoinColumn(name = "ACCOUNT_ID")
 	private Account account;
 
-	@ManyToOne
-	@JoinColumn(name = "MODULE_ID")
-	private Module module;
-
 	@OneToOne(mappedBy = "alert", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Condition condition;
 
+	public String getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(String externalId) {
+		this.externalId = externalId;
+	}
 
 	public Long getId() {
 		return id;
@@ -49,14 +54,6 @@ public class Alert {
 
 	public void setAccount(Account account) {
 		this.account = account;
-	}
-
-	public Module getModule() {
-		return module;
-	}
-
-	public void setModule(Module module) {
-		this.module = module;
 	}
 
 	public Condition getCondition() {
