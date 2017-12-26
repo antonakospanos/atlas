@@ -5,6 +5,7 @@ import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
 import org.antonakospanos.iot.atlas.web.dto.DeviceDto;
+import org.antonakospanos.iot.atlas.web.dto.events.HeartbeatRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,17 @@ public class DeviceService {
 
 	@Autowired
 	DeviceRepository deviceRepository;
+
+	@Autowired
+	EventsService eventsService;
+
+
+	@Transactional
+	public void update(String deviceId, HeartbeatRequest request) {
+		validateDevice(deviceId);
+
+		eventsService.create(request);
+	}
 
 	@Transactional
 	public List<DeviceDto> list(String deviceId, String username) {
