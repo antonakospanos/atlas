@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @Api(value = "Devices API", tags = "devices", position = 3, description = "Device Management")
@@ -31,39 +32,6 @@ public class DeviceController extends BaseAtlasController {
 
 	@Autowired
 	DeviceService service;
-
-	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
-	@RequestMapping(value = "/devices", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<Iterable> listAllDevices() {
-
-		logger.debug(LoggingHelper.logInboundRequest("/devices/"));
-		ResponseEntity<Iterable> devices = list(null, null);
-		logger.debug(LoggingHelper.logInboundResponse(devices));
-
-		return devices;
-	}
-
-	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
-	@RequestMapping(value = "/accounts/{username}/devices", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<Iterable> listAccountDevices(@PathVariable String username) {
-
-		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username + "/devices/"));
-		ResponseEntity<Iterable> devices = list(null, username);
-		logger.debug(LoggingHelper.logInboundResponse(devices));
-
-		return devices;
-	}
-
-	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
-	@RequestMapping(value = "/devices/{deviceId}", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<Iterable> listDevice(@PathVariable String deviceId) {
-
-		logger.debug(LoggingHelper.logInboundRequest("/devices/" + deviceId));
-		ResponseEntity<Iterable> devices = list(deviceId, null);
-		logger.debug(LoggingHelper.logInboundResponse(devices));
-
-		return devices;
-	}
 
 	@RequestMapping(value = "/devices/{deviceId}", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.PUT)
 	@ApiOperation(value = "Adds or updates the information of the IoT device", response = ResponseBase.class)
@@ -90,20 +58,86 @@ public class DeviceController extends BaseAtlasController {
 	}
 
 	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
-	@RequestMapping(value = "/accounts/{username}/devices/{deviceId}", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<Iterable> listAccountDevice(@PathVariable String username, @PathVariable String deviceId) {
+	@RequestMapping(value = "/devices", produces = {"application/json"},	method = RequestMethod.GET)
+	public ResponseEntity<Iterable> listAllDevices() {
 
-		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username + "/devices/" + deviceId));
-		ResponseEntity<Iterable> devices = list(deviceId, username);
-		logger.debug(LoggingHelper.logInboundResponse(devices));
+		logger.debug(LoggingHelper.logInboundRequest("/devices/"));
+		List<DeviceDto> devices = service.listAll();
 
-		return devices;
+		ResponseEntity<Iterable> response = createResponse(devices);
+		logger.debug(LoggingHelper.logInboundResponse(response));
+
+		return response;
 	}
 
-	private ResponseEntity<Iterable> list (String deviceId, String username) {
-		ResponseEntity<Iterable> response = null;
+	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
+	@RequestMapping(value = "/devices/{deviceId}", produces = {"application/json"},	method = RequestMethod.GET)
+	public ResponseEntity<Iterable> listDevice(@PathVariable String deviceId) {
 
-		List<DeviceDto> devices = service.list(deviceId, username);
+		logger.debug(LoggingHelper.logInboundRequest("/devices/" + deviceId));
+		List<DeviceDto> devices = service.list(deviceId);
+
+		ResponseEntity<Iterable> response = createResponse(devices);
+		logger.debug(LoggingHelper.logInboundResponse(response));
+
+		return response;
+	}
+
+	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
+	@RequestMapping(value = "/accounts/{accountId}/devices", produces = {"application/json"},	method = RequestMethod.GET)
+	public ResponseEntity<Iterable> listAccountDevices(@PathVariable UUID accountId) {
+
+		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId + "/devices/"));
+		List<DeviceDto> devices = service.listByAccountId(null, accountId);
+
+		ResponseEntity<Iterable> response = createResponse(devices);
+		logger.debug(LoggingHelper.logInboundResponse(response));
+
+		return response;
+	}
+
+	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
+	@RequestMapping(value = "/accounts/{accountId}/devices/{deviceId}", produces = {"application/json"},	method = RequestMethod.GET)
+	public ResponseEntity<Iterable> listAccountDevice(@PathVariable UUID accountId, @PathVariable String deviceId) {
+
+		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId + "/devices/" + deviceId));
+		List<DeviceDto> devices = service.listByAccountId(deviceId, accountId);
+
+		ResponseEntity<Iterable> response = createResponse(devices);
+		logger.debug(LoggingHelper.logInboundResponse(response));
+
+		return response;
+	}
+
+//	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
+//	@RequestMapping(value = "/accounts/{username}/devices", produces = {"application/json"},	method = RequestMethod.GET)
+//	public ResponseEntity<Iterable> listAccountDevices(@PathVariable String username) {
+//
+//		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username + "/devices/"));
+//		List<DeviceDto> deviceDtos = service.listByUsername(null, username);
+//
+//		ResponseEntity<Iterable> response = createResponse(deviceDtos);
+//		logger.debug(LoggingHelper.logInboundResponse(response));
+//
+//		return response;
+//	}
+//
+// 	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
+//	@RequestMapping(value = "/accounts/{username}/devices/{deviceId}", produces = {"application/json"},	method = RequestMethod.GET)
+//	public ResponseEntity<Iterable> listAccountDevice(@PathVariable String username, @PathVariable String deviceId) {
+//
+//		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username + "/devices/" + deviceId));
+//	  List<DeviceDto> deviceDtos = service.listByUsername(deviceId, username);
+//
+//	  ResponseEntity<Iterable> response = createResponse(deviceDtos);
+//		logger.debug(LoggingHelper.logInboundResponse(response));
+//
+//		return response;
+//	}
+
+	private ResponseEntity<Iterable> createResponse(List<DeviceDto> devices) {
+		ResponseEntity<Iterable> response;
+
 		if (devices != null && !devices.isEmpty()) {
 			response = ResponseEntity.status(HttpStatus.OK).body(devices);
 		} else {

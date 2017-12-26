@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -58,16 +59,16 @@ public class DeviceService {
 	}
 
 	@Transactional
-	public List<DeviceDto> list(String deviceId, String username) {
+	public List<DeviceDto> listByAccountId(String deviceId, UUID accountExternalId) {
 		List<DeviceDto> deviceDtos = new ArrayList<>();
 
 		// Validate listed resources
 		validateDevice(deviceId);
-		accountService.validateAccount(username);
+		accountService.validateAccount(accountExternalId);
 
-		if (StringUtils.isNotBlank(deviceId) && StringUtils.isNotBlank(username)) {
+		if (StringUtils.isNotBlank(deviceId) && accountExternalId != null) {
 			// Fetch user's device with the declared id
-			Account account = accountRepository.findByUsername(username);
+			Account account = accountRepository.findByExternalId(accountExternalId);
 			deviceDtos = account.getDevices().stream()
 					.filter(device -> device.getExternalId().equals(deviceId))
 					.map(device -> new DeviceDto().fromEntity(device))
@@ -80,9 +81,9 @@ public class DeviceService {
 			DeviceDto deviceDto = new DeviceDto().fromEntity(device);
 			deviceDtos.add(deviceDto);
 
-		} else if (StringUtils.isNotBlank(username)) {
+		} else if (accountExternalId != null) {
 			// Fetch all user's devices
-			Account account = accountRepository.findByUsername(username);
+			Account account = accountRepository.findByExternalId(accountExternalId);
 			deviceDtos = account.getDevices().stream()
 					.map(device -> new DeviceDto().fromEntity(device))
 					.collect(Collectors.toList());
@@ -97,6 +98,31 @@ public class DeviceService {
 
 		return deviceDtos;
 	}
+
+	public List<DeviceDto> listByUsername(String deviceId, String username) {
+		accountService.validateAccount(username);
+
+		List<DeviceDto> deviceDtos;
+		if (StringUtils.isNotBlank(username)) {
+			Account account = accountRepository.findByUsername(username);
+			deviceDtos = listByAccountId(deviceId, account.getExternalId());
+		} else {
+			deviceDtos = listByAccountId(deviceId, null);
+		}
+
+		return deviceDtos;
+	}
+
+	@Transactional
+	public List<DeviceDto> list(String deviceId) {
+		return listByAccountId(deviceId, null);
+	}
+
+	@Transactional
+	public List<DeviceDto> listAll() {
+		return listByAccountId(null, null);
+	}
+
 
 	@Transactional
 	public void validateDevice(String deviceId) {

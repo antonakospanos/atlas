@@ -61,67 +61,6 @@ public class AccountController extends BaseAtlasController {
 		return response;
 	}
 
-//	@RequestMapping(value = "/{username}", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.PUT)
-//	@ApiOperation(value = "Replaces the account of the user owning an IoT device", response = ResponseBase.class)
-//	@ResponseStatus(HttpStatus.OK)
-//	@ApiResponses(value = {
-//			@ApiResponse(code = 200, message = "The account is replaced!", response = ResponseBase.class),
-//			@ApiResponse(code = 400, message = "The request is invalid!"),
-//			@ApiResponse(code = 500, message = "server error")})
-//	public ResponseEntity<ResponseBase> replace(@PathVariable String username, @Valid @RequestBody AccountRequest request) {
-//		ResponseEntity<ResponseBase> response;
-//		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId));
-//
-//		AccountsValidator.validateAccount(request);
-//
-//		service.replace(username, request);
-//		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
-//		response = ResponseEntity.ok().body(responseBase);
-//
-//		logger.debug(LoggingHelper.logInboundResponse(response));
-//
-//		return response;
-//	}
-//
-//	@RequestMapping(value = "/{username}", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.PATCH)
-//	@ApiOperation(value = "Updates the account of the user owning an IoT device", response = ResponseBase.class)
-//	@ResponseStatus(HttpStatus.OK)
-//	@ApiResponses(value = {
-//			@ApiResponse(code = 200, message = "The account is updated!", response = ResponseBase.class),
-//			@ApiResponse(code = 400, message = "The request is invalid!"),
-//			@ApiResponse(code = 500, message = "server error")})
-//	public ResponseEntity<ResponseBase> update(@PathVariable String username, @Valid @RequestBody PatchRequest request) {
-//		ResponseEntity<ResponseBase> response;
-//		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId));
-//
-//		AccountsValidator.validateAccount(request);
-//
-//		service.update(username, request.getPatches());
-//		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
-//		response = ResponseEntity.ok().body(responseBase);
-//
-//		logger.debug(LoggingHelper.logInboundResponse(response));
-//
-//		return response;
-//	}
-//
-//	@ApiOperation(value = "Deletes the user's account owning an IoT device", response = ResponseBase.class)
-//	@RequestMapping(value = "/{username}", produces = {"application/json"},	method = RequestMethod.DELETE)
-//	@ResponseBody
-//	@ResponseStatus(HttpStatus.OK)
-//	public ResponseEntity<ResponseBase> delete(@PathVariable String username) {
-//		ResponseEntity<ResponseBase> response;
-//		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username));
-//
-//		service.delete(username);
-//		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
-//		response = ResponseEntity.status(HttpStatus.OK).body(responseBase);
-//
-//		logger.debug(LoggingHelper.logInboundResponse(response));
-//
-//		return response;
-//	}
-
 	@RequestMapping(value = "/{accountId}", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.PUT)
 	@ApiOperation(value = "Replaces the account of the user owning an IoT device", response = ResponseBase.class)
 	@ResponseStatus(HttpStatus.OK)
@@ -195,17 +134,6 @@ public class AccountController extends BaseAtlasController {
 	}
 
 	@ApiOperation(value = "Lists the accounts of the integrated IoT devices", response = AccountDto.class, responseContainer="List")
-	@RequestMapping(value = "/{username}", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<Iterable> listAccount(@PathVariable String username) {
-
-		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username));
-		ResponseEntity<Iterable> response = list(username);
-		logger.debug(LoggingHelper.logInboundResponse(response));
-
-		return response;
-	}
-
-	@ApiOperation(value = "Lists the accounts of the integrated IoT devices", response = AccountDto.class, responseContainer="List")
 	@RequestMapping(value = "/{accountId}", produces = {"application/json"},	method = RequestMethod.GET)
 	public ResponseEntity<Iterable> listAccount(@PathVariable UUID accountId) {
 
@@ -215,6 +143,79 @@ public class AccountController extends BaseAtlasController {
 
 		return response;
 	}
+
+//	@ApiOperation(value = "Lists the accounts of the integrated IoT devices", response = AccountDto.class, responseContainer="List")
+//	@RequestMapping(value = "/{username}", produces = {"application/json"},	method = RequestMethod.GET)
+//	public ResponseEntity<Iterable> listAccount(@PathVariable String username) {
+//
+//		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username));
+//		ResponseEntity<Iterable> response = list(username);
+//		logger.debug(LoggingHelper.logInboundResponse(response));
+//
+//		return response;
+//	}
+
+//	@RequestMapping(value = "/{username}", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.PUT)
+//	@ApiOperation(value = "Replaces the account of the user owning an IoT device", response = ResponseBase.class)
+//	@ResponseStatus(HttpStatus.OK)
+//	@ApiResponses(value = {
+//			@ApiResponse(code = 200, message = "The account is replaced!", response = ResponseBase.class),
+//			@ApiResponse(code = 400, message = "The request is invalid!"),
+//			@ApiResponse(code = 500, message = "server error")})
+//	public ResponseEntity<ResponseBase> replace(@PathVariable String username, @Valid @RequestBody AccountRequest request) {
+//		ResponseEntity<ResponseBase> response;
+//		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId));
+//
+//		AccountsValidator.validateAccount(request);
+//
+//		service.replace(username, request);
+//		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
+//		response = ResponseEntity.ok().body(responseBase);
+//
+//		logger.debug(LoggingHelper.logInboundResponse(response));
+//
+//		return response;
+//	}
+//
+//	@RequestMapping(value = "/{username}", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.PATCH)
+//	@ApiOperation(value = "Updates the account of the user owning an IoT device", response = ResponseBase.class)
+//	@ResponseStatus(HttpStatus.OK)
+//	@ApiResponses(value = {
+//			@ApiResponse(code = 200, message = "The account is updated!", response = ResponseBase.class),
+//			@ApiResponse(code = 400, message = "The request is invalid!"),
+//			@ApiResponse(code = 500, message = "server error")})
+//	public ResponseEntity<ResponseBase> update(@PathVariable String username, @Valid @RequestBody PatchRequest request) {
+//		ResponseEntity<ResponseBase> response;
+//		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId));
+//
+//		AccountsValidator.validateAccount(request);
+//
+//		service.update(username, request.getPatches());
+//		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
+//		response = ResponseEntity.ok().body(responseBase);
+//
+//		logger.debug(LoggingHelper.logInboundResponse(response));
+//
+//		return response;
+//	}
+//
+//	@ApiOperation(value = "Deletes the user's account owning an IoT device", response = ResponseBase.class)
+//	@RequestMapping(value = "/{username}", produces = {"application/json"},	method = RequestMethod.DELETE)
+//	@ResponseBody
+//	@ResponseStatus(HttpStatus.OK)
+//	public ResponseEntity<ResponseBase> delete(@PathVariable String username) {
+//		ResponseEntity<ResponseBase> response;
+//		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username));
+//
+//		service.delete(username);
+//		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
+//		response = ResponseEntity.status(HttpStatus.OK).body(responseBase);
+//
+//		logger.debug(LoggingHelper.logInboundResponse(response));
+//
+//		return response;
+//	}
+
 
 	private ResponseEntity<Iterable> listAll() {
 		List<AccountDto> accounts = service.listAll();
