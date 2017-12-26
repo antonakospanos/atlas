@@ -4,10 +4,9 @@ import org.antonakospanos.iot.atlas.dao.converter.DeviceConverter;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
 import org.antonakospanos.iot.atlas.dao.repository.ModuleRepository;
-import org.antonakospanos.iot.atlas.web.dto.DeviceDto;
+import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.antonakospanos.iot.atlas.web.dto.events.HeartbeatRequest;
 import org.antonakospanos.iot.atlas.web.dto.events.HeartbeatResponseData;
-import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,31 +32,21 @@ public class EventsService {
 	@Autowired
 	DeviceConverter deviceConverter;
 
+	@Autowired
+	DeviceService deviceService;
+
+
 	@Transactional
 	public HeartbeatResponseData create(HeartbeatRequest request) {
+
+		// Add or Update Device information
+		Device device = deviceService.put(request.getDevice());
+
+		// Check for planned actions for devices's modules
+		List<ModuleActionDto> actions = actionService.findActions(device);
+
 		HeartbeatResponseData responseData = new HeartbeatResponseData();
-
-		DeviceDto deviceDto = request.getDevice();
-		Device device = deviceRepository.findByExternalId(deviceDto.getId());
-
-		if (device == null) {
-			// Add new Device in DB
-			device = deviceDto.toEntity(); // deviceConverter.createDevice(deviceDto);
-			deviceRepository.save(device);
-
-			logger.info("New Device added: " + deviceDto);
-
-		} else {
-			// Update Device information in DB
-			deviceConverter.updateDevice(deviceDto, device); // deviceDto.toEntity(device);
-			deviceRepository.save(device);
-
-			logger.debug("Device is updated: " + deviceDto);
-
-			// Check for planned actions for device's modules
-			List<ModuleActionDto> actions = actionService.findActions(device);
-			responseData.setActions(actions);
-		}
+		responseData.setActions(actions);
 
 		return responseData;
 	}

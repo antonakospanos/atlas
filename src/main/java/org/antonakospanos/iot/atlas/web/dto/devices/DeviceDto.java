@@ -1,45 +1,41 @@
-package org.antonakospanos.iot.atlas.web.dto;
+package org.antonakospanos.iot.atlas.web.dto.devices;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.model.Module;
+import org.antonakospanos.iot.atlas.web.dto.Dto;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
  * DeviceDto
  */
 @JsonPropertyOrder({ "id", "version", "modules" })
-public class DeviceDto implements Dto<Device> {
+public class DeviceDto extends DeviceBaseDto implements Dto<Device> {
 
 	@JsonProperty("id")
 	@ApiModelProperty(example = "deviceId")
 	private String id = null;
 
-	@JsonProperty("version")
-	@ApiModelProperty(example = "1.0")
-	private String version = null;
-
-	@JsonProperty("modules")
-	private List<ModuleDto> modules = null;
-
 	public DeviceDto() {
 	}
 
-	public DeviceDto(String id, String version, List<ModuleDto> modules) {
+	public DeviceDto(String id, DeviceBaseDto deviceBaseDto) {
+		super(deviceBaseDto.getVersion(), deviceBaseDto.getModules());
 		this.id = id;
-		this.version = version;
-		this.modules = modules;
+	}
+
+	public DeviceDto(String id, String version, List<ModuleDto> modules) {
+		super(version, modules);
+		this.id = id;
 	}
 
 	// Factory methods
@@ -49,20 +45,20 @@ public class DeviceDto implements Dto<Device> {
 	}
 
 	public DeviceDto version(String version) {
-		this.version = version;
+		setVersion(version);
 		return this;
 	}
 
 	public DeviceDto addModulesItem(ModuleDto modulesItem) {
-		if (this.modules == null) {
-			this.modules = new ArrayList<ModuleDto>();
+		if (getModules() == null) {
+			setModules(new ArrayList<ModuleDto>());
 		}
-		this.modules.add(modulesItem);
+		getModules().add(modulesItem);
 		return this;
 	}
 
 	public DeviceDto modules(List<ModuleDto> modules) {
-		this.modules = modules;
+		setModules(modules);
 		return this;
 	}
 
@@ -81,51 +77,22 @@ public class DeviceDto implements Dto<Device> {
 		this.id = id;
 	}
 
-	/**
-	 * Get version
-	 *
-	 * @return version
-	 **/
-	@ApiModelProperty(example = "1.0", required = true, value = "")
-	@NotNull
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	/**
-	 * Get modules
-	 *
-	 * @return modules
-	 **/
-	@ApiModelProperty(value = "")
-	@Valid
-	public List<ModuleDto> getModules() {
-		return modules;
-	}
-
-	public void setModules(List<ModuleDto> modules) {
-		this.modules = modules;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (!(o instanceof DeviceDto)) return false;
+		if (!super.equals(o)) return false;
 
 		DeviceDto deviceDto = (DeviceDto) o;
 
-		if (id != null ? !id.equals(deviceDto.id) : deviceDto.id != null) return false;
-		if (version != null ? !version.equals(deviceDto.version) : deviceDto.version != null) return false;
-		return modules != null ? modules.equals(deviceDto.modules) : deviceDto.modules == null;
+		return id != null ? id.equals(deviceDto.id) : deviceDto.id == null;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, version, modules);
+		int result = super.hashCode();
+		result = 31 * result + (id != null ? id.hashCode() : 0);
+		return result;
 	}
 
 	@Override
@@ -136,8 +103,8 @@ public class DeviceDto implements Dto<Device> {
 	@Override
 	public DeviceDto fromEntity(Device device) {
 		this.id = device.getExternalId();
-		this.version = device.getVersion();
-		this.modules = device.getModules().stream().map(e -> new ModuleDto().fromEntity(e)).collect(Collectors.toList());
+		setVersion(device.getVersion());
+		setModules(device.getModules().stream().map(e -> new ModuleDto().fromEntity(e)).collect(Collectors.toList()));
 
 		return this;
 	}

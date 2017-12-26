@@ -1,11 +1,11 @@
 package org.antonakospanos.iot.atlas.service;
 
+import org.antonakospanos.iot.atlas.dao.converter.DeviceConverter;
 import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
-import org.antonakospanos.iot.atlas.web.dto.DeviceDto;
-import org.antonakospanos.iot.atlas.web.dto.events.HeartbeatRequest;
+import org.antonakospanos.iot.atlas.web.dto.devices.DeviceDto;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +32,29 @@ public class DeviceService {
 	DeviceRepository deviceRepository;
 
 	@Autowired
-	EventsService eventsService;
-
+	DeviceConverter deviceConverter;
 
 	@Transactional
-	public void update(String deviceId, HeartbeatRequest request) {
-		validateDevice(deviceId);
+	public Device put(DeviceDto deviceDto) {
 
-		eventsService.create(request);
+		Device device = deviceRepository.findByExternalId(deviceDto.getId());
+
+		if (device == null) {
+			// Add new Device in DB
+			device = deviceDto.toEntity(); // deviceConverter.createDevice(deviceDto);
+			deviceRepository.save(device);
+
+			logger.info("New Device added: " + deviceDto);
+
+		} else {
+			// Update Device information in DB
+			deviceConverter.updateDevice(deviceDto, device); // deviceDto.toEntity(devices);
+			deviceRepository.save(device);
+
+			logger.debug("Device is updated: " + deviceDto);
+		}
+
+		return device;
 	}
 
 	@Transactional

@@ -1,9 +1,8 @@
-package org.antonakospanos.iot.atlas.web.dto.events;
+package org.antonakospanos.iot.atlas.web.dto.devices;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
-import org.antonakospanos.iot.atlas.web.dto.devices.DeviceDto;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -14,17 +13,17 @@ import java.util.Objects;
 /**
  * HeartbeatRequest
  */
-@JsonPropertyOrder({ "device", "device" })
-public class HeartbeatRequest {
+@JsonPropertyOrder({ "timestamp", "devices" })
+public class DeviceRequest {
 
   @JsonProperty("timestamp")
   @ApiModelProperty(example = "2017-11-19T16:52:40.000 UTC")
   private String timestamp = null;
 
-  @JsonProperty("device")
-  private DeviceDto device = null;
+  @JsonProperty("devices")
+  private DeviceBaseDto device = null;
 
-  public HeartbeatRequest timestamp(String timestamp) {
+  public DeviceRequest timestamp(String timestamp) {
     this.timestamp = timestamp;
     return this;
   }
@@ -41,23 +40,23 @@ public class HeartbeatRequest {
     this.timestamp = timestamp;
   }
 
-  public HeartbeatRequest device(DeviceDto device) {
+  public DeviceRequest device(DeviceDto device) {
     this.device = device;
     return this;
   }
 
    /**
-   * Get device
-   * @return device
+   * Get devices
+   * @return devices
   **/
   @ApiModelProperty(required = true, value = "")
   @NotNull
   @Valid
-  public DeviceDto getDevice() {
+  public DeviceBaseDto getDevice() {
     return device;
   }
 
-  public void setDevice(DeviceDto device) {
+  public void setDevice(DeviceBaseDto device) {
     this.device = device;
   }
 
@@ -69,7 +68,7 @@ public class HeartbeatRequest {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    HeartbeatRequest heartbeat = (HeartbeatRequest) o;
+    DeviceRequest heartbeat = (DeviceRequest) o;
     return Objects.equals(this.timestamp, heartbeat.timestamp) &&
         Objects.equals(this.device, heartbeat.device);
   }

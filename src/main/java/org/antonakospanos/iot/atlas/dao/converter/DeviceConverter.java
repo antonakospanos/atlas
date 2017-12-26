@@ -2,8 +2,8 @@ package org.antonakospanos.iot.atlas.dao.converter;
 
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.model.Module;
-import org.antonakospanos.iot.atlas.web.dto.DeviceDto;
-import org.antonakospanos.iot.atlas.web.dto.ModuleDto;
+import org.antonakospanos.iot.atlas.web.dto.devices.DeviceDto;
+import org.antonakospanos.iot.atlas.web.dto.devices.ModuleDto;
 import org.springframework.stereotype.Component;
 
 import java.time.ZonedDateTime;

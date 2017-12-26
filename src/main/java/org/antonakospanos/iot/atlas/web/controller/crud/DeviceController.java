@@ -7,8 +7,8 @@ import io.swagger.annotations.ApiResponses;
 import org.antonakospanos.iot.atlas.service.DeviceService;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
 import org.antonakospanos.iot.atlas.web.controller.BaseAtlasController;
-import org.antonakospanos.iot.atlas.web.dto.DeviceDto;
-import org.antonakospanos.iot.atlas.web.dto.events.HeartbeatRequest;
+import org.antonakospanos.iot.atlas.web.dto.devices.DeviceDto;
+import org.antonakospanos.iot.atlas.web.dto.devices.DeviceRequest;
 import org.antonakospanos.iot.atlas.web.dto.response.ResponseBase;
 import org.antonakospanos.iot.atlas.web.enums.Result;
 import org.antonakospanos.iot.atlas.web.validator.DeviceValidator;
@@ -72,12 +72,14 @@ public class DeviceController extends BaseAtlasController {
 			@ApiResponse(code = 200, message = "The device is replaced!", response = ResponseBase.class),
 			@ApiResponse(code = 400, message = "The request is invalid!"),
 			@ApiResponse(code = 500, message = "server error")})
-	public ResponseEntity<ResponseBase> update(@PathVariable String deviceId, @Valid @RequestBody HeartbeatRequest request) {
+	public ResponseEntity<ResponseBase> update(@PathVariable String deviceId, @Valid @RequestBody DeviceRequest request) {
 		logger.debug(LoggingHelper.logInboundRequest(request));
 		ResponseEntity<ResponseBase> response;
 
-		DeviceValidator.validateDeviceUpdate(deviceId, request);
-		service.update(deviceId, request);
+		DeviceDto deviceDto = new DeviceDto(deviceId, request.getDevice());
+		DeviceValidator.validateDeviceRequest(deviceDto);
+
+		service.put(deviceDto);
 
 		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
 		response = ResponseEntity.ok().body(responseBase);

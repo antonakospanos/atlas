@@ -1,10 +1,11 @@
-package org.antonakospanos.iot.atlas.web.dto;
+package org.antonakospanos.iot.atlas.web.dto.devices;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.Module;
 import org.antonakospanos.iot.atlas.enums.ModuleState;
+import org.antonakospanos.iot.atlas.web.dto.Dto;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
