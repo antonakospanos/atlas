@@ -42,9 +42,9 @@ public class AccountsValidator {
 			}
 
 			// Field validation
-			if (StringUtils.isBlank(value)) {
+			if (StringUtils.isBlank(field)) {
 				throw new IllegalArgumentException("Field is required! Account resource: " + AccountDto.fields);
-			} else if (AccountDto.fields.contains(field)) {
+			} else if (!AccountDto.fields.contains(field)) {
 				throw new IllegalArgumentException("Field '" + field + "' is not included in Account resource: " + AccountDto.fields);
 			}
 
