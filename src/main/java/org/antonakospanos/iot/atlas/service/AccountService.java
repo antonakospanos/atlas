@@ -59,8 +59,8 @@ public class AccountService {
 	public void replace(String username, AccountRequest request) {
 		AccountDto accountDto = request.getAccount();
 
-		validateAccountUpdate(username);
-		validateAccountUpdate(username, accountDto.getUsername());
+		validateAccount(username);
+		validateNewUsername(username, accountDto.getUsername());
 
 		// Update Account in DB
 		Account account = accountRepository.findByUsername(username);
@@ -73,16 +73,16 @@ public class AccountService {
 	@Transactional
 	public void update(String username, List<PatchDto> patches) {
 
-		validateAccountUpdate(username);
+		validateAccount(username);
 		Account account = accountRepository.findByUsername(username);
 
 		patches.stream().forEach(patchDto -> {
 			// Validate Account patches
 			if (patchDto.getField().equals("username")) {
-				validateAccountUpdate(username, patchDto.getValue());
+				validateNewUsername(username, patchDto.getValue());
 			}
 			if (patchDto.getField().equals("devices") && StringUtils.isNotBlank(patchDto.getValue())) {
-				validateAccountUpdate(patchDto.getValue());
+				validateNewDevice(patchDto.getValue());
 			}
 			// Update Account in DB
 			accountConverter.updateAccount(patchDto, account);
@@ -144,7 +144,7 @@ public class AccountService {
 	}
 
 	@Transactional
-	public void validateAccountUpdate(String oldUsername, String newUsername) {
+	public void validateNewUsername(String oldUsername, String newUsername) {
 		// Check that resource does not conflict
 		Account account = accountRepository.findByUsername(newUsername);
 		if (!oldUsername.equals(newUsername) && account == null) {
@@ -154,7 +154,7 @@ public class AccountService {
 	}
 
 	@Transactional
-	public void validateAccountUpdate(String deviceExternalId) {
+	public void validateNewDevice(String deviceExternalId) {
 		// Check that device resources exist
 		Device device = deviceRepository.findByExternalId(deviceExternalId);
 		if (device == null) {
