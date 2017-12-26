@@ -298,8 +298,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-rest</artifactId>
+			<artifactId>spring-boot-starter-data-rest</artifactId> <!-- REST API for DB resources -->
 			<version>${spring.boot.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-rest-hal-browser</artifactId> <!-- HATEOAS REST API: http://server:8080/atlas/browser/index.html -->
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -308,7 +312,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
+			<artifactId>h2</artifactId> <!-- H2 in memory Database -->
 			<version>1.4.196</version>
 		</dependency>
 
