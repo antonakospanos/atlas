@@ -6,6 +6,9 @@ endpoints:
 logging:
   config: 'classpath:atlas-logback.xml'
 spring:
+  data:
+    rest:
+      defaultMediaType: application/json
   jpa:
     generate-ddl: true
     show-sql: true
