@@ -66,7 +66,7 @@ public class DeviceController extends BaseAtlasController {
 	}
 
 	@RequestMapping(value = "/devices/{deviceId}", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.PUT)
-	@ApiOperation(value = "Replaces the information of the IoT device", response = ResponseBase.class)
+	@ApiOperation(value = "Adds or updates the information of the IoT device", response = ResponseBase.class)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "The device is replaced!", response = ResponseBase.class),

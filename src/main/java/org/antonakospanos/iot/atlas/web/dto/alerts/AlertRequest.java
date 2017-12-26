@@ -12,6 +12,7 @@ public class AlertRequest {
 	private String timestamp = null;
 
 	@JsonProperty("username")
+	@ApiModelProperty(example = "ckar")
 	private String username = null;
 
 	@JsonProperty("alert")

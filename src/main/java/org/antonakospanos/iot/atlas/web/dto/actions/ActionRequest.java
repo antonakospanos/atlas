@@ -12,7 +12,7 @@ public class ActionRequest {
 	private String timestamp = null;
 
 	@JsonProperty("username")
-	@ApiModelProperty(example = "panto")
+	@ApiModelProperty(example = "ckar")
 	private String username = null;
 
 	@JsonProperty("action")

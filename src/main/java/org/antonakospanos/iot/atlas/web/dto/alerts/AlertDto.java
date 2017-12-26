@@ -2,6 +2,7 @@ package org.antonakospanos.iot.atlas.web.dto.alerts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.Alert;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
 import org.antonakospanos.iot.atlas.web.dto.actions.ConditionDto;
@@ -17,6 +18,7 @@ import java.util.UUID;
 public class AlertDto implements Dto<Alert> {
 
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@ApiModelProperty(example = "ckar")
 	private UUID id;
 
 	private ConditionDto condition;
