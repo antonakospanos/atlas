@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@Api(value = "Alerts API", tags = "alerts", position = 1, description = "Alerts Management")
+@Api(value = "Alerts API", tags = "alerts", position = 1, description = "Alert Management")
 @RequestMapping(value = "/alerts")
 public class AlertsController extends BaseAtlasController {
 
