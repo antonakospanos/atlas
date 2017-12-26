@@ -1,12 +1,9 @@
 package org.antonakospanos.iot.atlas.web.dto.accounts;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
 
-import javax.validation.constraints.NotEmpty;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -16,151 +13,96 @@ import java.util.stream.Collectors;
  * AccountDto
  */
 @JsonPropertyOrder({ "username", "password", "name", "email", "cellphone", "devices" })
-public class AccountDto implements Dto<Account> {
+public class AccountDto extends AccountBaseDto implements Dto<Account> {
 
 	public static List<String> fields = Arrays.asList(AccountDto.class.getDeclaredFields())
 			.stream()
 			.map(field -> field.getName())
 			.collect(Collectors.toList());
 
-	// @JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private UUID id;
-
-	@JsonProperty("username")
-	@ApiModelProperty(example = "ckar")
-	@NotEmpty
-	private String username;
-
-	/**
-	 * Hashed password
-	 */
-	@JsonProperty("password")
-	@ApiModelProperty(example = "password")
-	@NotEmpty
-	private String password;
-
-	@JsonProperty("name")
-	@ApiModelProperty(example = "Kostas Carouzos")
-	private String name;
-
-	@JsonProperty("email")
-	@ApiModelProperty(example = "kostas@carouzos.com")
-	@NotEmpty
-	private String email;
-
-	@JsonProperty("cellphone")
-	@ApiModelProperty(example = "00306941234567")
-	private String cellphone;
-
-	@JsonProperty("devices")
-	@ApiModelProperty(allowableValues = "deviceId")
-	private List<String> devices;
 
 
 	public AccountDto() {
 	}
 
-	public AccountDto(String username, String password, String name, String email, String cellphone, List<String> devices) {
-		this.username = username;
-		this.password = password;
-		this.name = name;
-		this.email = email;
-		this.cellphone = cellphone;
-		this.devices = devices;
+	public AccountDto(UUID id, String username, String password, String name, String email, String cellphone, List<String> devices) {
+		this.id = id;
+		setUsername(username);
+		setPassword(password);
+		setName(name);
+		setEmail(email);
+		setCellphone(cellphone);
+		setDevices(devices);
+	}
+
+	public AccountDto(UUID id, AccountBaseDto accountBaseDto) {
+		this(accountBaseDto);
+		this.id = id;
+	}
+
+	public AccountDto(AccountBaseDto accountBaseDto) {
+		super(accountBaseDto.getUsername(), accountBaseDto.getPassword(), accountBaseDto.getName(),
+				accountBaseDto.getEmail(), accountBaseDto.getCellphone(), accountBaseDto.getDevices());
 	}
 
 	// Factory methods
+	public AccountDto id(UUID id) {
+		this.id = id;
+		return this;
+	}
+
 	public AccountDto username(String username) {
-		this.username = username;
+		setUsername(username);
 		return this;
 	}
 
 	public AccountDto password(String password) {
-		this.password = password;
+		setPassword(password);
 		return this;
 	}
 
 	public AccountDto name(String name) {
-		this.name = name;
+		setName(name);
 		return this;
 	}
 
 	public AccountDto email(String email) {
-		this.email = email;
+		setEmail(email);
 		return this;
 	}
 
 	public AccountDto cellphone(String cellphone) {
-		this.cellphone = cellphone;
+		setCellphone(cellphone);
 		return this;
 	}
 
 	public AccountDto devices(List<String> devices) {
-		this.devices= devices;
+		setDevices(devices);
 		return this;
 	}
 
-
-	public String getUsername() {
-		return username;
+	public UUID getId() {
+		return id;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getCellphone() {
-		return cellphone;
-	}
-
-	public void setCellphone(String cellphone) {
-		this.cellphone = cellphone;
-	}
-
-	public List<String> getDevices() {
-		return devices;
-	}
-
-	public void setDevices(List<String> devices) {
-		this.devices = devices;
+	public void setId(UUID id) {
+		this.id = id;
 	}
 
 	@Override
 	public AccountDto fromEntity(Account account) {
 		this.id = account.getExternalId();
-		this.username = account.getUsername();
-		this.password = account.getPassword();
-		this.name = account.getName();
-		this.email = account.getEmail();
-		this.cellphone = account.getCellphone();
-		this.devices = account.getDevices()
+
+		setUsername(account.getUsername());
+		setPassword(account.getPassword());
+		setEmail(account.getEmail());
+		setName(account.getName());
+		setCellphone(account.getCellphone());
+		setDevices(account.getDevices()
 				.stream()
 				.map(device -> device.getExternalId())
-				.collect(Collectors.toList());
+				.collect(Collectors.toList()));
 
 		return this;
 	}

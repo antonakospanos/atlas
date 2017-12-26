@@ -11,7 +11,7 @@ public class AccountRequest {
 	@ApiModelProperty(example = "2017-11-19T16:52:40.000 UTC")
 	private String timestamp = null;
 
-	private AccountDto account;
+	private AccountBaseDto account;
 
 	public String getTimestamp() {
 		return timestamp;
@@ -21,11 +21,11 @@ public class AccountRequest {
 		this.timestamp = timestamp;
 	}
 
-	public AccountDto getAccount() {
+	public AccountBaseDto getAccount() {
 		return account;
 	}
 
-	public void setAccount(AccountDto account) {
+	public void setAccount(AccountBaseDto account) {
 		this.account = account;
 	}
 

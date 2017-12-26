@@ -39,7 +39,7 @@ public class AccountService {
 	@Transactional
 	public CreateResponseData create(AccountRequest request) {
 
-		AccountDto accountDto = request.getAccount();
+		AccountDto accountDto = new AccountDto(request.getAccount());
 		Account account = accountRepository.findByUsername(accountDto.getUsername());
 
 		if (account != null) {
@@ -57,8 +57,8 @@ public class AccountService {
 
 	@Transactional
 	public void replace(String username, AccountRequest request) {
-		AccountDto accountDto = request.getAccount();
 
+		AccountDto accountDto = new AccountDto(request.getAccount());
 		validateAccount(username);
 		validateNewUsername(username, accountDto.getUsername());
 
