@@ -17,6 +17,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private static final String[] ATLAS_WHITELIST = new String[]{"/", "/version", "/health", "/ehcache/**", "/metrics/**"};
 
+	private static final String[] ALERTS_API = new String[]{"/alerts"};
 	private static final String[] ACTIONS_API = new String[]{"/actions"};
 	private static final String[] ADMIN_API = new String[]{"/admin"};
 

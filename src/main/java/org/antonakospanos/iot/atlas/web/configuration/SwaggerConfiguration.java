@@ -38,7 +38,7 @@ public class SwaggerConfiguration {
 				.groupName("Atlas API")
 				.apiInfo(atlasInfo())
 				.select()
-				.paths(regex(".*/(accounts|devices|actions|events).*"))
+				.paths(regex(".*/(accounts|devices|actions|alerts|events).*"))
 				.build();
 	}
 
