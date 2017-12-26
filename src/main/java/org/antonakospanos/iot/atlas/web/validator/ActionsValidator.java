@@ -6,15 +6,11 @@ public class ActionsValidator {
 
 	public static void validateAction(ActionRequest create) {
 
-//		List<String> moduleList = create.getDevice().getModules()
-//				.stream()
-//				.map(module -> module.getId())
-//				.collect(Collectors.toList());
-//
-//		Set<String> moduleSet = new HashSet<String>(moduleList);
-//
-//		if (moduleList.size() > moduleSet.size()) {
-//			throw new IllegalArgumentException("Device's Module IDs shall differ: " + moduleList);
-//		}
+		if (create.getAlert() &&
+							(create.getAction().getCondition() == null
+						|| create.getAction().getCondition().getOrLegs() == null
+						|| create.getAction().getCondition().getOrLegs().isEmpty())) {
+			throw new IllegalArgumentException("Alerts are explicitly supported in case of conditional actions");
+		}
 	}
 }

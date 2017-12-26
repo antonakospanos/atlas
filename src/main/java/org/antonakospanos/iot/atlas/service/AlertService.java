@@ -1,6 +1,7 @@
 package org.antonakospanos.iot.atlas.service;
 
 import org.antonakospanos.iot.atlas.dao.model.Account;
+import org.antonakospanos.iot.atlas.dao.model.Action;
 import org.antonakospanos.iot.atlas.dao.model.Alert;
 import org.antonakospanos.iot.atlas.dao.model.Condition;
 import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
@@ -62,6 +63,16 @@ public class AlertService {
 
 			return new CreateResponseData(alert.getExternalId().toString());
 		}
+	}
+
+	@Transactional
+	public void create(Action action, Account account) {
+		Condition condition = action.getCondition();
+
+		Alert alert = new Alert();
+		alert.setAccount(account);
+		alert.setCondition(condition);
+		alertRepository.save(alert);
 	}
 
 	@Transactional

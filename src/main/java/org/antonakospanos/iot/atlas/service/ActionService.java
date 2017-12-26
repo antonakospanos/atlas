@@ -2,10 +2,7 @@ package org.antonakospanos.iot.atlas.service;
 
 import org.antonakospanos.iot.atlas.dao.model.*;
 import org.antonakospanos.iot.atlas.dao.model.Module;
-import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
-import org.antonakospanos.iot.atlas.dao.repository.ActionRepository;
-import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
-import org.antonakospanos.iot.atlas.dao.repository.ModuleRepository;
+import org.antonakospanos.iot.atlas.dao.repository.*;
 import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.antonakospanos.iot.atlas.web.dto.actions.ActionDto;
 import org.antonakospanos.iot.atlas.web.dto.actions.ActionRequest;
@@ -27,12 +24,6 @@ public class ActionService {
 	private final static Logger logger = LoggerFactory.getLogger(ActionService.class);
 
 	@Autowired
-	DeviceService deviceService;
-
-	@Autowired
-	AccountService accountService;
-
-	@Autowired
 	ActionRepository actionRepository;
 
 	@Autowired
@@ -45,7 +36,20 @@ public class ActionService {
 	DeviceRepository deviceRepository;
 
 	@Autowired
+	AlertRepository alertRepository;
+
+
+	@Autowired
+	DeviceService deviceService;
+
+	@Autowired
+	AccountService accountService;
+
+	@Autowired
 	ConditionService conditionService;
+
+	@Autowired
+	AlertService alertService;
 
 
 	@Transactional
@@ -80,17 +84,28 @@ public class ActionService {
 
 			actionRepository.save(action);
 
+			// Add new Alert in DB
+			if (request.getAlert()) {
+				alertService.create(action, account);
+			}
+
 			return new CreateResponseData(action.getExternalId().toString());
 		}
 	}
 
 	@Transactional
-	public void delete(UUID actionId) {
+	public void delete(UUID actionId, boolean deleteAlert) {
 		Action action = actionRepository.findByExternalId(actionId);
 
 		if (action == null) {
 			throw new IllegalArgumentException("Action '" + actionId + "' does not exist!");
 		} else {
+			// Delete action and related alert
+			if (deleteAlert) {
+				Alert alert = action.getCondition().getAlert();
+				alertRepository.delete(alert);
+			}
+
 			actionRepository.delete(action);
 		}
 	}

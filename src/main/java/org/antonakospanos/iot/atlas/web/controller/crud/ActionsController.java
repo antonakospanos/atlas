@@ -7,11 +7,11 @@ import io.swagger.annotations.ApiResponses;
 import org.antonakospanos.iot.atlas.service.ActionService;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
 import org.antonakospanos.iot.atlas.web.controller.BaseAtlasController;
+import org.antonakospanos.iot.atlas.web.dto.actions.ActionDto;
+import org.antonakospanos.iot.atlas.web.dto.actions.ActionRequest;
 import org.antonakospanos.iot.atlas.web.dto.response.CreateResponse;
 import org.antonakospanos.iot.atlas.web.dto.response.CreateResponseData;
 import org.antonakospanos.iot.atlas.web.dto.response.ResponseBase;
-import org.antonakospanos.iot.atlas.web.dto.actions.ActionDto;
-import org.antonakospanos.iot.atlas.web.dto.actions.ActionRequest;
 import org.antonakospanos.iot.atlas.web.enums.Result;
 import org.antonakospanos.iot.atlas.web.validator.ActionsValidator;
 import org.slf4j.Logger;
@@ -64,11 +64,11 @@ public class ActionsController extends BaseAtlasController {
 	@RequestMapping(value = "/{actionId}", produces = {"application/json"},	method = RequestMethod.DELETE)
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<ResponseBase> delete(@PathVariable UUID actionId) {
+	public ResponseEntity<ResponseBase> delete(@PathVariable UUID actionId, @RequestParam (required=false, defaultValue = "true") boolean deleteAlert) {
 		ResponseEntity<ResponseBase> response;
 		logger.debug(LoggingHelper.logInboundRequest("/actions/" + actionId));
 
-		service.delete(actionId);
+		service.delete(actionId, deleteAlert);
 		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
 		response = ResponseEntity.status(HttpStatus.OK).body(responseBase);
 
