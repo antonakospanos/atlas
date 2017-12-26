@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
 /**
  * AccountDto
  */
-@JsonPropertyOrder({ "username", "password", "name", "email", "cellphone", "devices" })
+@JsonPropertyOrder({ "id", "username", "password", "name", "email", "cellphone", "devices" })
 public class AccountDto extends AccountBaseDto implements Dto<Account> {
 
-	public static List<String> fields = Arrays.asList(AccountDto.class.getDeclaredFields())
+	public static List<String> fields = Arrays.asList(AccountBaseDto.class.getDeclaredFields())
 			.stream()
 			.map(field -> field.getName())
 			.collect(Collectors.toList());

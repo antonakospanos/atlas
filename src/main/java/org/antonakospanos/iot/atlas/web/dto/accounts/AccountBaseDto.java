@@ -5,20 +5,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotEmpty;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * AccountBaseDto
  */
 @JsonPropertyOrder({ "username", "password", "name", "email", "cellphone", "devices" })
 public class AccountBaseDto {
-
-	public static List<String> fields = Arrays.asList(AccountBaseDto.class.getDeclaredFields())
-			.stream()
-			.map(field -> field.getName())
-			.collect(Collectors.toList());
 
 	@JsonProperty("username")
 	@ApiModelProperty(example = "ckar")
