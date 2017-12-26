@@ -16,12 +16,12 @@ public class AlertRequest {
 	private String username = null;
 
 	@JsonProperty("alert")
-	private AlertDto alert = null;
+	private AlertBaseDto alert = null;
 
 	public AlertRequest() {
 	}
 
-	public AlertRequest(String timestamp, String username, AlertDto alert) {
+	public AlertRequest(String timestamp, String username, AlertBaseDto alert) {
 		this.timestamp = timestamp;
 		this.username = username;
 		this.alert = alert;
@@ -43,11 +43,11 @@ public class AlertRequest {
 		this.username = username;
 	}
 
-	public AlertDto getAlert() {
+	public AlertBaseDto getAlert() {
 		return alert;
 	}
 
-	public void setAlert(AlertDto alert) {
+	public void setAlert(AlertBaseDto alert) {
 		this.alert = alert;
 	}
 

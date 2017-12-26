@@ -41,8 +41,8 @@ public class AlertService {
 
 	@Transactional
 	public CreateResponseData create(AlertRequest request) {
-		
-		AlertDto alertDto = request.getAlert();
+
+		AlertDto alertDto = new AlertDto(request.getAlert());
 		Account account = accountRepository.findByUsername(request.getUsername());
 
 		if (account == null) {
