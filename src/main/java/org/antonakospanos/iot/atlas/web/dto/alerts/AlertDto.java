@@ -17,7 +17,7 @@ import java.util.UUID;
 @JsonPropertyOrder({"id, condition"})
 public class AlertDto extends AlertBaseDto implements Dto<Alert> {
 
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	@JsonProperty("id")
 	@ApiModelProperty(example = "ckar")
 	private UUID id;
 
@@ -41,15 +41,6 @@ public class AlertDto extends AlertBaseDto implements Dto<Alert> {
 	public AlertDto(UUID id, ConditionDto condition) {
 		this.id = id;
 		setCondition(condition);
-	}
-
-	public AlertDto(ConditionDto condition) {
-		setCondition(condition);
-	}
-
-	public AlertDto(UUID id, AlertBaseDto alertBaseDto) {
-		this.id = id;
-		setCondition(alertBaseDto.getCondition());
 	}
 
 	public AlertDto(AlertBaseDto alertBaseDto) {

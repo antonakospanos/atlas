@@ -16,7 +16,7 @@ public class ActionRequest {
 	private String username = null;
 
 	@JsonProperty("action")
-	private ActionDto action = null;
+	private ActionBaseDto action = null;
 
 	@JsonProperty("alert")
 	@ApiModelProperty(example = "true")
@@ -25,7 +25,7 @@ public class ActionRequest {
 	public ActionRequest() {
 	}
 
-	public ActionRequest(String timestamp, String username, ActionDto action, Boolean alert) {
+	public ActionRequest(String timestamp, String username, ActionBaseDto action, Boolean alert) {
 		this.timestamp = timestamp;
 		this.username = username;
 		this.action = action;
@@ -48,11 +48,11 @@ public class ActionRequest {
 		this.username = username;
 	}
 
-	public ActionDto getAction() {
+	public ActionBaseDto getAction() {
 		return action;
 	}
 
-	public void setAction(ActionDto action) {
+	public void setAction(ActionBaseDto action) {
 		this.action = action;
 	}
 

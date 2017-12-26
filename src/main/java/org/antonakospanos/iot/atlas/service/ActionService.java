@@ -55,7 +55,7 @@ public class ActionService {
 	@Transactional
 	public CreateResponseData create(ActionRequest request) {
 
-		ActionDto actionDto = request.getAction();
+		ActionDto actionDto = new ActionDto(request.getAction());
 		String actionDeviceId = actionDto.getDevice().getId();
 		String actionModuleId = actionDto.getDevice().getModule().getId();
 

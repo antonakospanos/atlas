@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @JsonPropertyOrder({ "id", "version", "modules" })
 public class DeviceDto extends DeviceBaseDto implements Dto<Device> {
 
-	@JsonProperty("id")
+	@JsonProperty("id") // access = JsonProperty.Access.READ_ONLY
 	@ApiModelProperty(example = "deviceId")
 	private String id = null;
 
