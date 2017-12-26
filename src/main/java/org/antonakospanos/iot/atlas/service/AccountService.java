@@ -60,26 +60,56 @@ public class AccountService {
 
 		AccountDto accountDto = new AccountDto(request.getAccount());
 		validateAccount(username);
-		validateNewUsername(username, accountDto.getUsername());
 
 		// Update Account in DB
 		Account account = accountRepository.findByUsername(username);
+		replace(accountDto, account);
+	}
+
+
+	@Transactional
+	public void replace(UUID accountExternalId, AccountRequest request) {
+
+		AccountDto accountDto = new AccountDto(request.getAccount());
+		validateAccount(accountExternalId);
+
+		// Update Account in DB
+		Account account = accountRepository.findByExternalId(accountExternalId);
+		replace(accountDto, account);
+	}
+
+	@Transactional
+	public void replace(AccountDto accountDto, Account account) {
+		validateNewUsername(account.getUsername(), accountDto.getUsername());
+
 		accountDto.toEntity(account);
 		accountConverter.updateAccount(accountDto, account);
-
 		accountRepository.save(account);
 	}
 
 	@Transactional
 	public void update(String username, List<PatchDto> patches) {
-
 		validateAccount(username);
 		Account account = accountRepository.findByUsername(username);
+
+		update(account, patches);
+	}
+
+	@Transactional
+	public void update(UUID accountExternalId, List<PatchDto> patches) {
+		validateAccount(accountExternalId);
+		Account account = accountRepository.findByExternalId(accountExternalId);
+
+		update(account, patches);
+	}
+
+	@Transactional
+	public void update(Account account, List<PatchDto> patches) {
 
 		patches.stream().forEach(patchDto -> {
 			// Validate Account patches
 			if (patchDto.getField().equals("username")) {
-				validateNewUsername(username, patchDto.getValue());
+				validateNewUsername(account.getUsername(), patchDto.getValue());
 			}
 			if (patchDto.getField().equals("devices") && StringUtils.isNotBlank(patchDto.getValue())) {
 				validateNewDevice(patchDto.getValue());
@@ -94,7 +124,17 @@ public class AccountService {
 	@Transactional
 	public void delete(String username) {
 		Account account = accountRepository.findByUsername(username);
+		delete(account);
+	}
 
+	@Transactional
+	public void delete(UUID accountExternalId) {
+		Account account = accountRepository.findByExternalId(accountExternalId);
+		delete(account);
+	}
+
+	@Transactional
+	public void delete(Account account) {
 		if (account == null) {
 			throw new IllegalArgumentException("Account '" + account + "' does not exist!");
 		} else {
@@ -104,21 +144,51 @@ public class AccountService {
 
 	@Transactional
 	public List<AccountDto> list(String username) {
-		List<AccountDto> accountDtos = new ArrayList<>();
+		List<AccountDto> accountDtos;
 
 		if (StringUtils.isNotBlank(username)) {
 			Account account = accountRepository.findByUsername(username);
+			accountDtos = list(account);
+		} else {
+			accountDtos = listAll();
+		}
 
+		return accountDtos;
+	}
+
+	@Transactional
+	public List<AccountDto> list(UUID accountExternalId) {
+		List<AccountDto> accountDtos;
+
+		if (accountExternalId != null) {
+			Account account = accountRepository.findByExternalId(accountExternalId);
+			accountDtos = list(account);
+		} else {
+			accountDtos = listAll();
+		}
+
+		return accountDtos;
+	}
+
+	@Transactional
+	public List<AccountDto> list(Account account) {
+		List<AccountDto> accountDtos = new ArrayList<>();
+
+		if (account != null) {
 			AccountDto accountDto = new AccountDto().fromEntity(account);
 			accountDtos.add(accountDto);
-		} else {
-			List<Account> accounts = accountRepository.findAll();
-
-			accountDtos = accounts.stream()
-					.map(account -> new AccountDto().fromEntity(account))
-					.collect(Collectors.toList());
-
 		}
+
+		return accountDtos;
+	}
+
+	@Transactional
+	public List<AccountDto> listAll() {
+		List<Account> accounts = accountRepository.findAll();
+
+		List<AccountDto> accountDtos = accounts.stream()
+				.map(account -> new AccountDto().fromEntity(account))
+				.collect(Collectors.toList());
 
 		return accountDtos;
 	}
@@ -147,7 +217,7 @@ public class AccountService {
 	public void validateNewUsername(String oldUsername, String newUsername) {
 		// Check that resource does not conflict
 		Account account = accountRepository.findByUsername(newUsername);
-		if (!oldUsername.equals(newUsername) && account == null) {
+		if (!oldUsername.equals(newUsername) && account != null) {
 			// Illegal username replacement
 			throw new IllegalArgumentException("Account with username '" + newUsername + "' already exists!");
 		}
