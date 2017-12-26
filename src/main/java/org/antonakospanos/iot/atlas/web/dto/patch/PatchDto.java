@@ -14,7 +14,7 @@ public class PatchDto {
 
 	@NotNull
 	@JsonProperty("operation")
-	@ApiModelProperty(value = "replace", allowableValues = "add, replace, remove")
+	@ApiModelProperty(example = "replace", allowableValues = "add, replace, remove")
 	private PatchOperation operation;
 
 	@NotNull

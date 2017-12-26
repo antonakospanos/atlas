@@ -23,9 +23,11 @@ import java.util.stream.Collectors;
 public class DeviceDto implements Dto<Device> {
 
 	@JsonProperty("id")
+	@ApiModelProperty(example = "deviceId")
 	private String id = null;
 
 	@JsonProperty("version")
+	@ApiModelProperty(example = "1.0")
 	private String version = null;
 
 	@JsonProperty("modules")

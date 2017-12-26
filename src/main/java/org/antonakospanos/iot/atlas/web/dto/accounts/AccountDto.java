@@ -2,6 +2,7 @@ package org.antonakospanos.iot.atlas.web.dto.accounts;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
 
@@ -22,10 +23,11 @@ public class AccountDto implements Dto<Account> {
 			.map(field -> field.getName())
 			.collect(Collectors.toList());
 
-	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	// @JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private UUID id;
 
 	@JsonProperty("username")
+	@ApiModelProperty(example = "ckar")
 	@NotEmpty
 	private String username;
 
@@ -33,19 +35,25 @@ public class AccountDto implements Dto<Account> {
 	 * Hashed password
 	 */
 	@JsonProperty("password")
+	@ApiModelProperty(example = "password")
 	@NotEmpty
 	private String password;
 
 	@JsonProperty("name")
+	@ApiModelProperty(example = "Kostas Carouzos")
 	private String name;
 
 	@JsonProperty("email")
+	@ApiModelProperty(example = "kostas@carouzos.com")
 	@NotEmpty
 	private String email;
 
 	@JsonProperty("cellphone")
+	@ApiModelProperty(example = "00306941234567")
 	private String cellphone;
 
+	@JsonProperty("devices")
+	@ApiModelProperty(allowableValues = "deviceId")
 	private List<String> devices;
 
 
@@ -91,6 +99,7 @@ public class AccountDto implements Dto<Account> {
 		this.devices= devices;
 		return this;
 	}
+
 
 	public String getUsername() {
 		return username;

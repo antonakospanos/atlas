@@ -1,5 +1,6 @@
 package org.antonakospanos.iot.atlas.web.dto.actions;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.web.enums.Unit;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -11,8 +12,11 @@ import java.io.Serializable;
 public class RecurringActionDto implements Serializable {
 
 	@NotNull
+	@JsonProperty("period")
+	@ApiModelProperty(example = "10")
 	private Long period;
 
+	@JsonProperty("unit")
 	@ApiModelProperty(example = "seconds")
 	private String unit = Unit.SECONDS.toString();
 

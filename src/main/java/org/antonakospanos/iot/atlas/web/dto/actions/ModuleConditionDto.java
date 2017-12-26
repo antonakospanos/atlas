@@ -1,5 +1,7 @@
 package org.antonakospanos.iot.atlas.web.dto.actions;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.enums.ModuleState;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -10,14 +12,24 @@ import java.io.Serializable;
 public class ModuleConditionDto implements Serializable {
 
 	@NotNull
+	@JsonProperty("id")
+	@ApiModelProperty(example = "thermometer_01", required = true)
 	private String id;
 
+	@JsonProperty("state")
+	@ApiModelProperty(example = "1")
 	private ModuleState state;
 
+	@JsonProperty("value")
+	@ApiModelProperty(example = "36")
 	private String value;
 
+	@JsonProperty("minValue")
+	@ApiModelProperty(example = "32.5")
 	private Double minValue;
 
+	@JsonProperty("maxValue")
+	@ApiModelProperty(example = "38.5")
 	private Double maxValue;
 
 	public ModuleConditionDto() {

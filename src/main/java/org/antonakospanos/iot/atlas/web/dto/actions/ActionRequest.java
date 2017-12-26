@@ -12,12 +12,14 @@ public class ActionRequest {
 	private String timestamp = null;
 
 	@JsonProperty("username")
+	@ApiModelProperty(example = "panto")
 	private String username = null;
 
 	@JsonProperty("action")
 	private ActionDto action = null;
 
 	@JsonProperty("alert")
+	@ApiModelProperty(example = "true")
 	private Boolean alert = false;
 
 	public ActionRequest() {
