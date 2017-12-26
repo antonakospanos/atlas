@@ -18,7 +18,7 @@ import java.util.UUID;
 public class AlertDto extends AlertBaseDto implements Dto<Alert> {
 
 	@JsonProperty("id")
-	@ApiModelProperty(example = "ckar")
+	@ApiModelProperty(example = "alertId")
 	private UUID id;
 
 	private ConditionDto condition;
