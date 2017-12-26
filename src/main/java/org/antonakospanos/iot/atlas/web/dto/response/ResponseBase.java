@@ -24,9 +24,6 @@ public class ResponseBase {
   @JsonProperty("description")
   private String description = null;
 
-  @JsonProperty("data")
-  private Object data = null;
-
   public ResponseBase result(Result result) {
     this.result = result;
     return this;
@@ -35,11 +32,6 @@ public class ResponseBase {
   public ResponseBase build(Result result) {
     this.result = result;
     this.description = result.getDescription();
-    return this;
-  }
-
-  public ResponseBase data(Object data) {
-    this.data = data;
     return this;
   }
 
@@ -76,19 +68,6 @@ public class ResponseBase {
     this.description = description;
   }
 
-   /**
-   * Get data
-   * @return data
-  **/
-  @ApiModelProperty(value = "")
-  public Object getData() {
-    return data;
-  }
-
-  public void setData(Object data) {
-    this.data = data;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -99,13 +78,12 @@ public class ResponseBase {
     }
     ResponseBase responseSuccess = (ResponseBase) o;
     return Objects.equals(this.result, responseSuccess.result) &&
-        Objects.equals(this.description, responseSuccess.description) &&
-        Objects.equals(this.data, responseSuccess.data);
+        Objects.equals(this.description, responseSuccess.description);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(result, description, data);
+    return Objects.hash(result, description);
   }
 
   @Override

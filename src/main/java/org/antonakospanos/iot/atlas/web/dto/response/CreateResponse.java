@@ -2,7 +2,7 @@ package org.antonakospanos.iot.atlas.web.dto.response;
 
 import org.antonakospanos.iot.atlas.web.enums.Result;
 
-public class CreateResponse extends ResponseBase {
+public class CreateResponse extends Response {
 
 	public static CreateResponse Builder() {
 		return new CreateResponse();

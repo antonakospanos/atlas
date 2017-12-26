@@ -2,7 +2,7 @@ package org.antonakospanos.iot.atlas.web.dto.events;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import org.antonakospanos.iot.atlas.web.dto.response.ResponseBase;
+import org.antonakospanos.iot.atlas.web.dto.response.Response;
 import org.antonakospanos.iot.atlas.web.enums.Result;
 
 /**
@@ -10,7 +10,7 @@ import org.antonakospanos.iot.atlas.web.enums.Result;
  */
 @JsonPropertyOrder({ "result", "description", "data" })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class HeartbeatFailureResponse extends ResponseBase {
+public class HeartbeatFailureResponse extends Response {
 
 	public static HeartbeatFailureResponse Builder() {
 		return new HeartbeatFailureResponse();
