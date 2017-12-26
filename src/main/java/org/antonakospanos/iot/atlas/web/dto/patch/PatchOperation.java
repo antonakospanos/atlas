@@ -1,5 +1,8 @@
 package org.antonakospanos.iot.atlas.web.dto.patch;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum PatchOperation {
 
 	ADD, REPLACE, REMOVE;
@@ -7,5 +10,20 @@ public enum PatchOperation {
 	@Override
 	public String toString() {
 		return this.name().toLowerCase();
+	}
+
+	@JsonValue
+	public String toValue() {
+		return this.toString();
+	}
+
+	@JsonCreator
+	public static PatchOperation forValue(String value) {
+		for (PatchOperation operation : PatchOperation.values()) {
+			if (operation.toString().equals(value)) {
+				return operation;
+			}
+		}
+		return null;
 	}
 }
