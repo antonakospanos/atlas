@@ -1,5 +1,6 @@
 package org.antonakospanos.iot.atlas.web.dto.patch;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 public class PatchRequest {
 
+	@JsonProperty("timestamp")
 	private String timestamp = null;
 
 	private List<PatchDto> patches;

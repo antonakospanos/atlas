@@ -18,6 +18,7 @@ import java.util.Objects;
 public class HeartbeatRequest {
 
   @JsonProperty("timestamp")
+  @ApiModelProperty(example = "2017-11-19T16:52:40.000 UTC")
   private String timestamp = null;
 
   @JsonProperty("device")
@@ -32,7 +33,6 @@ public class HeartbeatRequest {
    * Get timestamp
    * @return timestamp
   **/
-  @ApiModelProperty(example = "2017-11-19T16:52:40.000 UTC", value = "")
   public String getTimestamp() {
     return timestamp;
   }
