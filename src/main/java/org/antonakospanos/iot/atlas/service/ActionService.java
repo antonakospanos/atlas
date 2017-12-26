@@ -117,7 +117,7 @@ public class ActionService {
 
 			// Validate listed resources
 			deviceService.validateDevice(deviceId);
-			accountService.validateActionByUsername(username);
+			accountService.validateAccount(username);
 
 			if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(deviceId) && StringUtils.isNotBlank(moduleId)) {
 				// Fetch all user's actions for the declared device and module

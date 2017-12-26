@@ -12,6 +12,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
 	Account findByExternalId(UUID externalId);
 
+	Account findByExternalId_AndUsername(UUID externalId, String username);
+
 	List<Account> findByDevices_ExternalId(String externalId);
 
 }

@@ -6,14 +6,24 @@ import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
 
 import javax.validation.constraints.NotEmpty;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
  * AccountDto
  */
-@JsonPropertyOrder({ "username", "password", "name", "email", "cellphone" })
+@JsonPropertyOrder({ "username", "password", "name", "email", "cellphone", "devices" })
 public class AccountDto implements Dto<Account> {
+
+	public static List<String> fields = Arrays.asList(AccountDto.class.getDeclaredFields())
+			.stream()
+			.map(field -> field.getName())
+			.collect(Collectors.toList());
+
+	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
+	private UUID id;
 
 	@JsonProperty("username")
 	@NotEmpty
@@ -132,6 +142,7 @@ public class AccountDto implements Dto<Account> {
 
 	@Override
 	public AccountDto fromEntity(Account account) {
+		this.id = account.getExternalId();
 		this.username = account.getUsername();
 		this.password = account.getPassword();
 		this.name = account.getName();

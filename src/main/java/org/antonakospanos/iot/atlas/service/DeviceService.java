@@ -36,7 +36,7 @@ public class DeviceService {
 
 		// Validate listed resources
 		validateDevice(deviceId);
-		accountService.validateActionByUsername(username);
+		accountService.validateAccount(username);
 
 		if (StringUtils.isNotBlank(deviceId) && StringUtils.isNotBlank(username)) {
 			// Fetch user's device with the declared id

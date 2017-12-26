@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -49,6 +50,10 @@ public class Account implements Serializable {
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL , fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<Action> actions;
 
+
+	public Account() {
+		this.externalId = UUID.randomUUID();
+	}
 
 	public Long getId() {
 		return id;
@@ -112,6 +117,26 @@ public class Account implements Serializable {
 
 	public void setDevices(Set<Device> devices) {
 		this.devices = devices;
+	}
+
+	public void addDevice(Device device) {
+		if (this.devices == null) {
+			this.devices = new HashSet<>();
+		}
+
+		this.devices.add(device);
+	}
+
+	public void removeDevice(Device device) {
+		if (this.devices != null) {
+			this.devices.remove(device);
+		}
+	}
+
+	public void removeAll() {
+		if (this.devices != null) {
+			this.devices.clear();
+		}
 	}
 
 	public List<Action> getActions() {

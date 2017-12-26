@@ -9,7 +9,7 @@ import org.antonakospanos.iot.atlas.support.LoggingHelper;
 import org.antonakospanos.iot.atlas.web.controller.BaseAtlasController;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountDto;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountRequest;
-import org.antonakospanos.iot.atlas.web.dto.response.CreateResponse;
+import org.antonakospanos.iot.atlas.web.dto.patch.PatchRequest;
 import org.antonakospanos.iot.atlas.web.dto.response.ResponseBase;
 import org.antonakospanos.iot.atlas.web.enums.Result;
 import org.antonakospanos.iot.atlas.web.validator.AccountsValidator;
@@ -36,10 +36,10 @@ public class AccountController extends BaseAtlasController {
 	AccountService service;
 
 	@RequestMapping(value = "", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.POST)
-	@ApiOperation(value = "Creates the account of the user owning an IoT device", response = CreateResponse.class)
+	@ApiOperation(value = "Creates the account of the user owning an IoT device", response = ResponseBase.class)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiResponses(value = {
-			@ApiResponse(code = 201, message = "The account is created!", response = CreateResponse.class),
+			@ApiResponse(code = 201, message = "The account is created!", response = ResponseBase.class),
 			@ApiResponse(code = 400, message = "The request is invalid!"),
 			@ApiResponse(code = 500, message = "server error")})
 	public ResponseEntity<ResponseBase> create(UriComponentsBuilder uriBuilder, @Valid @RequestBody AccountRequest request) {
@@ -50,8 +50,52 @@ public class AccountController extends BaseAtlasController {
 
 		service.create(request);
 		UriComponents uriComponents =	uriBuilder.path("/{username}").buildAndExpand(request.getAccount().getUsername());
-		ResponseBase createResponse = ResponseBase.Builder().build(Result.SUCCESS);
-		response = ResponseEntity.created(uriComponents.toUri()).body(createResponse);
+		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
+		response = ResponseEntity.created(uriComponents.toUri()).body(responseBase);
+
+		logger.debug(LoggingHelper.logInboundResponse(response));
+
+		return response;
+	}
+
+	@RequestMapping(value = "/{username}", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.PUT)
+	@ApiOperation(value = "Replaces the account of the user owning an IoT device", response = ResponseBase.class)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "The account is replaced!", response = ResponseBase.class),
+			@ApiResponse(code = 400, message = "The request is invalid!"),
+			@ApiResponse(code = 500, message = "server error")})
+	public ResponseEntity<ResponseBase> replace(@PathVariable String username, @Valid @RequestBody AccountRequest request) {
+		ResponseEntity<ResponseBase> response;
+		logger.debug(LoggingHelper.logInboundRequest(request));
+
+		AccountsValidator.validateAccount(request);
+
+		service.replace(username, request);
+		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
+		response = ResponseEntity.ok().body(responseBase);
+
+		logger.debug(LoggingHelper.logInboundResponse(response));
+
+		return response;
+	}
+
+	@RequestMapping(value = "/{username}", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.PATCH)
+	@ApiOperation(value = "Updates the account of the user owning an IoT device", response = ResponseBase.class)
+	@ResponseStatus(HttpStatus.OK)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "The account is updated!", response = ResponseBase.class),
+			@ApiResponse(code = 400, message = "The request is invalid!"),
+			@ApiResponse(code = 500, message = "server error")})
+	public ResponseEntity<ResponseBase> update(@PathVariable String username, @Valid @RequestBody PatchRequest request) {
+		ResponseEntity<ResponseBase> response;
+		logger.debug(LoggingHelper.logInboundRequest(request));
+
+		AccountsValidator.validateAccount(request);
+
+		service.update(username, request.getPatches());
+		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
+		response = ResponseEntity.ok().body(responseBase);
 
 		logger.debug(LoggingHelper.logInboundResponse(response));
 
