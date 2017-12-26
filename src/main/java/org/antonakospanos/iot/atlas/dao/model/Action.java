@@ -23,10 +23,6 @@ import java.util.UUID;
 @Table(name = "ACTION")
 public class Action implements Serializable {
 
-	public Action() {
-		this.externalId = UUID.randomUUID();
-	}
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -52,6 +48,11 @@ public class Action implements Serializable {
 
 	@OneToOne(mappedBy = "action", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Condition condition;
+
+
+	public Action() {
+		this.externalId = UUID.randomUUID();
+	}
 
 
 	public Long getId() {

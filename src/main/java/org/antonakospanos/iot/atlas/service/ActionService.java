@@ -44,6 +44,10 @@ public class ActionService {
 	@Autowired
 	DeviceRepository deviceRepository;
 
+	@Autowired
+	ConditionService conditionService;
+
+
 	@Transactional
 	public CreateResponseData create(ActionRequest request) {
 
@@ -62,36 +66,16 @@ public class ActionService {
 		}	else if (account == null) {
 			throw new IllegalArgumentException("Account with username '" + request.getUsername() + "' does not exist!");
 		} else {
+
 			// Add new Action in DB
 			Action action = actionDto.toEntity();
 			action.setAccount(account);
 			action.setModule(module);
 
 			if (actionDto.getCondition() != null) {
-
 				Condition condition = actionDto.getCondition().toEntity();
+				conditionService.linkModules(condition);
 				action.setCondition(condition);
-
-				condition.getConditionOrStatements()
-						.stream()
-						.forEach(conditionOrStatement -> {
-
-							conditionOrStatement.getConditionAndStatements()
-									.stream()
-									.forEach(conditionAndStatement -> {
-										ConditionStatement statement = conditionAndStatement.getConditionStatement();
-
-										String conditionalDeviceId = statement.getDeviceExternalId();
-										String conditionalModuleId = statement.getModuleExternalId();
-										Module conditionalModule = moduleRepository.findByExternalId_AndDevice_ExternalId(conditionalModuleId, conditionalDeviceId);
-
-										if (conditionalModule != null) {
-											statement.setModule(conditionalModule);
-										} else {
-											throw new IllegalArgumentException("Module '" + conditionalModuleId + "' of device '" + conditionalDeviceId + "' does not exist!");
-										}
-									});
-						});
 			}
 
 			actionRepository.save(action);

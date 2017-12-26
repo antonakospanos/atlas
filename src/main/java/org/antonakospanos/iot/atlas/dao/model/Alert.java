@@ -7,6 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 /**
  * Alerts the user for the module's state & value
@@ -23,7 +24,7 @@ public class Alert {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private String externalId;
+	private UUID externalId;
 
 	@ManyToOne
 	@JoinColumn(name = "ACCOUNT_ID")
@@ -32,11 +33,16 @@ public class Alert {
 	@OneToOne(mappedBy = "alert", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private Condition condition;
 
-	public String getExternalId() {
+
+	public Alert() {
+		this.externalId = UUID.randomUUID();
+	}
+
+	public UUID getExternalId() {
 		return externalId;
 	}
 
-	public void setExternalId(String externalId) {
+	public void setExternalId(UUID externalId) {
 		this.externalId = externalId;
 	}
 

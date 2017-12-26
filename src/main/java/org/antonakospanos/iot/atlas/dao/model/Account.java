@@ -55,6 +55,7 @@ public class Account implements Serializable {
 		this.externalId = UUID.randomUUID();
 	}
 
+
 	public Long getId() {
 		return id;
 	}

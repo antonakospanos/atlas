@@ -17,7 +17,7 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 /**
- * ActionDto
+ * AlertDto
  */
 @JsonPropertyOrder({"execution", "recurring", "device", "condition"})
 public class ActionDto implements Dto<Action> {
