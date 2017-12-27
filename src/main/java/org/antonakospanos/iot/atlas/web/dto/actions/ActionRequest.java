@@ -5,15 +5,17 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.UUID;
+
 public class ActionRequest {
 
 	@JsonProperty("timestamp")
 	@ApiModelProperty(example = "2017-11-19T16:52:40.000 UTC")
 	private String timestamp = null;
 
-	@JsonProperty("username")
-	@ApiModelProperty(example = "ckar")
-	private String username = null;
+	@JsonProperty("accountId")
+	@ApiModelProperty(example = "297dd70e-de40-4c82-8b75-f7183474d848")
+	private UUID accountId = null;
 
 	@JsonProperty("action")
 	private ActionBaseDto action = null;
@@ -25,9 +27,9 @@ public class ActionRequest {
 	public ActionRequest() {
 	}
 
-	public ActionRequest(String timestamp, String username, ActionBaseDto action, Boolean alert) {
+	public ActionRequest(String timestamp, UUID accountId, ActionBaseDto action, Boolean alert) {
 		this.timestamp = timestamp;
-		this.username = username;
+		this.accountId = accountId;
 		this.action = action;
 		this.alert = alert;
 	}
@@ -40,12 +42,12 @@ public class ActionRequest {
 		this.timestamp = timestamp;
 	}
 
-	public String getUsername() {
-		return username;
+	public UUID getAccountId() {
+		return accountId;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setAccountId(UUID accountId) {
+		this.accountId = accountId;
 	}
 
 	public ActionBaseDto getAction() {
@@ -72,7 +74,7 @@ public class ActionRequest {
 		ActionRequest that = (ActionRequest) o;
 
 		if (timestamp != null ? !timestamp.equals(that.timestamp) : that.timestamp != null) return false;
-		if (username != null ? !username.equals(that.username) : that.username != null) return false;
+		if (accountId != null ? !accountId.equals(that.accountId) : that.accountId != null) return false;
 		if (action != null ? !action.equals(that.action) : that.action != null) return false;
 		return alert != null ? alert.equals(that.alert) : that.alert == null;
 	}
@@ -80,7 +82,7 @@ public class ActionRequest {
 	@Override
 	public int hashCode() {
 		int result = timestamp != null ? timestamp.hashCode() : 0;
-		result = 31 * result + (username != null ? username.hashCode() : 0);
+		result = 31 * result + (accountId != null ? accountId.hashCode() : 0);
 		result = 31 * result + (action != null ? action.hashCode() : 0);
 		result = 31 * result + (alert != null ? alert.hashCode() : 0);
 		return result;

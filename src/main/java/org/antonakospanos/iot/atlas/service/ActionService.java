@@ -64,14 +64,14 @@ public class ActionService {
 
 		Device device = deviceRepository.findByExternalId(actionDeviceId);
 		Module module = moduleRepository.findByExternalId_AndDevice_ExternalId(actionModuleId, actionDeviceId);
-		Account account = accountRepository.findByUsername(request.getUsername());
+		Account account = accountRepository.findByExternalId(request.getAccountId());
 
 		if (device == null) {
 			throw new IllegalArgumentException("Device '" + actionDeviceId + "' does not exist!");
 		}	else if (module == null) {
 			throw new IllegalArgumentException("Module '" + actionModuleId + "' does not exist!");
 		}	else if (account == null) {
-			throw new IllegalArgumentException("Account with username '" + request.getUsername() + "' does not exist!");
+			throw new IllegalArgumentException("Account with accountId '" + request.getAccountId() + "' does not exist!");
 		} else {
 
 			// Add new Action in DB
@@ -117,7 +117,7 @@ public class ActionService {
 
 		@Transactional
 	public List<ActionDto> list(String username, String deviceId, String moduleId) {
-			List<ActionDto> actionDtos = new ArrayList<>();
+			List<ActionDto> actionDtos;
 
 			// Validate listed resources
 			deviceService.validateDevice(deviceId);

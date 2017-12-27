@@ -5,15 +5,17 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.UUID;
+
 public class AlertRequest {
 
 	@JsonProperty("timestamp")
 	@ApiModelProperty(example = "2017-11-19T16:52:40.000 UTC")
 	private String timestamp = null;
 
-	@JsonProperty("username")
-	@ApiModelProperty(example = "ckar")
-	private String username = null;
+	@JsonProperty("accountId")
+	@ApiModelProperty(example = "297dd70e-de40-4c82-8b75-f7183474d848")
+	private UUID accountId = null;
 
 	@JsonProperty("alert")
 	private AlertBaseDto alert = null;
@@ -21,9 +23,9 @@ public class AlertRequest {
 	public AlertRequest() {
 	}
 
-	public AlertRequest(String timestamp, String username, AlertBaseDto alert) {
+	public AlertRequest(String timestamp, UUID accountId, AlertBaseDto alert) {
 		this.timestamp = timestamp;
-		this.username = username;
+		this.accountId = accountId;
 		this.alert = alert;
 	}
 
@@ -35,12 +37,12 @@ public class AlertRequest {
 		this.timestamp = timestamp;
 	}
 
-	public String getUsername() {
-		return username;
+	public UUID getAccountId() {
+		return accountId;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setAccountId(UUID accountId) {
+		this.accountId = accountId;
 	}
 
 	public AlertBaseDto getAlert() {
@@ -59,14 +61,14 @@ public class AlertRequest {
 		AlertRequest that = (AlertRequest) o;
 
 		if (!timestamp.equals(that.timestamp)) return false;
-		if (!username.equals(that.username)) return false;
+		if (!accountId.equals(that.accountId)) return false;
 		return alert.equals(that.alert);
 	}
 
 	@Override
 	public int hashCode() {
 		int result = timestamp.hashCode();
-		result = 31 * result + username.hashCode();
+		result = 31 * result + accountId.hashCode();
 		result = 31 * result + alert.hashCode();
 		return result;
 	}

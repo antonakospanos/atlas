@@ -47,10 +47,10 @@ public class AlertService {
 	public CreateResponseData create(AlertRequest request) {
 
 		AlertDto alertDto = new AlertDto(request.getAlert());
-		Account account = accountRepository.findByUsername(request.getUsername());
+		Account account = accountRepository.findByExternalId(request.getAccountId());
 
 		if (account == null) {
-			throw new IllegalArgumentException("Account with username '" + request.getUsername() + "' does not exist!");
+			throw new IllegalArgumentException("Account with accountId '" + request.getAccountId() + "' does not exist!");
 		} else {
 
 			// Add new Alert in DB
