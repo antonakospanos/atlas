@@ -10,14 +10,12 @@ import org.antonakospanos.iot.atlas.dao.repository.ConditionRepository;
 import org.antonakospanos.iot.atlas.web.dto.alerts.AlertDto;
 import org.antonakospanos.iot.atlas.web.dto.alerts.AlertRequest;
 import org.antonakospanos.iot.atlas.web.dto.response.CreateResponseData;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -94,15 +92,15 @@ public class AlertService {
 	}
 
 		@Transactional
-	public List<AlertDto> list(String username) {
-			List<AlertDto> alertDtos = new ArrayList<>();
+	public List<AlertDto> list(UUID accountId) {
+			List<AlertDto> alertDtos;
 
 			// Validate listed resources
-			accountService.validateAccount(username);
+			accountService.validateAccount(accountId);
 
-			if (StringUtils.isNotBlank(username)) {
+			if (accountId != null) {
 				// Fetch all user's alerts
-				List<Alert> alerts = alertRepository.findByAccount_Username(username);
+				List<Alert> alerts = alertRepository.findByAccount_ExternalId(accountId);
 				alertDtos = alerts.stream()
 						.map(alert -> new AlertDto().fromEntity(alert))
 						.collect(Collectors.toList());

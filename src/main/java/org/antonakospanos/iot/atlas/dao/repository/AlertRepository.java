@@ -12,4 +12,6 @@ public interface AlertRepository extends JpaRepository<Alert, Long> {
 
 	List<Alert> findByAccount_Username(String username);
 
+	List<Alert> findByAccount_ExternalId(UUID accountExternalId);
+
 }

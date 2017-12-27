@@ -8,14 +8,19 @@ import java.util.UUID;
 
 public interface ActionRepository extends JpaRepository<Action, Long> {
 
-	Action findByExternalId(UUID externalId);
+	Action findByExternalId(UUID actionExternalId);
 
 	List<Action> findByModule_Id(Long moduleId);
 
-	List<Action> findByModule_ExternalId(String externalId);
+
+	List<Action> findByModule_ExternalId(String moduleExternalId);
+
+	List<Action> findByAccount_ExternalId(UUID accountExternalId);
 
 	List<Action> findByAccount_Username(String username);
 
 	List<Action> findByAccount_Username_AndModule_ExternalId(String username, String externalId);
+
+	List<Action> findByAccount_ExternalId_AndModule_ExternalId(UUID accountExternalId, String moduleExternalId);
 
 }

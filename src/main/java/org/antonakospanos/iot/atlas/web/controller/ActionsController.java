@@ -78,13 +78,13 @@ public class ActionsController extends BaseAtlasController {
 
 	@ApiOperation(value = "Lists the scheduled actions for the integrated IoT devices", response = ActionDto.class, responseContainer="List")
 	@RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<Iterable> list(@RequestParam (required=false) String username,
+	public ResponseEntity<Iterable> list(@RequestParam (required=false) UUID accountId,
 	                                     @RequestParam (required=false) String deviceId,
 	                                     @RequestParam (required=false) String moduleId) {
 		ResponseEntity<Iterable> response = null;
-		logger.debug(LoggingHelper.logInboundRequest("/actions?username=" + username + "&deviceId=" + deviceId + "&moduleId=" + moduleId));
+		logger.debug(LoggingHelper.logInboundRequest("/actions?accountId=" + accountId + "&deviceId=" + deviceId + "&moduleId=" + moduleId));
 
-		List<ActionDto> actions = service.list(username, deviceId, moduleId);
+		List<ActionDto> actions = service.list(accountId, deviceId, moduleId);
 		if (actions != null && !actions.isEmpty()) {
 			response = ResponseEntity.status(HttpStatus.OK).body(actions);
 		} else {

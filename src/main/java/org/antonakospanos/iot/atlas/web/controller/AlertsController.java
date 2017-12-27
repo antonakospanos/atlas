@@ -75,11 +75,11 @@ public class AlertsController extends BaseAtlasController {
 
 	@ApiOperation(value = "Lists the scheduled alerts for the integrated IoT devices", response = AlertDto.class, responseContainer="List")
 	@RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<Iterable> list(@RequestParam (required=false) String username) {
+	public ResponseEntity<Iterable> list(@RequestParam (required=false) UUID accountId) {
 		ResponseEntity<Iterable> response = null;
-		logger.debug(LoggingHelper.logInboundRequest("/alerts?username=" + username ));
+		logger.debug(LoggingHelper.logInboundRequest("/alerts?accountId=" + accountId ));
 
-		List<AlertDto> alerts = service.list(username);
+		List<AlertDto> alerts = service.list(accountId);
 		if (alerts != null && !alerts.isEmpty()) {
 			response = ResponseEntity.status(HttpStatus.OK).body(alerts);
 		} else {

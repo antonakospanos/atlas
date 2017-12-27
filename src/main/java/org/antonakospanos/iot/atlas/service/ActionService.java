@@ -116,46 +116,46 @@ public class ActionService {
 	}
 
 		@Transactional
-	public List<ActionDto> list(String username, String deviceId, String moduleId) {
+	public List<ActionDto> list(UUID accountId, String deviceId, String moduleId) {
 			List<ActionDto> actionDtos;
 
 			// Validate listed resources
 			deviceService.validateDevice(deviceId);
-			accountService.validateAccount(username);
+			accountService.validateAccount(accountId);
 
-			if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(deviceId) && StringUtils.isNotBlank(moduleId)) {
+			if (accountId != null && StringUtils.isNotBlank(deviceId) && StringUtils.isNotBlank(moduleId)) {
 				// Fetch all user's actions for the declared device and module
 				Device device = deviceRepository.findByExternalId(deviceId);
 
 				actionDtos = device.getModules().stream()
 						.map(module -> module.getExternalId())
 						.filter(moduleExternalId -> moduleId.equals(moduleExternalId))
-						.map(moduleExternalId -> actionRepository.findByAccount_Username_AndModule_ExternalId(username, moduleExternalId))
+						.map(moduleExternalId -> actionRepository.findByAccount_ExternalId_AndModule_ExternalId(accountId, moduleExternalId))
 						.flatMap(List::stream)
 						.map(action -> new ActionDto().fromEntity(action))
 						.collect(Collectors.toList());
 
-			} else if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(deviceId)) {
+			} else if (accountId != null && StringUtils.isNotBlank(deviceId)) {
 				// Fetch all user's actions for the declared device
 				List<Module> modules = moduleRepository.findByDevice_ExternalId(deviceId);
 
 				actionDtos = modules.stream()
 						.map(module -> module.getExternalId())
-						.map(moduleExternalId -> actionRepository.findByAccount_Username_AndModule_ExternalId(username, moduleExternalId))
+						.map(moduleExternalId -> actionRepository.findByAccount_ExternalId_AndModule_ExternalId(accountId, moduleExternalId))
 						.flatMap(List::stream)
 						.map(action -> new ActionDto().fromEntity(action))
 						.collect(Collectors.toList());
 
-			} else if (StringUtils.isNotBlank(username) && StringUtils.isNotBlank(moduleId)) {
+			} else if (accountId != null && StringUtils.isNotBlank(moduleId)) {
 				// Fetch all user's actions for the declared module
-				List<Action> actions = actionRepository.findByAccount_Username_AndModule_ExternalId(username, moduleId);
+				List<Action> actions = actionRepository.findByAccount_ExternalId_AndModule_ExternalId(accountId, moduleId);
 				actionDtos = actions.stream()
 						.map(action -> new ActionDto().fromEntity(action))
 						.collect(Collectors.toList());
 
-			} else if (StringUtils.isNotBlank(username)) {
+			} else if (accountId != null) {
 				// Fetch all user's actions
-				List<Action> actions = actionRepository.findByAccount_Username(username);
+				List<Action> actions = actionRepository.findByAccount_ExternalId(accountId);
 				actionDtos = actions.stream()
 						.map(action -> new ActionDto().fromEntity(action))
 						.collect(Collectors.toList());
