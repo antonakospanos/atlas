@@ -50,7 +50,7 @@ public class ActionsController extends BaseAtlasController {
 		ActionsValidator.validateAction(request);
 
 		CreateResponseData data = service.create(request);
-		UriComponents uriComponents =	uriBuilder.path("/{id}").buildAndExpand(data.getId());
+		UriComponents uriComponents =	uriBuilder.path("/actions/{id}").buildAndExpand(data.getId());
 		CreateResponse createResponse = CreateResponse.Builder().build(Result.SUCCESS).data(data);
 		response = ResponseEntity.created(uriComponents.toUri()).body(createResponse);
 

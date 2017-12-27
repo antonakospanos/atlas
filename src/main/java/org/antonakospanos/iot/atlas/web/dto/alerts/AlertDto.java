@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.Alert;
+import org.antonakospanos.iot.atlas.dao.model.Condition;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
 import org.antonakospanos.iot.atlas.web.dto.actions.ConditionDto;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -91,7 +92,9 @@ public class AlertDto extends AlertBaseDto implements Dto<Alert> {
 	@Override
 	public Alert toEntity(Alert alert) {
 		if (condition != null) {
-			alert.setCondition(this.condition.toEntity());
+			Condition condition = this.getCondition().toEntity();
+			condition.setAlert(alert);
+			alert.setCondition(condition);
 		}
 		// DAO: accountId
 

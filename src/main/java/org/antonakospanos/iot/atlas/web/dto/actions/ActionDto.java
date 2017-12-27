@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.Action;
+import org.antonakospanos.iot.atlas.dao.model.Condition;
 import org.antonakospanos.iot.atlas.dao.model.Module;
 import org.antonakospanos.iot.atlas.enums.ModuleState;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
@@ -17,7 +18,7 @@ import java.util.UUID;
 /**
  * AlertDto
  */
-@JsonPropertyOrder({"id, execution", "recurring", "device", "condition"})
+@JsonPropertyOrder({ "id, execution", "recurring", "device", "condition" })
 public class ActionDto extends ActionBaseDto implements Dto<Action> {
 
 	@JsonProperty("id")
@@ -87,7 +88,9 @@ public class ActionDto extends ActionBaseDto implements Dto<Action> {
 			action.setPeriodInSecods(this.getRecurring().getPeriod());
 		}
 		if (this.getCondition() != null) {
-			action.setCondition(this.getCondition().toEntity());
+			Condition condition = this.getCondition().toEntity();
+			condition.setAction(action);
+			action.setCondition(condition);
 		}
 		ModuleState state = this.getDevice().getModule().getState();
 		if (state != null) {

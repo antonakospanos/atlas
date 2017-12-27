@@ -72,6 +72,7 @@ public class ConditionAndStatementDto implements Dto<ConditionAndStatement> {
 		ModuleConditionDto module = this.getDevice().getModule();
 
 		ConditionStatement condition = new ConditionStatement();
+		condition.setConditionAndStatement(conditionAndStatement);
 		condition.setMaxValue(module.getMaxValue());
 		condition.setMinValue(module.getMinValue());
 		condition.setValue(module.getValue());

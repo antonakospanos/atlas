@@ -12,7 +12,7 @@ public class HomeController extends BaseAtlasController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index() {
-//        return "redirect:docs/api.html";
+        // return "redirect:docs/api.html";
         return "redirect:swagger-ui.html";
     }
 }

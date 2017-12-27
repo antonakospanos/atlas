@@ -38,6 +38,9 @@ public class ActionService {
 	@Autowired
 	AlertRepository alertRepository;
 
+	@Autowired
+	ConditionRepository conditionRepository;
+
 
 	@Autowired
 	DeviceService deviceService;
@@ -73,14 +76,9 @@ public class ActionService {
 
 			// Add new Action in DB
 			Action action = actionDto.toEntity();
+			conditionService.linkModules(action.getCondition());
 			action.setAccount(account);
 			action.setModule(module);
-
-			if (actionDto.getCondition() != null) {
-				Condition condition = actionDto.getCondition().toEntity();
-				conditionService.linkModules(condition);
-				action.setCondition(condition);
-			}
 
 			actionRepository.save(action);
 
@@ -100,13 +98,20 @@ public class ActionService {
 		if (action == null) {
 			throw new IllegalArgumentException("Action '" + actionId + "' does not exist!");
 		} else {
-			// Delete action and related alert
-			if (deleteAlert) {
-				Alert alert = action.getCondition().getAlert();
+
+			// Remove action-condition relationship
+			Condition condition = action.getCondition();
+			condition.setAction(null);
+			conditionRepository.save(condition);
+
+			// Delete Action and related Alert
+			action.setCondition(null);
+			actionRepository.delete(action);
+
+			Alert alert = condition.getAlert();
+			if (deleteAlert && alert != null) {
 				alertRepository.delete(alert);
 			}
-
-			actionRepository.delete(action);
 		}
 	}
 

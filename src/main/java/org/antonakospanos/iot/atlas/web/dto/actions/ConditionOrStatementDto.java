@@ -67,7 +67,12 @@ public class ConditionOrStatementDto implements Dto<ConditionOrStatement> {
 
 		Set<ConditionAndStatement> conditions = this.getAndLegs()
 				.stream()
-				.map(conditionDto -> conditionDto.toEntity())
+				.map(conditionDto -> {
+					ConditionAndStatement conditionAndStatement = conditionDto.toEntity();
+					conditionAndStatement.setConditionOrStatement(conditionOrStatement);
+
+					return conditionAndStatement;
+				})
 				.collect(Collectors.toSet());
 
 		conditionOrStatement.setConditionAndStatements(conditions);

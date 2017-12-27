@@ -6,6 +6,7 @@ import org.antonakospanos.iot.atlas.dao.model.Alert;
 import org.antonakospanos.iot.atlas.dao.model.Condition;
 import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
 import org.antonakospanos.iot.atlas.dao.repository.AlertRepository;
+import org.antonakospanos.iot.atlas.dao.repository.ConditionRepository;
 import org.antonakospanos.iot.atlas.web.dto.alerts.AlertDto;
 import org.antonakospanos.iot.atlas.web.dto.alerts.AlertRequest;
 import org.antonakospanos.iot.atlas.web.dto.response.CreateResponseData;
@@ -36,6 +37,9 @@ public class AlertService {
 	AccountRepository accountRepository;
 
 	@Autowired
+	ConditionRepository conditionRepository;
+
+	@Autowired
 	ConditionService conditionService;
 
 
@@ -51,13 +55,8 @@ public class AlertService {
 
 			// Add new Alert in DB
 			Alert alert = alertDto.toEntity();
+			conditionService.linkModules(alert.getCondition());
 			alert.setAccount(account);
-
-			if (alertDto.getCondition() != null) {
-				Condition condition = alertDto.getCondition().toEntity();
-				conditionService.linkModules(condition);
-				alert.setCondition(condition);
-			}
 
 			alertRepository.save(alert);
 
@@ -72,6 +71,8 @@ public class AlertService {
 		Alert alert = new Alert();
 		alert.setAccount(account);
 		alert.setCondition(condition);
+		condition.setAlert(alert);
+
 		alertRepository.save(alert);
 	}
 
@@ -82,6 +83,12 @@ public class AlertService {
 		if (alert == null) {
 			throw new IllegalArgumentException("Alert '" + alertId + "' does not exist!");
 		} else {
+
+			Condition condition = alert.getCondition();
+			condition.setAlert(null);
+			conditionRepository.save(condition);
+
+			alert.setCondition(null);
 			alertRepository.delete(alert);
 		}
 	}

@@ -47,7 +47,7 @@ public class AlertsController extends BaseAtlasController {
 		logger.debug(LoggingHelper.logInboundRequest(request));
 
 		CreateResponseData data = service.create(request);
-		UriComponents uriComponents =	uriBuilder.path("/{id}").buildAndExpand(data.getId());
+		UriComponents uriComponents =	uriBuilder.path("/alerts/{id}").buildAndExpand(data.getId());
 		CreateResponse createResponse = CreateResponse.Builder().build(Result.SUCCESS).data(data);
 		response = ResponseEntity.created(uriComponents.toUri()).body(createResponse);
 

@@ -51,8 +51,8 @@ public class AccountController extends BaseAtlasController {
 		AccountsValidator.validateAccount(request);
 
 		CreateResponseData data = service.create(request);
-		UriComponents uriComponents =	uriBuilder.path("/{id}").buildAndExpand(data.getId());
-		CreateResponse responseBase = CreateResponse.Builder().build(Result.SUCCESS);
+		UriComponents uriComponents =	uriBuilder.path("/accounts/{id}").buildAndExpand(data.getId());
+		CreateResponse responseBase = CreateResponse.Builder().build(Result.SUCCESS).data(data);
 		response = ResponseEntity.created(uriComponents.toUri()).body(responseBase);
 
 		logger.debug(LoggingHelper.logInboundResponse(response));

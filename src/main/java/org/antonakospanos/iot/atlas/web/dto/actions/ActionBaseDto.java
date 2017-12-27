@@ -11,7 +11,7 @@ import java.time.ZonedDateTime;
 /**
  * ActionBaseDto
  */
-@JsonPropertyOrder({"execution", "recurring", "device", "condition"})
+@JsonPropertyOrder({ "execution", "recurring", "device", "condition" })
 public class ActionBaseDto {
 
 	@NotNull
