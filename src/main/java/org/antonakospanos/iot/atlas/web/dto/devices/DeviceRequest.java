@@ -13,14 +13,14 @@ import java.util.Objects;
 /**
  * HeartbeatRequest
  */
-@JsonPropertyOrder({ "timestamp", "devices" })
+@JsonPropertyOrder({ "timestamp", "device" })
 public class DeviceRequest {
 
   @JsonProperty("timestamp")
   @ApiModelProperty(example = "2017-11-19T16:52:40.000 UTC")
   private String timestamp = null;
 
-  @JsonProperty("devices")
+  @JsonProperty("device")
   private DeviceBaseDto device = null;
 
   public DeviceRequest timestamp(String timestamp) {
