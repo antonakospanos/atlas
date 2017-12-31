@@ -13,6 +13,7 @@ public class PatchRequest {
 	@ApiModelProperty(example = "2017-11-19T16:52:40.000 UTC")
 	private String timestamp = null;
 
+	@JsonProperty(value = "patches", required = true)
 	private List<PatchDto> patches;
 
 	public String getTimestamp() {

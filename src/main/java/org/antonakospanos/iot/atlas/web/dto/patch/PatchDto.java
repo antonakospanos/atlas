@@ -14,12 +14,12 @@ public class PatchDto {
 
 	@NotNull
 	@JsonProperty("operation")
-	@ApiModelProperty(example = "replace", allowableValues = "add, replace, remove")
+	@ApiModelProperty(example = "replace", allowableValues = "add, replace, remove", required = true)
 	private PatchOperation operation;
 
 	@NotNull
 	@JsonProperty("field")
-	@ApiModelProperty(example = "name", value = "name")
+	@ApiModelProperty(example = "name", value = "name", required = true)
 	private String field;
 
 	@JsonProperty("value")

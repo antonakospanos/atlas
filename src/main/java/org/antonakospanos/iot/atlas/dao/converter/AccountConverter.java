@@ -39,9 +39,9 @@ public class AccountConverter {
 	public void updateAccount(PatchDto patchDto, Account account) {
 		String value = null;
 		PatchOperation operation = patchDto.getOperation();
-		if (PatchOperation.ADD.equals(operation) || PatchOperation.REMOVE.equals(operation)) {
+		if (PatchOperation.ADD.equals(operation) || PatchOperation.REPLACE.equals(operation)) {
 			value = patchDto.getValue();
-		} else if (PatchOperation.REPLACE.equals(operation)) {
+		} else if (PatchOperation.REMOVE.equals(operation)) {
 			value = null;
 		}
 
