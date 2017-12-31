@@ -1,6 +1,5 @@
 package org.antonakospanos.iot.atlas.web.dto.events;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.web.dto.devices.DeviceDto;
@@ -17,12 +16,13 @@ import java.util.Objects;
 @JsonPropertyOrder({ "device", "device" })
 public class HeartbeatRequest {
 
-  @JsonProperty("timestamp")
   @ApiModelProperty(example = "2017-11-19T16:52:40.000 UTC")
-  private String timestamp = null;
+  private String timestamp;
 
-  @JsonProperty("device")
-  private DeviceDto device = null;
+  @NotNull
+  @Valid
+  @ApiModelProperty(required = true)
+  private DeviceDto device;
 
   public HeartbeatRequest timestamp(String timestamp) {
     this.timestamp = timestamp;
@@ -46,13 +46,6 @@ public class HeartbeatRequest {
     return this;
   }
 
-   /**
-   * Get device
-   * @return device
-  **/
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-  @Valid
   public DeviceDto getDevice() {
     return device;
   }

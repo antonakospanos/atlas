@@ -21,9 +21,10 @@ import java.util.stream.Collectors;
 @JsonPropertyOrder({ "id", "version", "uptime", "modules" })
 public class DeviceDto extends DeviceBaseDto implements Dto<Device> {
 
+	@NotNull
 	@JsonProperty("id") // access = JsonProperty.Access.READ_ONLY
-	@ApiModelProperty(example = "deviceId")
-	private String id = null;
+	@ApiModelProperty(example = "deviceId", required = true)
+	private String id;
 
 	public DeviceDto() {
 	}
@@ -62,13 +63,6 @@ public class DeviceDto extends DeviceBaseDto implements Dto<Device> {
 		return this;
 	}
 
-	/**
-	 * Get id
-	 *
-	 * @return id
-	 **/
-	@ApiModelProperty(example = "000000a12bcc", required = true, value = "")
-	@NotNull
 	public String getId() {
 		return id;
 	}

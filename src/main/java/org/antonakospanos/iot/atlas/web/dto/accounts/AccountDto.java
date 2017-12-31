@@ -1,11 +1,11 @@
 package org.antonakospanos.iot.atlas.web.dto.accounts;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -22,8 +22,8 @@ public class AccountDto extends AccountBaseDto implements Dto<Account> {
 			.map(field -> field.getName())
 			.collect(Collectors.toList());
 
-	@JsonProperty("id")
-	@ApiModelProperty(example = "accountId")
+	@NotNull
+	@ApiModelProperty(example = "accountId", required = true)
 	private UUID id;
 
 

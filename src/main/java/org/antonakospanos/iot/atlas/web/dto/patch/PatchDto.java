@@ -18,11 +18,9 @@ public class PatchDto {
 	private PatchOperation operation;
 
 	@NotNull
-	@JsonProperty("field")
-	@ApiModelProperty(example = "name", value = "name", required = true)
+	@ApiModelProperty(example = "name", required = true)
 	private String field;
 
-	@JsonProperty("value")
 	@ApiModelProperty(example = "Panos Antonakos")
 	private String value;
 

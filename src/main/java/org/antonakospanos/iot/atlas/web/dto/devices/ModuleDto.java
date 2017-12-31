@@ -19,25 +19,22 @@ import java.util.Objects;
 public class ModuleDto implements Dto<Module> {
 
 	@NotNull
-	@JsonProperty("id")
 	@ApiModelProperty(example = "thermometer_01", required = true)
-	private String id = null;
+	private String id;
 
-	@JsonProperty("name")
 	@ApiModelProperty(example = "living room thermometer")
-	private String name = null;
+	private String name;
 
-	@JsonProperty("type")
-	@ApiModelProperty(example = "thermometer")
-	private String type = null;
+	@NotNull
+	@ApiModelProperty(example = "thermometer", required = true)
+	private String type;
 
 	@JsonProperty("state")
-	@ApiModelProperty(example = "1")
-	private ModuleState state = null;
+	@ApiModelProperty(example = "1", allowableValues = "0,1,2,3,4", notes = "ENABLED(0), DISABLED(1), ARMED(2), DISARMED(3), ERROR(4)")
+	private ModuleState state;
 
-	@JsonProperty("value")
 	@ApiModelProperty(example = "36")
-	private String value = null;
+	private String value;
 
 	public ModuleDto() {
 	}

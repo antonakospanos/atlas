@@ -1,16 +1,20 @@
 package org.antonakospanos.iot.atlas.web.dto.actions;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.ConditionAndStatement;
 import org.antonakospanos.iot.atlas.dao.model.ConditionStatement;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 public class ConditionAndStatementDto implements Dto<ConditionAndStatement> {
 
 	@NotNull
+	@ApiModelProperty(required = true)
+	@Valid
 	DeviceConditionDto device;
 
 	public DeviceConditionDto getDevice() {

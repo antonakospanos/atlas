@@ -1,6 +1,5 @@
 package org.antonakospanos.iot.atlas.web.dto.alerts;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.Alert;
@@ -18,7 +17,6 @@ import java.util.UUID;
 @JsonPropertyOrder({"id, condition"})
 public class AlertDto extends AlertBaseDto implements Dto<Alert> {
 
-	@JsonProperty("id")
 	@ApiModelProperty(example = "alertId")
 	private UUID id;
 

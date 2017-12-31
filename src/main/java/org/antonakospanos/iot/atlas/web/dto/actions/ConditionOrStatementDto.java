@@ -1,11 +1,13 @@
 package org.antonakospanos.iot.atlas.web.dto.actions;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.ConditionAndStatement;
 import org.antonakospanos.iot.atlas.dao.model.ConditionOrStatement;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 public class ConditionOrStatementDto implements Dto<ConditionOrStatement> {
 
 	@NotNull
+	@ApiModelProperty(required = true)
+	@Valid
 	List<ConditionAndStatementDto> andLegs;
 
 	public List<ConditionAndStatementDto> getAndLegs() {

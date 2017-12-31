@@ -1,6 +1,5 @@
 package org.antonakospanos.iot.atlas.web.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.web.enums.Result;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -18,11 +17,13 @@ public class ResponseBase {
     return new ResponseBase();
   }
 
-  @JsonProperty("result")
-  private Result result = null;
+  @NotNull
+  @ApiModelProperty(required = true)
+  private Result result;
 
-  @JsonProperty("description")
-  private String description = null;
+  @NotNull
+  @ApiModelProperty(required = true)
+  private String description;
 
   public ResponseBase result(Result result) {
     this.result = result;
@@ -35,12 +36,6 @@ public class ResponseBase {
     return this;
   }
 
-  /**
-   * Get result
-   * @return result
-  **/
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
   public Result getResult() {
     return result;
   }
@@ -54,12 +49,6 @@ public class ResponseBase {
     return this;
   }
 
-   /**
-   * Get description
-   * @return description
-  **/
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
   public String getDescription() {
     return description;
   }

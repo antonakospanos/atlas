@@ -1,22 +1,23 @@
 package org.antonakospanos.iot.atlas.web.dto.actions;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 public class DeviceActionDto implements Serializable {
 
 	@NotNull
-	@JsonProperty("id")
 	@ApiModelProperty(example = "deviceId", required = true)
 	private String id;
 
 	@NotNull
+	@ApiModelProperty(required = true)
+	@Valid
 	private ModuleActionDto module;
 
 	public DeviceActionDto() {

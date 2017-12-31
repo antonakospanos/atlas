@@ -1,16 +1,20 @@
 package org.antonakospanos.iot.atlas.web.dto.accounts;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 public class AccountRequest {
 
-	@JsonProperty("timestamp")
 	@ApiModelProperty(example = "2017-11-19T16:52:40.000 UTC")
-	private String timestamp = null;
+	private String timestamp;
 
+	@Valid
+	@NotNull
+	@ApiModelProperty(required = true)
 	private AccountBaseDto account;
 
 	public String getTimestamp() {

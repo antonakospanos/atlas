@@ -1,6 +1,5 @@
 package org.antonakospanos.iot.atlas.web.dto.devices;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -16,12 +15,13 @@ import java.util.Objects;
 @JsonPropertyOrder({ "timestamp", "device" })
 public class DeviceRequest {
 
-  @JsonProperty("timestamp")
   @ApiModelProperty(example = "2017-11-19T16:52:40.000 UTC")
-  private String timestamp = null;
+  private String timestamp;
 
-  @JsonProperty("device")
-  private DeviceBaseDto device = null;
+  @NotNull
+  @Valid
+  @ApiModelProperty(required = true)
+  private DeviceBaseDto device;
 
   public DeviceRequest timestamp(String timestamp) {
     this.timestamp = timestamp;
@@ -45,13 +45,6 @@ public class DeviceRequest {
     return this;
   }
 
-   /**
-   * Get devices
-   * @return devices
-  **/
-  @ApiModelProperty(required = true, value = "")
-  @NotNull
-  @Valid
   public DeviceBaseDto getDevice() {
     return device;
   }

@@ -1,6 +1,5 @@
 package org.antonakospanos.iot.atlas.web.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.web.enums.Result;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -15,8 +14,8 @@ public class Response extends ResponseBase {
     return new Response();
   }
 
-  @JsonProperty("data")
-  private Object data = null;
+  @ApiModelProperty(required = true, notes = "Data created by the request")
+  private Object data;
 
   public Response build(Result result) {
     setResult(result);

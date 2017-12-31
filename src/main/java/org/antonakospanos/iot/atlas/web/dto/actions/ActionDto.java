@@ -1,6 +1,5 @@
 package org.antonakospanos.iot.atlas.web.dto.actions;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.Action;
@@ -13,6 +12,7 @@ import org.antonakospanos.iot.atlas.web.enums.Unit;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 /**
@@ -21,8 +21,8 @@ import java.util.UUID;
 @JsonPropertyOrder({ "id, execution", "recurring", "device", "condition" })
 public class ActionDto extends ActionBaseDto implements Dto<Action> {
 
-	@JsonProperty("id")
-	@ApiModelProperty(example = "actionId")
+	@NotNull
+	@ApiModelProperty(example = "actionId", required = true)
 	private UUID id;
 
 	public ActionDto() {

@@ -1,6 +1,5 @@
 package org.antonakospanos.iot.atlas.web.dto.devices;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -18,16 +17,15 @@ import java.util.Objects;
 @JsonPropertyOrder({ "version", "modules" })
 public class DeviceBaseDto {
 
-	@JsonProperty("version")
-	@ApiModelProperty(example = "1.0")
-	private String version = null;
+	@NotNull
+	@ApiModelProperty(example = "1.0", required = true)
+	private String version;
 
-	@JsonProperty("uptime")
 	@ApiModelProperty(example = "1000", notes = "The milliseconds since startup")
 	private Long uptime;
 
-	@JsonProperty("modules")
-	private List<ModuleDto> modules = null;
+	@Valid
+	private List<ModuleDto> modules;
 
 	public DeviceBaseDto() {
 	}
@@ -62,13 +60,7 @@ public class DeviceBaseDto {
 		return this;
 	}
 
-	/**
-	 * Get version
-	 *
-	 * @return version
-	 **/
-	@ApiModelProperty(example = "1.0", required = true, value = "")
-	@NotNull
+
 	public String getVersion() {
 		return version;
 	}
@@ -85,13 +77,6 @@ public class DeviceBaseDto {
 		this.uptime = uptime;
 	}
 
-	/**
-	 * Get modules
-	 *
-	 * @return modules
-	 **/
-	@ApiModelProperty(value = "")
-	@Valid
 	public List<ModuleDto> getModules() {
 		return modules;
 	}

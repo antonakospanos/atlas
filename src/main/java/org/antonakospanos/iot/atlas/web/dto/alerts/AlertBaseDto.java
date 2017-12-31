@@ -1,9 +1,13 @@
 package org.antonakospanos.iot.atlas.web.dto.alerts;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.web.dto.actions.ConditionDto;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.lang.NonNull;
+
+import javax.validation.Valid;
 
 /**
  * AlertBaseDto
@@ -11,6 +15,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @JsonPropertyOrder({"condition"})
 public class AlertBaseDto {
 
+	@NonNull
+	@ApiModelProperty(required = true)
+	@Valid
 	private ConditionDto condition;
 
 	public ConditionDto getCondition() {

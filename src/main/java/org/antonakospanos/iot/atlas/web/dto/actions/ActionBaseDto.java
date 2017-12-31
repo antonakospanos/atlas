@@ -1,10 +1,12 @@
 package org.antonakospanos.iot.atlas.web.dto.actions;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.ZonedDateTime;
 
@@ -16,11 +18,15 @@ public class ActionBaseDto {
 
 	@NotNull
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS ZZZ")
+	@ApiModelProperty(required = true)
 	private ZonedDateTime execution;
 
+	@Valid
 	private RecurringActionDto recurring;
 
 	@NotNull
+	@ApiModelProperty(required = true)
+	@Valid
 	private DeviceActionDto device;
 
 	private ConditionDto condition;

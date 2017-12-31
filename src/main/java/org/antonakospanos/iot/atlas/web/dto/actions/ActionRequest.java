@@ -1,26 +1,27 @@
 package org.antonakospanos.iot.atlas.web.dto.actions;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 public class ActionRequest {
 
-	@JsonProperty("timestamp")
 	@ApiModelProperty(example = "2017-11-19T16:52:40.000 UTC")
-	private String timestamp = null;
+	private String timestamp;
 
-	@JsonProperty("accountId")
-	@ApiModelProperty(example = "297dd70e-de40-4c82-8b75-f7183474d848")
-	private UUID accountId = null;
+	@NotNull
+	@ApiModelProperty(example = "297dd70e-de40-4c82-8b75-f7183474d848", required = true)
+	private UUID accountId;
 
-	@JsonProperty("action")
-	private ActionBaseDto action = null;
+	@Valid
+	@NotNull
+	@ApiModelProperty(required = true)
+	private ActionBaseDto action;
 
-	@JsonProperty("alert")
 	@ApiModelProperty(example = "true")
 	private Boolean alert = false;
 

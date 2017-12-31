@@ -1,6 +1,5 @@
 package org.antonakospanos.iot.atlas.web.dto.accounts;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -13,33 +12,27 @@ import java.util.List;
 @JsonPropertyOrder({ "username", "password", "name", "email", "cellphone", "devices" })
 public class AccountBaseDto {
 
-	@JsonProperty("username")
-	@ApiModelProperty(example = "ckar")
 	@NotEmpty
+	@ApiModelProperty(example = "ckar", required = true)
 	private String username;
 
 	/**
 	 * Hashed password
 	 */
-	@JsonProperty("password")
-	@ApiModelProperty(example = "password")
 	@NotEmpty
+	@ApiModelProperty(example = "password", required = true)
 	private String password;
 
-	@JsonProperty("name")
 	@ApiModelProperty(example = "Kostas Carouzos")
 	private String name;
 
-	@JsonProperty("email")
-	@ApiModelProperty(example = "kostas@carouzos.com")
 	@NotEmpty
+	@ApiModelProperty(example = "kostas@carouzos.com", required = true)
 	private String email;
 
-	@JsonProperty("cellphone")
 	@ApiModelProperty(example = "00306941234567")
 	private String cellphone;
 
-	@JsonProperty("devices")
 	@ApiModelProperty(allowableValues = "deviceId")
 	private List<String> devices;
 
