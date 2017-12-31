@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.antonakospanos.iot.atlas.service.AccountService;
+import org.antonakospanos.iot.atlas.support.ControllerUtils;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountDto;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountRequest;
@@ -132,12 +133,12 @@ public class AccountController extends BaseAtlasController {
 		return response;
 	}
 
-	@ApiOperation(value = "Lists the accounts of the integrated IoT devices", response = AccountDto.class, responseContainer="List")
+	@ApiOperation(value = "Lists the accounts of the integrated IoT devices", response = AccountDto.class)
 	@RequestMapping(value = "/{accountId}", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<Iterable> listAccount(@PathVariable UUID accountId) {
+	public ResponseEntity<AccountDto> listAccount(@PathVariable UUID accountId) {
 
 		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId));
-		ResponseEntity<Iterable> response = list(accountId);
+		ResponseEntity<AccountDto> response = list(accountId);
 		logger.debug(LoggingHelper.logInboundResponse(response));
 
 		return response;
@@ -219,30 +220,18 @@ public class AccountController extends BaseAtlasController {
 	private ResponseEntity<Iterable> listAll() {
 		List<AccountDto> accounts = service.listAll();
 
-		return list(accounts);
+		return ControllerUtils.listResources(accounts);
 	}
 
-	private ResponseEntity<Iterable> list(String username) {
+	private ResponseEntity<AccountDto> list(String username) {
 		List<AccountDto> accounts = service.list(username);
 
-		return list(accounts);
+		return ControllerUtils.listResource(accounts);
 	}
 
-	private ResponseEntity<Iterable> list(UUID accountId) {
+	private ResponseEntity<AccountDto> list(UUID accountId) {
 		List<AccountDto> accounts = service.list(accountId);
 
-		return list(accounts);
-	}
-
-	private ResponseEntity<Iterable> list(List<AccountDto> accounts) {
-		ResponseEntity<Iterable> response;
-
-		if (accounts != null && !accounts.isEmpty()) {
-			response = ResponseEntity.status(HttpStatus.OK).body(accounts);
-		} else {
-			response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(accounts);
-		}
-
-		return response;
+		return ControllerUtils.listResource(accounts);
 	}
 }

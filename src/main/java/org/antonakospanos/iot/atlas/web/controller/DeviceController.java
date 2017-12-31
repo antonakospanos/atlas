@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.antonakospanos.iot.atlas.service.DeviceService;
+import org.antonakospanos.iot.atlas.support.ControllerUtils;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
 import org.antonakospanos.iot.atlas.web.dto.devices.DeviceDto;
 import org.antonakospanos.iot.atlas.web.dto.devices.DeviceRequest;
@@ -63,20 +64,20 @@ public class DeviceController extends BaseAtlasController {
 		logger.debug(LoggingHelper.logInboundRequest("/devices/"));
 		List<DeviceDto> devices = service.listAll();
 
-		ResponseEntity<Iterable> response = createResponse(devices);
+		ResponseEntity<Iterable> response = ControllerUtils.listResources(devices);
 		logger.debug(LoggingHelper.logInboundResponse(response));
 
 		return response;
 	}
 
-	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
+	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class)
 	@RequestMapping(value = "/devices/{deviceId}", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<Iterable> listDevice(@PathVariable String deviceId) {
+	public ResponseEntity<DeviceDto> listDevice(@PathVariable String deviceId) {
 
 		logger.debug(LoggingHelper.logInboundRequest("/devices/" + deviceId));
 		List<DeviceDto> devices = service.list(deviceId);
 
-		ResponseEntity<Iterable> response = createResponse(devices);
+		ResponseEntity<DeviceDto> response = ControllerUtils.listResource(devices);
 		logger.debug(LoggingHelper.logInboundResponse(response));
 
 		return response;
@@ -89,20 +90,20 @@ public class DeviceController extends BaseAtlasController {
 		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId + "/devices/"));
 		List<DeviceDto> devices = service.listByAccountId(null, accountId);
 
-		ResponseEntity<Iterable> response = createResponse(devices);
+		ResponseEntity<Iterable> response = ControllerUtils.listResources(devices);
 		logger.debug(LoggingHelper.logInboundResponse(response));
 
 		return response;
 	}
 
-	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
+	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class)
 	@RequestMapping(value = "/accounts/{accountId}/devices/{deviceId}", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<Iterable> listAccountDevice(@PathVariable UUID accountId, @PathVariable String deviceId) {
+	public ResponseEntity<DeviceDto> listAccountDevice(@PathVariable UUID accountId, @PathVariable String deviceId) {
 
 		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId + "/devices/" + deviceId));
 		List<DeviceDto> devices = service.listByAccountId(deviceId, accountId);
 
-		ResponseEntity<Iterable> response = createResponse(devices);
+		ResponseEntity<DeviceDto> response = ControllerUtils.listResource(devices);
 		logger.debug(LoggingHelper.logInboundResponse(response));
 
 		return response;
@@ -115,7 +116,7 @@ public class DeviceController extends BaseAtlasController {
 //		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username + "/devices/"));
 //		List<DeviceDto> deviceDtos = service.listByUsername(null, username);
 //
-//		ResponseEntity<Iterable> response = createResponse(deviceDtos);
+//		ResponseEntity<Iterable> response = ControllerUtils.listResources(deviceDtos);
 //		logger.debug(LoggingHelper.logInboundResponse(response));
 //
 //		return response;
@@ -128,21 +129,9 @@ public class DeviceController extends BaseAtlasController {
 //		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username + "/devices/" + deviceId));
 //	  List<DeviceDto> deviceDtos = service.listByUsername(deviceId, username);
 //
-//	  ResponseEntity<Iterable> response = createResponse(deviceDtos);
+//	  ResponseEntity<DeviceDto> response = ControllerUtils.listResource(deviceDtos);
 //		logger.debug(LoggingHelper.logInboundResponse(response));
 //
 //		return response;
 //	}
-
-	private ResponseEntity<Iterable> createResponse(List<DeviceDto> devices) {
-		ResponseEntity<Iterable> response;
-
-		if (devices != null && !devices.isEmpty()) {
-			response = ResponseEntity.status(HttpStatus.OK).body(devices);
-		} else {
-			response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(devices);
-		}
-
-		return response;
-	}
 }
