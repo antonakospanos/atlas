@@ -47,6 +47,8 @@ public class ConditionStatement implements Serializable {
 
 	private Double maxValue;
 
+	private Boolean negated = false;
+
 	public Long getId() {
 		return id;
 	}
@@ -117,5 +119,13 @@ public class ConditionStatement implements Serializable {
 
 	public void setModuleExternalId(String moduleExternalId) {
 		this.moduleExternalId = moduleExternalId;
+	}
+
+	public Boolean getNegated() {
+		return negated;
+	}
+
+	public void setNegated(Boolean negated) {
+		this.negated = negated;
 	}
 }

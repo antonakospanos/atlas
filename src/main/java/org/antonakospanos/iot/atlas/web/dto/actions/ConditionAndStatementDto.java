@@ -15,7 +15,9 @@ public class ConditionAndStatementDto implements Dto<ConditionAndStatement> {
 	@NotNull
 	@ApiModelProperty(required = true)
 	@Valid
-	DeviceConditionDto device;
+	private DeviceConditionDto device;
+
+	private Boolean negated = false;
 
 	public DeviceConditionDto getDevice() {
 		return device;
@@ -23,6 +25,14 @@ public class ConditionAndStatementDto implements Dto<ConditionAndStatement> {
 
 	public void setDevice(DeviceConditionDto device) {
 		this.device = device;
+	}
+
+	public Boolean getNegated() {
+		return negated;
+	}
+
+	public void setNegated(Boolean negated) {
+		this.negated = negated;
 	}
 
 	@Override
@@ -49,6 +59,7 @@ public class ConditionAndStatementDto implements Dto<ConditionAndStatement> {
 	public ConditionAndStatementDto fromEntity(ConditionAndStatement conditionAndStatement) {
 
 		ConditionStatement condition = conditionAndStatement.getConditionStatement();
+		this.negated = condition.getNegated();
 
 		ModuleConditionDto moduleConditionDto = new ModuleConditionDto();
 		moduleConditionDto.setId(condition.getModule().getExternalId());
@@ -58,7 +69,7 @@ public class ConditionAndStatementDto implements Dto<ConditionAndStatement> {
 		moduleConditionDto.setState(condition.getState());
 
 		String deviceId = condition.getModule().getDevice().getExternalId();
-		this.setDevice(new DeviceConditionDto(deviceId, moduleConditionDto));
+		this.device = new DeviceConditionDto(deviceId, moduleConditionDto);
 
 		return this;
 	}
@@ -85,6 +96,7 @@ public class ConditionAndStatementDto implements Dto<ConditionAndStatement> {
 		condition.setDeviceExternalId(this.getDevice().getId());
 		condition.setModuleExternalId(module.getId());
 
+		condition.setNegated(this.negated);
 		conditionAndStatement.setConditionStatement(condition);
 
 		return conditionAndStatement;
