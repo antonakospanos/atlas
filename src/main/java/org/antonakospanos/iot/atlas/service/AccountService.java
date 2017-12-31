@@ -110,8 +110,7 @@ public class AccountService {
 			// Validate Account patches
 			if (patchDto.getField().equals("username")) {
 				validateNewUsername(account.getUsername(), patchDto.getValue());
-			}
-			if (patchDto.getField().equals("devices") && StringUtils.isNotBlank(patchDto.getValue())) {
+			} else if (patchDto.getField().equals("devices")) {
 				validateNewDevice(patchDto.getValue());
 			}
 			// Update Account in DB
@@ -215,20 +214,24 @@ public class AccountService {
 
 	@Transactional
 	public void validateNewUsername(String oldUsername, String newUsername) {
-		// Check that resource does not conflict
-		Account account = accountRepository.findByUsername(newUsername);
-		if (!oldUsername.equals(newUsername) && account != null) {
-			// Illegal username replacement
-			throw new IllegalArgumentException("Account with username '" + newUsername + "' already exists!");
+		if (StringUtils.isNotBlank(newUsername)) {
+			// Check that resource does not conflict
+			Account account = accountRepository.findByUsername(newUsername);
+			if (!oldUsername.equals(newUsername) && account != null) {
+				// Illegal username replacement
+				throw new IllegalArgumentException("Account with username '" + newUsername + "' already exists!");
+			}
 		}
 	}
 
 	@Transactional
 	public void validateNewDevice(String deviceExternalId) {
-		// Check that device resources exist
-		Device device = deviceRepository.findByExternalId(deviceExternalId);
-		if (device == null) {
-			throw new IllegalArgumentException("Device with id '" + deviceExternalId + "' does not exist!");
+		if (StringUtils.isNotBlank(deviceExternalId)) {
+			// Check that device resources exist
+			Device device = deviceRepository.findByExternalId(deviceExternalId);
+			if (device == null) {
+				throw new IllegalArgumentException("Device with id '" + deviceExternalId + "' does not exist!");
+			}
 		}
 	}
 }

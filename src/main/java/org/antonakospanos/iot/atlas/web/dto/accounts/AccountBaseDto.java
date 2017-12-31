@@ -23,12 +23,12 @@ public class AccountBaseDto {
 	@ApiModelProperty(example = "password", required = true)
 	private String password;
 
-	@ApiModelProperty(example = "Kostas Carouzos")
-	private String name;
-
 	@NotEmpty
 	@ApiModelProperty(example = "kostas@carouzos.com", required = true)
 	private String email;
+
+	@ApiModelProperty(example = "Kostas Carouzos")
+	private String name;
 
 	@ApiModelProperty(example = "00306941234567")
 	private String cellphone;

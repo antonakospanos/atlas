@@ -21,22 +21,28 @@ public class AccountsValidator {
 			PatchOperation operation = patchDto.getOperation();
 			String value = patchDto.getValue();
 
-			// Operation validation
-			if (patchDto.getOperation().equals(PatchOperation.REMOVE) && patchDto.getField().equals("username")) {
-				throw new IllegalArgumentException("Username is required and cannot be removed");
-			} else if (patchDto.getOperation().equals(PatchOperation.REMOVE) && patchDto.getField().equals("password")) {
-				throw new IllegalArgumentException("Password is required and cannot be removed");
-			} else if (patchDto.getOperation().equals(PatchOperation.REMOVE) && patchDto.getField().equals("email")) {
-				throw new IllegalArgumentException("Email is required and cannot be removed");
-			} else if (patchDto.getOperation().equals(PatchOperation.REPLACE) && patchDto.getField().equals("devices")) {
-				throw new IllegalArgumentException("Devices can be explicitly added or removed");
-			}
-
 			// Field validation
 			if (StringUtils.isBlank(field)) {
 				throw new IllegalArgumentException("Field is required! Account resource: " + AccountDto.fields);
 			} else if (!AccountDto.fields.contains(field)) {
 				throw new IllegalArgumentException("Field '" + field + "' is not included in Account resource: " + AccountDto.fields);
+			}
+
+			// Operation ADD validation: Required fields can only be replaced
+			if (patchDto.getOperation().equals(PatchOperation.ADD) &&
+					(patchDto.getField().equals("username") || patchDto.getField().equals("password") || patchDto.getField().equals("email"))) {
+
+				throw new IllegalArgumentException("Multiple "+patchDto.getField()+"s are not permitted");
+			}
+			// Operation REMOVE validation: Required fields can only be replaced
+			if (patchDto.getOperation().equals(PatchOperation.REMOVE) && patchDto.getField().equals("username") ||
+					(patchDto.getField().equals("username") || patchDto.getField().equals("password") || patchDto.getField().equals("email"))) {
+
+				throw new IllegalArgumentException("Field "+patchDto.getField()+" is required and cannot be removed");
+			}
+			// Operation REPLACE validation
+			if (patchDto.getOperation().equals(PatchOperation.REPLACE) && patchDto.getField().equals("devices")) {
+				throw new IllegalArgumentException("Devices can be explicitly added or removed");
 			}
 
 			// Value validation
@@ -46,9 +52,9 @@ public class AccountsValidator {
 			if (PatchOperation.REPLACE.equals(operation) && StringUtils.isEmpty(value)) {
 				throw new IllegalArgumentException("Value '" + value + "' is required in case of REPLACE operation");
 			}
-			if (PatchOperation.REMOVE.equals(operation) && !value.equals("devices")) {
+			if (PatchOperation.REMOVE.equals(operation) && StringUtils.isNotBlank(value)  && !field.equals("devices")) {
 				// Value is used only in case of devices to define the deviceId that should be removed, else the whole array will be removed
-				throw new IllegalArgumentException("Value '" + value + "' should be avoided in case of REMOVE operation");
+				throw new IllegalArgumentException("Value '" + value + "' should be avoided in case of REMOVE operation (apart from field='devices' where value='deviceId' to be removed)");
 			}
 		});
 	}

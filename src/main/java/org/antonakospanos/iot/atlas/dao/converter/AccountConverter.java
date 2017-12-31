@@ -37,15 +37,10 @@ public class AccountConverter {
 	}
 
 	public void updateAccount(PatchDto patchDto, Account account) {
-		String value = null;
-		PatchOperation operation = patchDto.getOperation();
-		if (PatchOperation.ADD.equals(operation) || PatchOperation.REPLACE.equals(operation)) {
-			value = patchDto.getValue();
-		} else if (PatchOperation.REMOVE.equals(operation)) {
-			value = null;
-		}
-
 		String field = patchDto.getField();
+		PatchOperation operation = patchDto.getOperation();
+		String value = patchDto.getValue();
+
 		if ("username".equals(field)) {
 			account.setUsername(value);
 		} else if ("password".equals(field)) {
