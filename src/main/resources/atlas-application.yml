@@ -36,6 +36,14 @@ flyway:
   table: DB_MIGRATION_HISTORY
   sqlMigrationSuffix: .Final.sql
   schemas: atlas
+mqtt:
+  broker:
+    url: "tcp://broker.mqttdashboard.com:1883"
+  client:
+    id: "org.iotac.atlas"
+  service:
+    quality: 1 # 0,1 or 2
+    retained: false
 application:
   roles:
     admin:
