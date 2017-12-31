@@ -22,20 +22,30 @@ public class DeviceBaseDto {
 	@ApiModelProperty(example = "1.0")
 	private String version = null;
 
+	@JsonProperty("uptime")
+	@ApiModelProperty(example = "1000", notes = "The milliseconds since startup")
+	private Long uptime;
+
 	@JsonProperty("modules")
 	private List<ModuleDto> modules = null;
 
 	public DeviceBaseDto() {
 	}
 
-	public DeviceBaseDto(String version, List<ModuleDto> modules) {
+	public DeviceBaseDto(String version, Long uptime, List<ModuleDto> modules) {
 		this.version = version;
+		this.uptime = uptime;
 		this.modules = modules;
 	}
 
 	// Factory methods
 	public DeviceBaseDto version(String version) {
 		this.version = version;
+		return this;
+	}
+
+	public DeviceBaseDto version(Long uptime) {
+		this.uptime = uptime;
 		return this;
 	}
 
@@ -65,6 +75,14 @@ public class DeviceBaseDto {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public Long getUptime() {
+		return uptime;
+	}
+
+	public void setUptime(Long uptime) {
+		this.uptime = uptime;
 	}
 
 	/**

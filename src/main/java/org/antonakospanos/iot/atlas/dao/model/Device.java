@@ -27,6 +27,8 @@ public class Device implements Serializable {
 
 	private String version;
 
+	private Long uptime;
+
 	private String externalId;
 
 	private ZonedDateTime lastContact;
@@ -37,9 +39,10 @@ public class Device implements Serializable {
 	public Device() {
 	}
 
-	public Device(String name, String version, String externalId, ZonedDateTime lastContact, List<Module> modules) {
+	public Device(String name, String version, Long uptime, String externalId, ZonedDateTime lastContact, List<Module> modules) {
 		this.name = name;
 		this.version = version;
+		this.uptime = uptime;
 		this.externalId = externalId;
 		this.lastContact = lastContact;
 		this.modules = modules;
@@ -67,6 +70,14 @@ public class Device implements Serializable {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public Long getUptime() {
+		return uptime;
+	}
+
+	public void setUptime(Long uptime) {
+		this.uptime = uptime;
 	}
 
 	public String getExternalId() {

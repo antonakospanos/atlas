@@ -20,7 +20,7 @@ public class DeviceConverter {
 	public Device createDevice(DeviceDto deviceDto) {
 
 		List<Module> modules = new ArrayList<>();
-		Device device = new Device(null, deviceDto.getVersion(), deviceDto.getId(), ZonedDateTime.now(), modules);
+		Device device = new Device(null, deviceDto.getVersion(), deviceDto.getUptime(), deviceDto.getId(), ZonedDateTime.now(), modules);
 
 		deviceDto.getModules()
 				.stream()
@@ -36,6 +36,7 @@ public class DeviceConverter {
 
 		device.setExternalId(deviceDto.getId());
 		device.setVersion(deviceDto.getVersion());
+		device.setUptime(deviceDto.getUptime());
 		device.setLastContact(ZonedDateTime.now());
 
 		Map<String, ModuleDto> newModules = deviceDto.getModules().stream().collect(Collectors.toMap(ModuleDto::getId, Function.identity()));

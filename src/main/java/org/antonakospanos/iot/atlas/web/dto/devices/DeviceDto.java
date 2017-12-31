@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 /**
  * DeviceDto
  */
-@JsonPropertyOrder({ "id", "version", "modules" })
+@JsonPropertyOrder({ "id", "version", "uptime", "modules" })
 public class DeviceDto extends DeviceBaseDto implements Dto<Device> {
 
 	@JsonProperty("id") // access = JsonProperty.Access.READ_ONLY
@@ -29,12 +29,12 @@ public class DeviceDto extends DeviceBaseDto implements Dto<Device> {
 	}
 
 	public DeviceDto(String id, DeviceBaseDto deviceBaseDto) {
-		super(deviceBaseDto.getVersion(), deviceBaseDto.getModules());
+		super(deviceBaseDto.getVersion(), deviceBaseDto.getUptime(), deviceBaseDto.getModules());
 		this.id = id;
 	}
 
-	public DeviceDto(String id, String version, List<ModuleDto> modules) {
-		super(version, modules);
+	public DeviceDto(String id, String version, Long uptime, List<ModuleDto> modules) {
+		super(version, uptime, modules);
 		this.id = id;
 	}
 
@@ -104,6 +104,7 @@ public class DeviceDto extends DeviceBaseDto implements Dto<Device> {
 	public DeviceDto fromEntity(Device device) {
 		this.id = device.getExternalId();
 		setVersion(device.getVersion());
+		setUptime(device.getUptime());
 		setModules(device.getModules().stream().map(e -> new ModuleDto().fromEntity(e)).collect(Collectors.toList()));
 
 		return this;
@@ -121,6 +122,7 @@ public class DeviceDto extends DeviceBaseDto implements Dto<Device> {
 
 		device.setExternalId(this.getId());
 		device.setVersion(this.getVersion());
+		device.setUptime(this.getUptime());
 		device.setLastContact(ZonedDateTime.now());
 
 		List<Module> modules =
