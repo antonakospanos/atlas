@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public abstract class MqttConsumer implements MqttCallback {
 
 	@Value("${mqtt.service.quality}")
-	private static final int qos = 1;
+	private int qos = 1;
 
 	@Override
 	public void connectionLost(Throwable cause) {

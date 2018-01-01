@@ -19,9 +19,9 @@ public class MqttBrokerClient {
 	private MqttClient mqttClient;
 
 	@Value("${mqtt.broker.url}")
-	private static String brokerUrl = "tcp://broker.mqttdashboard.com:1883";
+	private String brokerUrl = "tcp://broker.mqttdashboard.com:1883";
 	@Value("${mqtt.client.id}")
-	private static String clientId = "org.iotac.atlas";
+	private String clientId = "org.iotac.atlas";
 
 	@PostConstruct
 	private void create() {

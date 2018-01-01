@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AlertProducer extends MqttProducer {
 
-	public static final String ALERTS_TOPIC = "accounts/+/alerts";
+	public String ALERTS_TOPIC = "accounts/+/alerts";
 
 	@Autowired
 	MqttBrokerClient mqttBrokerClient;

@@ -52,3 +52,8 @@ application:
     user:
       username: user
       password: iotac
+  cron:
+    actions:
+      lookup-rate: 10000
+    alerts:
+      lookup-rate: 10000

@@ -1,5 +1,6 @@
 package org.antonakospanos.iot.atlas.service;
 
+import org.antonakospanos.iot.atlas.broker.mqtt.producer.ActionProducer;
 import org.antonakospanos.iot.atlas.dao.converter.DeviceConverter;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
@@ -35,6 +36,9 @@ public class EventsService {
 	@Autowired
 	DeviceService deviceService;
 
+	@Autowired
+	ActionProducer actionProducer;
+
 
 	@Transactional
 	public HeartbeatResponseData create(HeartbeatRequest request) {
@@ -42,8 +46,11 @@ public class EventsService {
 		// Add or Update Device information
 		Device device = deviceService.put(request.getDevice());
 
-		// Check for planned actions for devices's modules
+		// Check for planned or conditional actions for devices's modules
 		List<ModuleActionDto> actions = actionService.findActions(device);
+
+		// Publish actions to MQTT Broker
+		actionProducer.publishAction(actions);
 
 		HeartbeatResponseData responseData = new HeartbeatResponseData();
 		responseData.setActions(actions);

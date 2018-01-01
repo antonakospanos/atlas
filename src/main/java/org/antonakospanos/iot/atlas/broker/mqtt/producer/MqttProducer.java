@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 public abstract class MqttProducer {
 
 	@Value("${mqtt.service.quality}")
-	private static final int qos = 1;
+	private int qos = 1;
 
 	@Value("${mqtt.service.retained}")
-	private static final boolean retained = false;
+	private boolean retained = false;
 
 	public int getQoS() {
 		return qos;

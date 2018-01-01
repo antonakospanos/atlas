@@ -177,9 +177,20 @@ public class ActionService {
 		List<ModuleActionDto> moduleActions = new ArrayList<>();
 
 		for (Module module : device.getModules()) {
-			List<Action> plannedActions = findPlannedActions(module.getId());
+			List<Action> actions = findActions(module.getId());
 
-			if (!plannedActions.isEmpty()) {
+			if (!actions.isEmpty()) {
+				List<Action> plannedActions = actions.stream().filter(action -> action.getNextExecution() != null).collect(Collectors.toList());
+				List<Action> conditionalActions = actions.stream().filter(action -> action.getNextExecution() == null).collect(Collectors.toList());
+
+				// Conditional actions
+				conditionalActions.forEach(conditionalAction -> {
+					ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), conditionalAction.getState(), conditionalAction.getValue());
+					moduleActions.add(moduleAction);
+					logger.debug("Triggered for device '"+device.getExternalId()+"' action: " + moduleAction);
+				});
+
+				// Time based actions (condition may also have been added)
 				Optional<Action> plannedAction = plannedActions.stream()
 						.sorted(Comparator.comparing(Action::getNextExecution, Comparator.reverseOrder()))
 						.findFirst();
@@ -189,7 +200,7 @@ public class ActionService {
 					Action triggeredAction = plannedAction.get();
 					ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), triggeredAction.getState(), triggeredAction.getValue());
 					moduleActions.add(moduleAction);
-					logger.debug("Returned action: " + moduleAction);
+					logger.debug("Triggered for device '"+device.getExternalId()+"' action: " + moduleAction);
 				}
 
 				rescheduleActions(plannedActions);
@@ -199,11 +210,12 @@ public class ActionService {
 		return moduleActions;
 	}
 
-	public List<Action> findPlannedActions(Long moduleId) {
+	public List<Action> findActions(Long moduleId) {
 		List<Action> actions = actionRepository.findByModule_Id(moduleId);
 
 		return actions.stream()
-				.filter(a -> a.getNextExecution().isBefore(ZonedDateTime.now()))
+				.filter(a -> a.getNextExecution() == null || a.getNextExecution().isBefore(ZonedDateTime.now()))
+				.filter(a -> conditionService.isValid(a.getCondition()))
 				.collect(Collectors.toList());
 	}
 
