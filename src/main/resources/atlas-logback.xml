@@ -13,7 +13,7 @@
 			<!-- daily rollover -->
 			<fileNamePattern>/applogs/atlas/atlas-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
 			<!-- keep 20 days worth of history -->
-			<maxHistory>20</maxHistory>
+			<maxHistory>2</maxHistory>
 		</rollingPolicy>
 		<encoder>
 			<pattern>%boldBlue([ATLAS]) - %d %highlight(%-5level) %cyan(%50.50logger) - [%thread] %msg %n</pattern>
