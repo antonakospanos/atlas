@@ -1,4 +1,4 @@
-package org.antonakospanos.iot.atlas.broker.mqtt.consumer;
+package org.antonakospanos.iot.atlas.adapter.mqtt.consumer;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;

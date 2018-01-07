@@ -1,6 +1,6 @@
-package org.antonakospanos.iot.atlas.broker.mqtt.consumer;
+package org.antonakospanos.iot.atlas.adapter.mqtt.consumer;
 
-import org.antonakospanos.iot.atlas.broker.mqtt.MqttBrokerClient;
+import org.antonakospanos.iot.atlas.adapter.mqtt.MqttBrokerClient;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;

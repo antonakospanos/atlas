@@ -1,8 +1,8 @@
-package org.antonakospanos.iot.atlas.broker.mqtt.producer;
+package org.antonakospanos.iot.atlas.adapter.mqtt.producer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.antonakospanos.iot.atlas.broker.mqtt.MqttBrokerClient;
+import org.antonakospanos.iot.atlas.adapter.mqtt.MqttBrokerClient;
 import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

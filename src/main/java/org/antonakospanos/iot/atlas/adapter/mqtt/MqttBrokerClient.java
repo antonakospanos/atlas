@@ -1,6 +1,6 @@
-package org.antonakospanos.iot.atlas.broker.mqtt;
+package org.antonakospanos.iot.atlas.adapter.mqtt;
 
-import org.antonakospanos.iot.atlas.broker.mqtt.consumer.MqttConsumer;
+import org.antonakospanos.iot.atlas.adapter.mqtt.consumer.MqttConsumer;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;

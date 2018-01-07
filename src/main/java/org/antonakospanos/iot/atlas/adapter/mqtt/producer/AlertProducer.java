@@ -1,6 +1,6 @@
-package org.antonakospanos.iot.atlas.broker.mqtt.producer;
+package org.antonakospanos.iot.atlas.adapter.mqtt.producer;
 
-import org.antonakospanos.iot.atlas.broker.mqtt.MqttBrokerClient;
+import org.antonakospanos.iot.atlas.adapter.mqtt.MqttBrokerClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

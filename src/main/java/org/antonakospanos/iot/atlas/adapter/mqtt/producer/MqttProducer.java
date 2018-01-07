@@ -1,4 +1,4 @@
-package org.antonakospanos.iot.atlas.broker.mqtt.producer;
+package org.antonakospanos.iot.atlas.adapter.mqtt.producer;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

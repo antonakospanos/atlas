@@ -1,7 +1,7 @@
 package org.antonakospanos.iot.atlas.service;
 
-import org.antonakospanos.iot.atlas.broker.mqtt.producer.ActionProducer;
-import org.antonakospanos.iot.atlas.broker.mqtt.producer.AlertProducer;
+import org.antonakospanos.iot.atlas.adapter.mqtt.producer.ActionProducer;
+import org.antonakospanos.iot.atlas.adapter.mqtt.producer.AlertProducer;
 import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;

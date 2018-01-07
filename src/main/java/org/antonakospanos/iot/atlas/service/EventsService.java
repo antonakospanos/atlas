@@ -1,6 +1,6 @@
 package org.antonakospanos.iot.atlas.service;
 
-import org.antonakospanos.iot.atlas.broker.mqtt.producer.ActionProducer;
+import org.antonakospanos.iot.atlas.adapter.mqtt.producer.ActionProducer;
 import org.antonakospanos.iot.atlas.dao.converter.DeviceConverter;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
