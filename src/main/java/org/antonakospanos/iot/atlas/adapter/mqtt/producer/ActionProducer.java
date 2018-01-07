@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class ActionProducer extends MqttProducer {
 
-	public static final String ACTIONS_TOPIC = "devices/+/actions";
+	public static final String ACTIONS_TOPIC = "devices/${id}/actions";
 
 	private final static Logger logger = LoggerFactory.getLogger(ActionProducer.class);
 
@@ -24,7 +24,9 @@ public class ActionProducer extends MqttProducer {
 	@Autowired
 	ObjectMapper jsonSerializer;
 
-	public void publishAction(List<ModuleActionDto> actions) {
+	public void publishAction(List<ModuleActionDto> actions, String deviceId) {
+		String actionsTopic = ACTIONS_TOPIC.replace("${id}", deviceId);
+
 		for (ModuleActionDto action: actions) {
 
 			byte[] payload = null;
@@ -34,7 +36,7 @@ public class ActionProducer extends MqttProducer {
 				logger.error("Could not serialize publishing action to MQTT Broker: " + action);
 			}
 
-			mqttBrokerClient.publish(ACTIONS_TOPIC, payload, getQoS(), isRetained());
+			mqttBrokerClient.publish(actionsTopic, payload, getQoS(), isRetained());
 		}
 	}
 }

@@ -7,13 +7,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class AlertProducer extends MqttProducer {
 
-	public String ALERTS_TOPIC = "accounts/+/alerts";
+	public String ALERTS_TOPIC = "accounts/${id}/alerts";
 
 	@Autowired
 	MqttBrokerClient mqttBrokerClient;
 
-	public void publish(String message) {
+	public void publish(String message, String accountId) {
+		String alertsTopic = ALERTS_TOPIC.replace("${id}", accountId);
+
 		byte[] payload = message.getBytes();
-		mqttBrokerClient.publish(ALERTS_TOPIC, payload, getQoS(), isRetained());
+		mqttBrokerClient.publish(alertsTopic, payload, getQoS(), isRetained());
 	}
 }

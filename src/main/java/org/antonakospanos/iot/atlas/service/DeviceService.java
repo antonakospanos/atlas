@@ -24,9 +24,6 @@ public class DeviceService {
 	private final static Logger logger = LoggerFactory.getLogger(DeviceService.class);
 
 	@Autowired
-	AccountService accountService;
-
-	@Autowired
 	AccountRepository accountRepository;
 
 	@Autowired
@@ -35,8 +32,16 @@ public class DeviceService {
 	@Autowired
 	DeviceConverter deviceConverter;
 
+
+	@Autowired
+	AccountService accountService;
+
+	@Autowired
+	ActionService actionService;
+
+
 	@Transactional
-	public Device put(DeviceDto deviceDto) {
+	protected Device put(DeviceDto deviceDto) {
 
 		Device device = deviceRepository.findByExternalId(deviceDto.getId());
 
@@ -53,6 +58,18 @@ public class DeviceService {
 			deviceRepository.save(device);
 
 			logger.debug("Device is updated: " + deviceDto);
+		}
+
+		return device;
+	}
+
+	@Transactional
+	public Device put(DeviceDto deviceDto, boolean triggerActions) {
+		Device device = put(deviceDto);
+
+		if (triggerActions) {
+			// Finds and publishes any planned or conditional actions for devices's modules
+			actionService.triggerActions(device);
 		}
 
 		return device;

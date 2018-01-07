@@ -47,7 +47,7 @@ public class DeviceController extends BaseAtlasController {
 		DeviceDto deviceDto = new DeviceDto(deviceId, request.getDevice());
 		DeviceValidator.validateDeviceRequest(deviceDto);
 
-		service.put(deviceDto);
+		service.put(deviceDto, true);
 
 		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
 		response = ResponseEntity.ok().body(responseBase);

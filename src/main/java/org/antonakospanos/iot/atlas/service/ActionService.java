@@ -1,5 +1,6 @@
 package org.antonakospanos.iot.atlas.service;
 
+import org.antonakospanos.iot.atlas.adapter.mqtt.producer.ActionProducer;
 import org.antonakospanos.iot.atlas.dao.model.*;
 import org.antonakospanos.iot.atlas.dao.model.Module;
 import org.antonakospanos.iot.atlas.dao.repository.*;
@@ -55,6 +56,10 @@ public class ActionService {
 	AlertService alertService;
 
 
+	@Autowired
+	ActionProducer actionProducer;
+
+
 	@Transactional
 	public CreateResponseData create(ActionRequest request) {
 
@@ -68,9 +73,9 @@ public class ActionService {
 
 		if (device == null) {
 			throw new IllegalArgumentException("Device '" + actionDeviceId + "' does not exist!");
-		}	else if (module == null) {
+		} else if (module == null) {
 			throw new IllegalArgumentException("Module '" + actionModuleId + "' does not exist!");
-		}	else if (account == null) {
+		} else if (account == null) {
 			throw new IllegalArgumentException("Account with accountId '" + request.getAccountId() + "' does not exist!");
 		} else {
 
@@ -115,61 +120,76 @@ public class ActionService {
 		}
 	}
 
-		@Transactional
+	@Transactional
 	public List<ActionDto> list(UUID accountId, String deviceId, String moduleId) {
-			List<ActionDto> actionDtos;
+		List<ActionDto> actionDtos;
 
-			// Validate listed resources
-			deviceService.validateDevice(deviceId);
-			accountService.validateAccount(accountId);
+		// Validate listed resources
+		deviceService.validateDevice(deviceId);
+		accountService.validateAccount(accountId);
 
-			if (accountId != null && StringUtils.isNotBlank(deviceId) && StringUtils.isNotBlank(moduleId)) {
-				// Fetch all user's actions for the declared device and module
-				Device device = deviceRepository.findByExternalId(deviceId);
+		if (accountId != null && StringUtils.isNotBlank(deviceId) && StringUtils.isNotBlank(moduleId)) {
+			// Fetch all user's actions for the declared device and module
+			Device device = deviceRepository.findByExternalId(deviceId);
 
-				actionDtos = device.getModules().stream()
-						.map(module -> module.getExternalId())
-						.filter(moduleExternalId -> moduleId.equals(moduleExternalId))
-						.map(moduleExternalId -> actionRepository.findByAccount_ExternalId_AndModule_ExternalId(accountId, moduleExternalId))
-						.flatMap(List::stream)
-						.map(action -> new ActionDto().fromEntity(action))
-						.collect(Collectors.toList());
+			actionDtos = device.getModules().stream()
+					.map(module -> module.getExternalId())
+					.filter(moduleExternalId -> moduleId.equals(moduleExternalId))
+					.map(moduleExternalId -> actionRepository.findByAccount_ExternalId_AndModule_ExternalId(accountId, moduleExternalId))
+					.flatMap(List::stream)
+					.map(action -> new ActionDto().fromEntity(action))
+					.collect(Collectors.toList());
 
-			} else if (accountId != null && StringUtils.isNotBlank(deviceId)) {
-				// Fetch all user's actions for the declared device
-				List<Module> modules = moduleRepository.findByDevice_ExternalId(deviceId);
+		} else if (accountId != null && StringUtils.isNotBlank(deviceId)) {
+			// Fetch all user's actions for the declared device
+			List<Module> modules = moduleRepository.findByDevice_ExternalId(deviceId);
 
-				actionDtos = modules.stream()
-						.map(module -> module.getExternalId())
-						.map(moduleExternalId -> actionRepository.findByAccount_ExternalId_AndModule_ExternalId(accountId, moduleExternalId))
-						.flatMap(List::stream)
-						.map(action -> new ActionDto().fromEntity(action))
-						.collect(Collectors.toList());
+			actionDtos = modules.stream()
+					.map(module -> module.getExternalId())
+					.map(moduleExternalId -> actionRepository.findByAccount_ExternalId_AndModule_ExternalId(accountId, moduleExternalId))
+					.flatMap(List::stream)
+					.map(action -> new ActionDto().fromEntity(action))
+					.collect(Collectors.toList());
 
-			} else if (accountId != null && StringUtils.isNotBlank(moduleId)) {
-				// Fetch all user's actions for the declared module
-				List<Action> actions = actionRepository.findByAccount_ExternalId_AndModule_ExternalId(accountId, moduleId);
-				actionDtos = actions.stream()
-						.map(action -> new ActionDto().fromEntity(action))
-						.collect(Collectors.toList());
+		} else if (accountId != null && StringUtils.isNotBlank(moduleId)) {
+			// Fetch all user's actions for the declared module
+			List<Action> actions = actionRepository.findByAccount_ExternalId_AndModule_ExternalId(accountId, moduleId);
+			actionDtos = actions.stream()
+					.map(action -> new ActionDto().fromEntity(action))
+					.collect(Collectors.toList());
 
-			} else if (accountId != null) {
-				// Fetch all user's actions
-				List<Action> actions = actionRepository.findByAccount_ExternalId(accountId);
-				actionDtos = actions.stream()
-						.map(action -> new ActionDto().fromEntity(action))
-						.collect(Collectors.toList());
+		} else if (accountId != null) {
+			// Fetch all user's actions
+			List<Action> actions = actionRepository.findByAccount_ExternalId(accountId);
+			actionDtos = actions.stream()
+					.map(action -> new ActionDto().fromEntity(action))
+					.collect(Collectors.toList());
 
-			} else {
-				// Fetch all actions
-				List<Action> actions = actionRepository.findAll();
-				actionDtos = actions.stream()
-						.map(action -> new ActionDto().fromEntity(action))
-						.collect(Collectors.toList());
-			}
-
-			return actionDtos;
+		} else {
+			// Fetch all actions
+			List<Action> actions = actionRepository.findAll();
+			actionDtos = actions.stream()
+					.map(action -> new ActionDto().fromEntity(action))
+					.collect(Collectors.toList());
 		}
+
+		return actionDtos;
+	}
+
+	/**
+	 * Checks for planned or conditional actions for devices's modules
+	 * and publishes them to the MQTT Broker
+	 *
+	 * @param device
+	 * @return The published actions
+	 */
+	public List<ModuleActionDto> triggerActions(Device device) {
+		List<ModuleActionDto> actions = findActions(device);
+
+		actionProducer.publishAction(actions, device.getExternalId());
+
+		return actions;
+	}
 
 	@Transactional
 	public List<ModuleActionDto> findActions(Device device) {
@@ -187,7 +207,7 @@ public class ActionService {
 				conditionalActions.forEach(conditionalAction -> {
 					ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), conditionalAction.getState(), conditionalAction.getValue());
 					moduleActions.add(moduleAction);
-					logger.debug("Triggered for device '"+device.getExternalId()+"' action: " + moduleAction);
+					logger.debug("Triggered for device '" + device.getExternalId() + "' action: " + moduleAction);
 				});
 
 				// Time based actions (condition may also have been added)
@@ -200,7 +220,7 @@ public class ActionService {
 					Action triggeredAction = plannedAction.get();
 					ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), triggeredAction.getState(), triggeredAction.getValue());
 					moduleActions.add(moduleAction);
-					logger.debug("Triggered for device '"+device.getExternalId()+"' action: " + moduleAction);
+					logger.debug("Triggered for device '" + device.getExternalId() + "' action: " + moduleAction);
 				}
 
 				rescheduleActions(plannedActions);
@@ -243,9 +263,9 @@ public class ActionService {
 
 	/**
 	 * Module's actions are marked as CascadeType.ALL and eagerly fetched, hence shall be totally managed by Module entity.
-	 * @Deprecated Replaced by ActionService#rescheduleActions(java.util.List)
 	 *
 	 * @param actions
+	 * @Deprecated Replaced by ActionService#rescheduleActions(java.util.List)
 	 */
 	public void rescheduleActions(Module module, List<Action> actions) {
 
