@@ -76,11 +76,15 @@ public class MqttBrokerClient {
 	}
 
 	public void publish(String topic, byte[] message, int qos, boolean retained) {
+		connect();
+
 		try {
 			mqttClient.publish(topic, message, qos, retained);
 		} catch (MqttException e) {
 			logger.error("Publishing message "+message+" to MQTT Broker "+brokerUrl+": " + e);
 		}
+
+		// disconnect();
 	}
 
 	private void disconnect() {
