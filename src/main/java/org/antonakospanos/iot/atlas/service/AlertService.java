@@ -1,5 +1,6 @@
 package org.antonakospanos.iot.atlas.service;
 
+import org.antonakospanos.iot.atlas.adapter.mqtt.producer.AlertProducer;
 import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.dao.model.Action;
 import org.antonakospanos.iot.atlas.dao.model.Alert;
@@ -7,6 +8,7 @@ import org.antonakospanos.iot.atlas.dao.model.Condition;
 import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
 import org.antonakospanos.iot.atlas.dao.repository.AlertRepository;
 import org.antonakospanos.iot.atlas.dao.repository.ConditionRepository;
+import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.antonakospanos.iot.atlas.web.dto.alerts.AlertDto;
 import org.antonakospanos.iot.atlas.web.dto.alerts.AlertRequest;
 import org.antonakospanos.iot.atlas.web.dto.response.CreateResponseData;
@@ -26,9 +28,6 @@ public class AlertService {
 	private final static Logger logger = LoggerFactory.getLogger(AlertService.class);
 
 	@Autowired
-	AccountService accountService;
-
-	@Autowired
 	AlertRepository alertRepository;
 
 	@Autowired
@@ -37,8 +36,16 @@ public class AlertService {
 	@Autowired
 	ConditionRepository conditionRepository;
 
+
+	@Autowired
+	AccountService accountService;
+
 	@Autowired
 	ConditionService conditionService;
+
+
+	@Autowired
+	AlertProducer alertProducer;
 
 
 	@Transactional
@@ -91,30 +98,41 @@ public class AlertService {
 		}
 	}
 
-		@Transactional
+	@Transactional
 	public List<AlertDto> list(UUID accountId) {
-			List<AlertDto> alertDtos;
+		List<AlertDto> alertDtos;
 
-			// Validate listed resources
-			accountService.validateAccount(accountId);
+		// Validate listed resources
+		accountService.validateAccount(accountId);
 
-			if (accountId != null) {
-				// Fetch all user's alerts
-				List<Alert> alerts = alertRepository.findByAccount_ExternalId(accountId);
-				alertDtos = alerts.stream()
-						.map(alert -> new AlertDto().fromEntity(alert))
-						.collect(Collectors.toList());
+		if (accountId != null) {
+			// Fetch all user's alerts
+			List<Alert> alerts = alertRepository.findByAccount_ExternalId(accountId);
+			alertDtos = alerts.stream()
+					.map(alert -> new AlertDto().fromEntity(alert))
+					.collect(Collectors.toList());
 
-			} else {
-				// Fetch all alerts
-				List<Alert> alerts = alertRepository.findAll();
-				alertDtos = alerts.stream()
-						.map(alert -> new AlertDto().fromEntity(alert))
-						.collect(Collectors.toList());
-			}
-
-			return alertDtos;
+		} else {
+			// Fetch all alerts
+			List<Alert> alerts = alertRepository.findAll();
+			alertDtos = alerts.stream()
+					.map(alert -> new AlertDto().fromEntity(alert))
+					.collect(Collectors.toList());
 		}
+
+		return alertDtos;
+	}
+
+	/**
+	 * Publishes alerts to the MQTT Broker for the triggered actions
+	 */
+	public void triggerAlerts(List<ModuleActionDto> actions) {
+		List<Alert> alerts = actions.stream()
+				.map(action -> action.getAlert())
+				.collect(Collectors.toList());
+
+		alertProducer.publish(alerts);
+	}
 
 	@Transactional
 	public void validateAlert(UUID alertId) {

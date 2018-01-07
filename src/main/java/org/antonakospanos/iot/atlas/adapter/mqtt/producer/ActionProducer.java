@@ -19,8 +19,13 @@ public class ActionProducer extends MqttProducer {
 	@Autowired
 	MqttBrokerClient mqttBrokerClient;
 
-
-	public void publishAction(List<ModuleActionDto> actions, String deviceId) {
+	/**
+	 * Publishes actions to MQTT Broker for specific device (mostly triggered by device's heartbeat)
+	 *
+	 * @param actions
+	 * @param deviceId
+	 */
+	public void publish(List<ModuleActionDto> actions, String deviceId) {
 		if (actions != null && !actions.isEmpty()) {
 			String actionsTopic = ACTIONS_TOPIC.replace("${id}", deviceId);
 

@@ -1,8 +1,10 @@
 package org.antonakospanos.iot.atlas.web.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
+import org.antonakospanos.iot.atlas.dao.model.Alert;
 import org.antonakospanos.iot.atlas.enums.ModuleState;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -26,6 +28,9 @@ public class ModuleActionDto {
 
 	@ApiModelProperty(example = "36")
 	private String value;
+
+	@JsonIgnore
+	private transient Alert alert;
 
 	public ModuleActionDto() {
 	}
@@ -58,6 +63,15 @@ public class ModuleActionDto {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+
+	public Alert getAlert() {
+		return alert;
+	}
+
+	public void setAlert(Alert alert) {
+		this.alert = alert;
 	}
 
 	@Override
