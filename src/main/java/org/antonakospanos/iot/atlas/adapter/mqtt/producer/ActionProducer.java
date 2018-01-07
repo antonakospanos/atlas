@@ -1,7 +1,5 @@
 package org.antonakospanos.iot.atlas.adapter.mqtt.producer;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.antonakospanos.iot.atlas.adapter.mqtt.MqttBrokerClient;
 import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.slf4j.Logger;
@@ -21,22 +19,18 @@ public class ActionProducer extends MqttProducer {
 	@Autowired
 	MqttBrokerClient mqttBrokerClient;
 
-	@Autowired
-	ObjectMapper jsonSerializer;
 
 	public void publishAction(List<ModuleActionDto> actions, String deviceId) {
-		String actionsTopic = ACTIONS_TOPIC.replace("${id}", deviceId);
+		if (actions != null && !actions.isEmpty()) {
+			String actionsTopic = ACTIONS_TOPIC.replace("${id}", deviceId);
 
-		for (ModuleActionDto action: actions) {
+			for (ModuleActionDto action: actions) {
+				byte[] payload = serialize(action);
 
-			byte[] payload = null;
-			try {
-				payload = jsonSerializer.writeValueAsBytes(action);
-			} catch (JsonProcessingException e) {
-				logger.error("Could not serialize publishing action to MQTT Broker: " + action);
+				if (payload != null) {
+					mqttBrokerClient.publish(actionsTopic, payload, getQoS(), isRetained());
+				}
 			}
-
-			mqttBrokerClient.publish(actionsTopic, payload, getQoS(), isRetained());
 		}
 	}
 }

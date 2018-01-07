@@ -1,5 +1,10 @@
 package org.antonakospanos.iot.atlas.adapter.mqtt.producer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +16,12 @@ public abstract class MqttProducer {
 
 	@Value("${mqtt.service.retained}")
 	private boolean retained = false;
+
+	@Autowired
+	ObjectMapper jsonSerializer;
+
+	private final static Logger logger = LoggerFactory.getLogger(MqttProducer.class);
+
 
 	public int getQoS() {
 		return qos;
@@ -27,5 +38,16 @@ public abstract class MqttProducer {
 	 */
 	public boolean isRetained() {
 		return retained;
+	}
+
+	public byte[] serialize(Object object) {
+		byte[] payload = null;
+		try {
+			payload = jsonSerializer.writeValueAsBytes(object);
+		} catch (JsonProcessingException e) {
+			logger.error("Could not serialize: " + object);
+		}
+
+		return payload;
 	}
 }

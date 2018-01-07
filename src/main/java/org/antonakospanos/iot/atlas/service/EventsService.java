@@ -38,11 +38,9 @@ public class EventsService {
 
 	@Transactional
 	public HeartbeatResponseData create(HeartbeatRequest request) {
-
-		// Add or Update Device information
 		Device device = deviceService.put(request.getDevice(), false);
 
-		// Finds and publishes any planned or conditional actions for devices's modules
+		// Publish any planned or conditional actions for devices's modules
 		List<ModuleActionDto> actions = actionService.triggerActions(device);
 
 		HeartbeatResponseData responseData = new HeartbeatResponseData();

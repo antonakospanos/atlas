@@ -12,10 +12,12 @@ public class AlertProducer extends MqttProducer {
 	@Autowired
 	MqttBrokerClient mqttBrokerClient;
 
-	public void publish(String message, String accountId) {
+	public void publish(Object alert, String accountId) {
 		String alertsTopic = ALERTS_TOPIC.replace("${id}", accountId);
 
-		byte[] payload = message.getBytes();
-		mqttBrokerClient.publish(alertsTopic, payload, getQoS(), isRetained());
+		byte[] payload = serialize(alert);
+		if (payload != null) {
+			mqttBrokerClient.publish(alertsTopic, payload, getQoS(), isRetained());
+		}
 	}
 }
