@@ -24,6 +24,7 @@
 	<!-- enable these for debugging -->
 	<!--<logger name="org.springframework" level="debug"/>-->
 	<!--<logger name="org.hibernate.SQL" level="debug"/>-->
+	<!--<logger name="org.eclipse.paho" level="debug"/>-->
 
 	<logger name="org.antonakospanos.iot.atlas" level="debug" additivity="false">
 		<!--<appender-ref ref="console"/>-->
