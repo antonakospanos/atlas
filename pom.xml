@@ -362,6 +362,7 @@
 		<dependency>
 			<groupId>org.jolokia</groupId>
 			<artifactId>jolokia-core</artifactId>
+			<version>1.3.7</version>
 		</dependency>
 
 		<!-- Commons -->
