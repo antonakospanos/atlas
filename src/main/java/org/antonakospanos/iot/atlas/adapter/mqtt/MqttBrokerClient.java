@@ -26,7 +26,9 @@ public class MqttBrokerClient {
 	@PostConstruct
 	private void create() {
 		try {
+			logger.info("Trying to create client to MQTT broker "+brokerUrl);
 			mqttClient = new MqttClient(brokerUrl, clientId);
+			logger.info("Successfully created client to MQTT broker "+brokerUrl);
 		} catch (MqttException e) {
 			logger.error("Creating MQTT Client "+clientId+" to "+brokerUrl+": " + e);
 		}
@@ -60,7 +62,9 @@ public class MqttBrokerClient {
 			// options.setWill("will/topic", "message".getBytes(),	1, true);
 
 			try {
+				logger.info("Trying to connect to MQTT broker "+brokerUrl);
 				mqttClient.connect(options);
+				logger.info("Successfully connected to MQTT broker "+brokerUrl);
 			} catch (MqttException e) {
 				logger.error("Connecting to MQTT Broker "+brokerUrl+": " + e);
 			}
@@ -69,7 +73,9 @@ public class MqttBrokerClient {
 
 	private void subscribe(String topic, int qos) {
 		try {
+			logger.info("Trying to subscribe to MQTT topic "+topic);
 			mqttClient.subscribe(topic, qos);
+			logger.info("Successfully subscribed to MQTT topic "+topic);
 		} catch (MqttException e) {
 			logger.error("Subscribing to MQTT Broker's Topic "+topic+": " + e);
 		}
@@ -79,9 +85,11 @@ public class MqttBrokerClient {
 		connect();
 
 		try {
+			logger.info("Trying to publish message "+message+" to MQTT topic "+topic);
 			mqttClient.publish(topic, message, qos, retained);
+			logger.info("Successfully published message "+message+" to MQTT topic "+topic);
 		} catch (MqttException e) {
-			logger.error("Publishing message "+message+" to MQTT Broker "+brokerUrl+": " + e);
+			logger.error("Publishing message "+message+" to MQTT topic "+topic+": " + e);
 		}
 
 		// disconnect();
@@ -89,7 +97,9 @@ public class MqttBrokerClient {
 
 	private void disconnect() {
 		try {
+			logger.info("Trying to disconnect from MQTT broker "+brokerUrl);
 			mqttClient.disconnect();
+			logger.info("Successfully to disconnect from MQTT broker "+brokerUrl);
 		} catch (MqttException e) {
 			logger.error("Disconnecting from MQTT Broker "+brokerUrl+": " + e);
 		}
