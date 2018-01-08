@@ -106,11 +106,13 @@ public class ActionService {
 
 			// Remove action-condition relationship
 			Condition condition = action.getCondition();
-			condition.setAction(null);
-			conditionRepository.save(condition);
+			if (condition != null) {
+				condition.setAction(null);
+				conditionRepository.save(condition);
+				action.setCondition(null);
+			}
 
 			// Delete Action and related Alert
-			action.setCondition(null);
 			actionRepository.delete(action);
 
 			Alert alert = condition.getAlert();
