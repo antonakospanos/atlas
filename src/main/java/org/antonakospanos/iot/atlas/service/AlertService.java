@@ -8,6 +8,7 @@ import org.antonakospanos.iot.atlas.dao.model.Condition;
 import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
 import org.antonakospanos.iot.atlas.dao.repository.AlertRepository;
 import org.antonakospanos.iot.atlas.dao.repository.ConditionRepository;
+import org.antonakospanos.iot.atlas.web.dto.AccountAlertDto;
 import org.antonakospanos.iot.atlas.web.dto.ModuleActionDto;
 import org.antonakospanos.iot.atlas.web.dto.alerts.AlertDto;
 import org.antonakospanos.iot.atlas.web.dto.alerts.AlertRequest;
@@ -127,11 +128,12 @@ public class AlertService {
 	 * Publishes alerts to the MQTT Broker for the triggered actions
 	 */
 	public void triggerAlerts(List<ModuleActionDto> actions) {
-		List<Alert> alerts = actions.stream()
-				.map(action -> action.getAlert())
+		List<AccountAlertDto> accountAlerts = actions.stream()
+				.map(action -> action.getAccountAlert())
+				.filter(alert -> alert != null)
 				.collect(Collectors.toList());
 
-		alertProducer.publish(alerts);
+		alertProducer.publish(accountAlerts);
 	}
 
 	@Transactional

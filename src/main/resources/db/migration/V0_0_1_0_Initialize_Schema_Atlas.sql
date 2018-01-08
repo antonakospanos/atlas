@@ -101,6 +101,7 @@ create table condition_statement
     primary key,
   max_value double precision,
   min_value double precision,
+  negated boolean,
   state varchar(255),
   value varchar(255),
   condition_and_statement_id bigint
@@ -118,6 +119,7 @@ create table device
   external_id varchar(255),
   last_contact timestamp,
   name varchar(255),
+  uptime bigint,
   version varchar(255)
 )
 ;

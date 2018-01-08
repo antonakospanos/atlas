@@ -206,11 +206,7 @@ public class ActionService {
 
 				// Conditional actions
 				conditionalActions.forEach(conditionalAction -> {
-
-					ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), conditionalAction.getState(), conditionalAction.getValue());
-					Alert alert = conditionalAction.getCondition().getAlert();
-					moduleAction.setAlert(alert);
-
+					ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), conditionalAction);
 					moduleActions.add(moduleAction);
 					logger.debug("Triggered for device '" + device.getExternalId() + "' action: " + moduleAction);
 				});
@@ -223,13 +219,7 @@ public class ActionService {
 				// Add latest module's action on the response
 				if (plannedAction.isPresent()) {
 					Action triggeredAction = plannedAction.get();
-
-					ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), triggeredAction.getState(), triggeredAction.getValue());
-					if (triggeredAction.getCondition() != null) {
-						Alert alert = triggeredAction.getCondition().getAlert();
-						moduleAction.setAlert(alert);
-					}
-
+					ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), triggeredAction);
 					moduleActions.add(moduleAction);
 					logger.debug("Triggered for device '" + device.getExternalId() + "' action: " + moduleAction);
 				}

@@ -1,7 +1,7 @@
 package org.antonakospanos.iot.atlas.adapter.mqtt.producer;
 
 import org.antonakospanos.iot.atlas.adapter.mqtt.MqttBrokerClient;
-import org.antonakospanos.iot.atlas.dao.model.Alert;
+import org.antonakospanos.iot.atlas.web.dto.AccountAlertDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,18 +19,17 @@ public class AlertProducer extends MqttProducer {
 	/**
 	 * Publishes alerts to MQTT Broker
 	 *
-	 * @param alerts
+	 * @param accountAlerts
 	 */
-	public void publish(List<Alert> alerts) {
-		for (Alert alert : alerts) {
-			UUID accountId = alert.getAccount().getExternalId();
+	public void publish(List<AccountAlertDto> accountAlerts) {
+		for (AccountAlertDto accountAlert : accountAlerts) {
+			UUID accountId = accountAlert.getAccount().getId();
 			String alertsTopic = ALERTS_TOPIC.replace("${id}", accountId.toString());
 
-			byte[] payload = serialize(alert.getCondition());
+			byte[] payload = serialize(accountAlert.getAlert().getCondition());
 			if (payload != null) {
 				mqttBrokerClient.publish(alertsTopic, payload, getQoS(), isRetained());
 			}
-
 		}
 	}
 }

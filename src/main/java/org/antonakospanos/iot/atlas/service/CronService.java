@@ -1,13 +1,15 @@
 package org.antonakospanos.iot.atlas.service;
 
-import org.antonakospanos.iot.atlas.adapter.mqtt.producer.ActionProducer;
-import org.antonakospanos.iot.atlas.adapter.mqtt.producer.AlertProducer;
+import org.antonakospanos.iot.atlas.dao.model.Condition;
+import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class CronService {
@@ -28,37 +30,29 @@ public class CronService {
 	ActionService actionService;
 
 	@Autowired
+	AlertService alertService;
+
+	@Autowired
 	ConditionService conditionService;
-
-	@Autowired
-	ActionProducer actionProducer;
-
-	@Autowired
-	AlertProducer alertProducer;
 
 
 	/**
-	 * @Deprecated
-	 * Checked by heartbeat at the moment
+	 * Checked by heartbeat too
 	 */
 	@Scheduled(fixedRate = actionsLookupRate)
-	@Deprecated
 	public void actionsLookup() {
-//		List<Device> devices = deviceRepository.findAll();
-//		for (Device device : devices) {
-//			List<ModuleActionDto> actions = actionService.findActions(device);
-//			actionProducer.publishAction(actions);
-//		}
+		List<Device> devices = deviceRepository.findAll();
+		for (Device device : devices) {
+			actionService.triggerActions(device);
+		}
 	}
 
 	@Scheduled(fixedRate = actionsLookupRate)
 	public void alertsLookup() {
-//		List<Condition> conditions = conditionService.findValidWithAlerts();
-//
+		List<Condition> conditions = conditionService.findAllValid(); // findValidWithAlerts();
+//  TODO
 //		for (Condition condition : conditions) {
-//			Alert alert = condition.getAlert();
-//			// TODO: Create user's alert
-//			alertProducer.publish(null);
-//		}
+//	    actionService.triggerActions(condition);
+// 	}
 	}
 }

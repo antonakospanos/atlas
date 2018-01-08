@@ -258,7 +258,7 @@
 					<url>${db.module.url}</url>
 					<user>${db.module.userId}</user>
 					<password>${db.module.password}</password>
-					<sqlMigrationSuffix>.Final.sql</sqlMigrationSuffix>
+					<sqlMigrationSuffix>.sql</sqlMigrationSuffix>
 					<encoding>UTF-8</encoding>
 					<table>DB_MIGRATION_HISTORY</table>
 					<outOfOrder>true</outOfOrder>

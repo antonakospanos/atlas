@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
+import org.antonakospanos.iot.atlas.dao.model.Action;
 import org.antonakospanos.iot.atlas.dao.model.Alert;
 import org.antonakospanos.iot.atlas.enums.ModuleState;
+import org.antonakospanos.iot.atlas.web.dto.accounts.AccountDto;
+import org.antonakospanos.iot.atlas.web.dto.alerts.AlertDto;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -29,8 +32,9 @@ public class ModuleActionDto {
 	@ApiModelProperty(example = "36")
 	private String value;
 
+	@ApiModelProperty(hidden = true)
 	@JsonIgnore
-	private transient Alert alert;
+	private AccountAlertDto accountAlert;
 
 	public ModuleActionDto() {
 	}
@@ -39,6 +43,21 @@ public class ModuleActionDto {
 		this.id = id;
 		this.state = state;
 		this.value = value;
+	}
+
+	public ModuleActionDto(String id, ModuleState state, String value, Alert alert) {
+		this(id, state, value);
+
+		if (alert != null) {
+			AlertDto alertDto = new AlertDto().fromEntity(alert);
+			AccountDto accountDto = new AccountDto().fromEntity(alert.getAccount());
+			AccountAlertDto accountAlertDto = new AccountAlertDto(alertDto, accountDto);
+			this.accountAlert = accountAlertDto;
+		}
+	}
+
+	public ModuleActionDto(String id, Action action) {
+		this(id, action.getState(), action.getValue(), action.getCondition() != null ? action.getCondition().getAlert() : null);
 	}
 
 	public String getId() {
@@ -66,12 +85,12 @@ public class ModuleActionDto {
 	}
 
 
-	public Alert getAlert() {
-		return alert;
+	public AccountAlertDto getAccountAlert() {
+		return accountAlert;
 	}
 
-	public void setAlert(Alert alert) {
-		this.alert = alert;
+	public void setAccountAlert(AccountAlertDto accountAlertDto) {
+		this.accountAlert = accountAlertDto;
 	}
 
 	@Override
