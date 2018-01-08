@@ -106,17 +106,20 @@ public class ActionService {
 
 			// Remove action-condition relationship
 			Condition condition = action.getCondition();
-			condition.setAction(null);
-			conditionRepository.save(condition);
+			if (condition != null) {
+				condition.setAction(null);
+				conditionRepository.save(condition);
+				action.setCondition(null);
 
-			// Delete Action and related Alert
-			action.setCondition(null);
-			actionRepository.delete(action);
-
-			Alert alert = condition.getAlert();
-			if (deleteAlert && alert != null) {
-				alertRepository.delete(alert);
+				// Delete related Alert
+				Alert alert = condition.getAlert();
+				if (deleteAlert && alert != null) {
+					alertRepository.delete(alert);
+				}
 			}
+
+			// Delete Action
+			actionRepository.delete(action);
 		}
 	}
 
