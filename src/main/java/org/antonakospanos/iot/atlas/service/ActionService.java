@@ -205,24 +205,21 @@ public class ActionService {
 				List<Action> conditionalActions = actions.stream().filter(action -> action.getNextExecution() == null).collect(Collectors.toList());
 
 				// Conditional actions
-				conditionalActions.forEach(conditionalAction -> {
-					ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), conditionalAction);
-					moduleActions.add(moduleAction);
-					logger.debug("Triggered for device '" + device.getExternalId() + "' action: " + moduleAction);
-				});
+				conditionalActions
+						.forEach(conditionalAction -> {
+							ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), conditionalAction);
+							moduleActions.add(moduleAction);
+							logger.debug("Triggered for device '" + device.getExternalId() + "' action: " + moduleAction);
+						});
 
 				// Time based actions (condition may also have been added)
-				Optional<Action> plannedAction = plannedActions.stream()
+				plannedActions.stream()
 						.sorted(Comparator.comparing(Action::getNextExecution, Comparator.reverseOrder()))
-						.findFirst();
-
-				// Add latest module's action on the response
-				if (plannedAction.isPresent()) {
-					Action triggeredAction = plannedAction.get();
-					ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), triggeredAction);
-					moduleActions.add(moduleAction);
-					logger.debug("Triggered for device '" + device.getExternalId() + "' action: " + moduleAction);
-				}
+						.forEach(plannedAction -> {
+							ModuleActionDto moduleAction = new ModuleActionDto(module.getExternalId(), plannedAction);
+							moduleActions.add(moduleAction);
+							logger.debug("Triggered for device '" + device.getExternalId() + "' action: " + moduleAction);
+						});
 
 				rescheduleActions(plannedActions);
 			}
