@@ -221,7 +221,7 @@ public class ActionService {
 							logger.debug("Triggered for device '" + device.getExternalId() + "' action: " + moduleAction);
 						});
 
-				rescheduleActions(plannedActions);
+				rescheduleActions(actions);
 			}
 		}
 
