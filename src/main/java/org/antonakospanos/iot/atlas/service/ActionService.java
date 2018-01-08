@@ -261,7 +261,7 @@ public class ActionService {
 				logger.debug("Rescheduled action: " + action);
 			} else {
 				// Remove the action
-				actionRepository.delete(action);
+				delete(action.getExternalId(), true);
 				logger.debug("Removed action: " + action);
 			}
 		}
