@@ -1,6 +1,5 @@
 package org.antonakospanos.iot.atlas.service;
 
-import org.antonakospanos.iot.atlas.dao.model.Condition;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
@@ -36,23 +35,20 @@ public class CronService {
 	ConditionService conditionService;
 
 
-	/**
-	 * Checked by heartbeat too
-	 */
 	@Scheduled(fixedRate = actionsLookupRate)
 	public void actionsLookup() {
+		// TODO: Improve algorithm to check only planned actions. The conditional ones will be checked by the heartbeats.
 		List<Device> devices = deviceRepository.findAll();
 		for (Device device : devices) {
-			actionService.triggerActions(device);
+			actionService.triggerPlannedActions(device);
 		}
 	}
 
-	@Scheduled(fixedRate = actionsLookupRate)
-	public void alertsLookup() {
-		List<Condition> conditions = conditionService.findAllValid(); // findValidWithAlerts();
-//  TODO
+//	@Scheduled(fixedRate = actionsLookupRate)
+//	public void alertsLookup() {
+//		List<Condition> conditions = conditionService.findAllValid(); // findValidWithAlerts();
 //		for (Condition condition : conditions) {
-//	    actionService.triggerActions(condition);
+//	    actionService.triggerPlannedActions(condition);
 // 	}
-	}
+//	}
 }

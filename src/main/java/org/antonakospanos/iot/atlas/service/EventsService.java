@@ -41,7 +41,8 @@ public class EventsService {
 		Device device = deviceService.put(request.getDevice(), false);
 
 		// Publish any planned or conditional actions for devices's modules
-		List<ModuleActionDto> actions = actionService.triggerActions(device);
+		// TODO: Improve action lookup. Should be checked only conditional actions. The rest will be triggered from the scheduler
+		List<ModuleActionDto> actions = actionService.triggerPlannedActions(device);
 
 		HeartbeatResponseData responseData = new HeartbeatResponseData();
 		responseData.setActions(actions);

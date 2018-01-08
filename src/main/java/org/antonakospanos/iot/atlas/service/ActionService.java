@@ -176,6 +176,11 @@ public class ActionService {
 		return actionDtos;
 	}
 
+	public List<ModuleActionDto> triggerConditionalActions() {
+		//TODO: Triggered by heartbeat!
+		return null;
+	}
+
 	/**
 	 * Checks for planned or conditional actions for devices's modules
 	 * and publishes them to the MQTT Broker
@@ -183,7 +188,7 @@ public class ActionService {
 	 * @param device
 	 * @return The published actions
 	 */
-	public List<ModuleActionDto> triggerActions(Device device) {
+	public List<ModuleActionDto> triggerPlannedActions(Device device) {
 		List<ModuleActionDto> actions = findActions(device);
 
 		actionProducer.publish(actions, device.getExternalId());

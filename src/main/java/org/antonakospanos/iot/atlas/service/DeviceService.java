@@ -69,7 +69,8 @@ public class DeviceService {
 
 		if (triggerActions) {
 			// Finds and publishes any planned or conditional actions for devices's modules
-			actionService.triggerActions(device);
+			// TODO: Improve action lookup. Should be checked only conditional actions. The rest will be triggered from the scheduler
+			actionService.triggerPlannedActions(device);
 		}
 
 		return device;
