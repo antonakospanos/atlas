@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.NonNull;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -13,8 +14,13 @@ import java.time.ZonedDateTime;
 /**
  * ActionBaseDto
  */
-@JsonPropertyOrder({ "execution", "recurring", "device", "condition" })
+@JsonPropertyOrder({ "name", "execution", "recurring", "device", "condition" })
 public class ActionBaseDto {
+
+	@NonNull
+	@ApiModelProperty(example = "Daily heating at 18.00 in case temperature < 20°C", required = true)
+	@Valid
+	private String name;
 
 	@NotNull
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS ZZZ")
@@ -30,6 +36,15 @@ public class ActionBaseDto {
 	private DeviceActionDto device;
 
 	private ConditionDto condition;
+
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public ZonedDateTime getExecution() {
 		return execution;

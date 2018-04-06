@@ -12,13 +12,26 @@ import javax.validation.Valid;
 /**
  * AlertBaseDto
  */
-@JsonPropertyOrder({"condition"})
+@JsonPropertyOrder({"name", "condition"})
 public class AlertBaseDto {
+
+	@NonNull
+	@ApiModelProperty(example = "Security alarm triggered!", required = true)
+	@Valid
+	private String name;
 
 	@NonNull
 	@ApiModelProperty(required = true)
 	@Valid
 	private ConditionDto condition;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public ConditionDto getCondition() {
 		return condition;

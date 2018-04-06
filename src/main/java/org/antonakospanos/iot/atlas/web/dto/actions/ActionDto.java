@@ -18,7 +18,7 @@ import java.util.UUID;
 /**
  * AlertDto
  */
-@JsonPropertyOrder({ "id, execution", "recurring", "device", "condition" })
+@JsonPropertyOrder({ "id", "name", "execution", "recurring", "device", "condition" })
 public class ActionDto extends ActionBaseDto implements Dto<Action> {
 
 	@NotNull
@@ -55,6 +55,7 @@ public class ActionDto extends ActionBaseDto implements Dto<Action> {
 	public ActionDto fromEntity(Action action) {
 
 		this.id = action.getExternalId();
+		setName(action.getName());
 		setExecution(action.getNextExecution());
 		if (action.getPeriodInSecods() != null && action.getPeriodInSecods() != 0) {
 			setRecurring(new RecurringActionDto(action.getPeriodInSecods(), Unit.SECONDS.toString()));
@@ -83,6 +84,7 @@ public class ActionDto extends ActionBaseDto implements Dto<Action> {
 	@Override
 	public Action toEntity(Action action) {
 		action.setNextExecution(this.getExecution());
+		action.setName(this.getName());
 
 		if (this.getRecurring() != null) {
 			action.setPeriodInSecods(this.getRecurring().getPeriod());

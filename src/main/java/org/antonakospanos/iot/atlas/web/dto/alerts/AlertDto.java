@@ -14,24 +14,14 @@ import java.util.UUID;
 /**
  * AlertDto
  */
-@JsonPropertyOrder({"id, condition"})
+@JsonPropertyOrder({"id", "name", "condition"})
 public class AlertDto extends AlertBaseDto implements Dto<Alert> {
 
 	@ApiModelProperty(example = "alertId")
 	private UUID id;
 
-	private ConditionDto condition;
-
 	public UUID getId() {
 		return id;
-	}
-
-	public ConditionDto getCondition() {
-		return condition;
-	}
-
-	public void setCondition(ConditionDto condition) {
-		this.condition = condition;
 	}
 
 	public AlertDto() {
@@ -47,24 +37,6 @@ public class AlertDto extends AlertBaseDto implements Dto<Alert> {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof AlertDto)) return false;
-
-		AlertDto alertDto = (AlertDto) o;
-
-		if (id != null ? !id.equals(alertDto.id) : alertDto.id != null) return false;
-		return condition != null ? condition.equals(alertDto.condition) : alertDto.condition == null;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = id != null ? id.hashCode() : 0;
-		result = 31 * result + (condition != null ? condition.hashCode() : 0);
-		return result;
-	}
-
-	@Override
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
@@ -73,8 +45,9 @@ public class AlertDto extends AlertBaseDto implements Dto<Alert> {
 	public AlertDto fromEntity(Alert alert) {
 
 		this.id = alert.getExternalId();
+		setName(alert.getName());
 		if (alert.getCondition() != null) {
-			this.condition = new ConditionDto().fromEntity(alert.getCondition());
+			this.setCondition(new ConditionDto().fromEntity(alert.getCondition()));
 		}
 
 		return this;
@@ -89,7 +62,9 @@ public class AlertDto extends AlertBaseDto implements Dto<Alert> {
 
 	@Override
 	public Alert toEntity(Alert alert) {
-		if (condition != null) {
+		alert.setName(this.getName());
+
+		if (this.getCondition() != null) {
 			Condition condition = this.getCondition().toEntity();
 			condition.setAlert(alert);
 			alert.setCondition(condition);

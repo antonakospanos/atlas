@@ -24,6 +24,8 @@ public class Alert {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	private String name;
+
 	private UUID externalId;
 
 	@ManyToOne
@@ -36,6 +38,14 @@ public class Alert {
 
 	public Alert() {
 		this.externalId = UUID.randomUUID();
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public UUID getExternalId() {
