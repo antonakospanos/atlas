@@ -122,6 +122,38 @@ public class AccountController extends BaseAtlasController {
 		return response;
 	}
 
+	@ApiOperation(value = "Lists the authenticated user's ID", response = CreateResponse.class)
+	@RequestMapping(value = "/id", produces = {"application/json"},	method = RequestMethod.GET)
+	public ResponseEntity<CreateResponse> listAccount(UriComponentsBuilder uriBuilder, @RequestParam String username, @RequestParam String password) {
+
+		logger.debug(LoggingHelper.logInboundRequest("/accounts?username=" + username + "?password=" + password));
+
+		ResponseEntity<CreateResponse> response;
+		List<AccountDto> accounts = service.list(username);
+
+		if (accounts == null || accounts.isEmpty()) {
+			response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+		} else if (accounts.size() > 1) {
+			throw new RuntimeException("Multiple accounts found for username: '" + username + "'");
+		} else {
+			AccountDto accountDto = accounts.get(0);
+
+			if (!password.equals(accountDto.getPassword())) {
+				throw new IllegalArgumentException("Invalid password '" + password + "' for user '" + username + "'");
+			} else {
+				CreateResponseData data = new CreateResponseData(accountDto.getId().toString());
+				CreateResponse responseBase = CreateResponse.Builder().build(Result.SUCCESS).data(data);
+
+				UriComponents uriComponents = uriBuilder.path("/accounts/{id}").buildAndExpand(data.getId());
+				response = ResponseEntity.status(HttpStatus.OK).location(uriComponents.toUri()).body(responseBase);
+			}
+		}
+
+		logger.debug(LoggingHelper.logInboundResponse(response));
+
+		return response;
+	}
+
 	@ApiOperation(value = "Lists all accounts of the integrated IoT devices", response = AccountDto.class, responseContainer="List")
 	@RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.GET)
 	public ResponseEntity<Iterable> listAllAccounts() {
