@@ -128,7 +128,7 @@ public class AccountController extends BaseAtlasController {
 	@RequestMapping(value = "/id", produces = {"application/json"},	method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiResponses(value = {
-			@ApiResponse(code = 200, message = "The user is authenticated", response = ResponseBase.class),
+			@ApiResponse(code = 200, message = "The user is authenticated", response = IdentityDto.class),
 			@ApiResponse(code = 401, message = "The credentials are invalid"),
 			@ApiResponse(code = 404, message = "No user found!"),
 			@ApiResponse(code = 500, message = "Server Error")})

@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@Api(value = "Events API", tags = "events", position = 0 , description = "Consumes events from the integrated IoT devices")
+@Deprecated
+@Api(value = "Events API", tags = "events", position = 0 , description = "Event Management of integrated IoT devices")
 @RequestMapping(value = "/events")
 public class EventsController extends BaseAtlasController {
 
@@ -29,11 +30,20 @@ public class EventsController extends BaseAtlasController {
     @Autowired
     EventsService service;
 
-    @ApiOperation(value = "Consumes state events published by IoT devices", response = HeartbeatSuccessResponse.class)
+    /**
+     * Backwards compatibility of PUT /devices/{deviceId} API
+     *
+     * @param heartbeat The device's heartbeat event
+     * @return The actions to be executed by the device
+     * @deprecated Replaced by PUT /devices/{deviceId} API
+     */
+    @Deprecated
+    @ApiOperation(value = "Consumes state events that are published by IoT devices", response = HeartbeatSuccessResponse.class,
+            notes = "Backwards compatibility of PUT /devices/{deviceId} API")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "The event is created!", response = HeartbeatSuccessResponse.class),
         @ApiResponse(code = 400, message = "The request is invalid!"),
-        @ApiResponse(code = 500, message = "server error")})
+        @ApiResponse(code = 500, message = "Server Error")})
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(value = "/heartbeat",
         produces = {"application/json"},
