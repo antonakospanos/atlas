@@ -152,9 +152,9 @@ public class AccountService {
 		List<AccountDto> accounts = list(username);
 
 		if (accounts == null || accounts.isEmpty()) {
-			throw new NotFoundException("No user found with username: '" + username + "'");
+			throw new NotFoundException("No user found with username '" + username + "'");
 		} else if (accounts.size() > 1) {
-			throw new RuntimeException("Multiple accounts found with username: '" + username + "'");
+			throw new RuntimeException("Multiple accounts found with username '" + username + "'");
 		} else {
 			AccountDto accountDto = accounts.get(0);
 			if (!password.equals(accountDto.getPassword())) {
