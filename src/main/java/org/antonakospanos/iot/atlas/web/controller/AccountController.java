@@ -4,9 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import javassist.NotFoundException;
 import org.antonakospanos.iot.atlas.service.AccountService;
 import org.antonakospanos.iot.atlas.support.ControllerUtils;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
+import org.antonakospanos.iot.atlas.web.dto.IdentityDto;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountDto;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountRequest;
 import org.antonakospanos.iot.atlas.web.dto.patch.PatchRequest;
@@ -122,31 +124,27 @@ public class AccountController extends BaseAtlasController {
 		return response;
 	}
 
-	@ApiOperation(value = "Lists the authenticated user's ID", response = CreateResponse.class)
+	@ApiOperation(value = "Lists the authenticated user's ID", response = IdentityDto.class)
 	@RequestMapping(value = "/id", produces = {"application/json"},	method = RequestMethod.GET)
-	public ResponseEntity<CreateResponse> listAccount(UriComponentsBuilder uriBuilder, @RequestParam String username, @RequestParam String password) {
+	@ResponseStatus(HttpStatus.OK)
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "The user is authenticated", response = ResponseBase.class),
+			@ApiResponse(code = 401, message = "The credentials are invalid"),
+			@ApiResponse(code = 404, message = "No user found!"),
+			@ApiResponse(code = 500, message = "Server Error")})
+	public ResponseEntity<IdentityDto> listAccount(UriComponentsBuilder uriBuilder, @RequestParam String username, @RequestParam String password) throws NotFoundException {
 
 		logger.debug(LoggingHelper.logInboundRequest("/accounts?username=" + username + "?password=" + password));
 
-		ResponseEntity<CreateResponse> response;
-		List<AccountDto> accounts = service.list(username);
+		ResponseEntity<IdentityDto> response;
+		AccountDto account = service.find(username, password);
 
-		if (accounts == null || accounts.isEmpty()) {
+		if (account == null) {
 			response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-		} else if (accounts.size() > 1) {
-			throw new RuntimeException("Multiple accounts found for username: '" + username + "'");
 		} else {
-			AccountDto accountDto = accounts.get(0);
-
-			if (!password.equals(accountDto.getPassword())) {
-				throw new IllegalArgumentException("Invalid password '" + password + "' for user '" + username + "'");
-			} else {
-				CreateResponseData data = new CreateResponseData(accountDto.getId().toString());
-				CreateResponse responseBase = CreateResponse.Builder().build(Result.SUCCESS).data(data);
-
-				UriComponents uriComponents = uriBuilder.path("/accounts/{id}").buildAndExpand(data.getId());
-				response = ResponseEntity.status(HttpStatus.OK).location(uriComponents.toUri()).body(responseBase);
-			}
+			IdentityDto identityDto = new IdentityDto(account.getId().toString());
+			UriComponents uriComponents = uriBuilder.path("/accounts/{id}").buildAndExpand(identityDto.getId());
+			response = ResponseEntity.status(HttpStatus.OK).location(uriComponents.toUri()).body(identityDto);
 		}
 
 		logger.debug(LoggingHelper.logInboundResponse(response));

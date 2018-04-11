@@ -4,6 +4,7 @@ import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountDto;
+import org.antonakospanos.iot.atlas.web.dto.devices.DeviceDto;
 import org.antonakospanos.iot.atlas.web.dto.patch.PatchDto;
 import org.antonakospanos.iot.atlas.web.dto.patch.PatchOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -22,7 +24,10 @@ public class AccountConverter {
 	public void updateAccount(AccountDto accountDto, Account account) {
 		Set<Device> devices = new HashSet<>();
 
-		accountDto.getDevices()
+		List<String> deviceIds = accountDto.getDevices();
+
+		if (deviceIds != null) {
+			deviceIds
 				.stream()
 				.forEach(deviceExternalId -> {
 					Device device = deviceRepository.findByExternalId(deviceExternalId);
@@ -32,6 +37,7 @@ public class AccountConverter {
 						throw new IllegalArgumentException("Device '" + deviceExternalId + "' does not exist!");
 					}
 				});
+		}
 
 		account.setDevices(devices);
 	}

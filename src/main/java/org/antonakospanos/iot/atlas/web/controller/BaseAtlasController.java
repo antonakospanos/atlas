@@ -1,11 +1,13 @@
 package org.antonakospanos.iot.atlas.web.controller;
 
+import javassist.NotFoundException;
 import org.antonakospanos.iot.atlas.web.dto.response.ResponseBase;
 import org.antonakospanos.iot.atlas.web.enums.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,11 +23,9 @@ public abstract class BaseAtlasController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<ResponseBase> handleMissingParams(MissingServletRequestParameterException exception) {
-		ResponseBase validationError = new ResponseBase();
+		ResponseBase validationError = buildErrorResponse(exception, Result.BAD_REQUEST);
+		validationError.setDescription("The " + exception.getParameterName() + " parameter of the request is required!");
 
-		String errorMsg = " The " + exception.getParameterName() + " parameter of the request is required!";
-		validationError.setResult(Result.BAD_REQUEST);
-		validationError.setDescription(errorMsg);
 		logger.error(validationError.getResult() + ": " + validationError.getDescription(), exception);
 
 		return new ResponseEntity<>(validationError, HttpStatus.BAD_REQUEST);
@@ -35,12 +35,44 @@ public abstract class BaseAtlasController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ResponseEntity<ResponseBase> handleValidationException(IllegalArgumentException exception) {
-		ResponseBase validationError = new ResponseBase();
-
-		validationError.setResult(Result.BAD_REQUEST);
-		validationError.setDescription(exception.getMessage());
+		ResponseBase validationError = buildErrorResponse(exception, Result.BAD_REQUEST);
 		logger.error(exception.getClass() + " Cause: " + exception.getCause() + " Message: " + exception.getMessage());
 
 		return new ResponseEntity<>(validationError, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(AuthorizationServiceException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	public ResponseEntity<ResponseBase> handleAuthorizationException(AuthorizationServiceException exception) {
+		ResponseBase authorizationError = buildErrorResponse(exception, Result.UNAUTHORIZED);
+		logger.error(exception.getClass() + " Cause: " + exception.getCause() + " Message: " + exception.getMessage());
+
+		return new ResponseEntity<>(authorizationError, HttpStatus.UNAUTHORIZED);
+	}
+
+	@ExceptionHandler(NotFoundException.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	public ResponseEntity<ResponseBase> handleAuthorizationException(NotFoundException exception) {
+		ResponseBase resourceError = buildErrorResponse(exception, Result.NOT_FOUND);
+		logger.error(exception.getClass() + " Cause: " + exception.getCause() + " Message: " + exception.getMessage());
+
+		return new ResponseEntity<>(resourceError, HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Builds the HTTP response in case of an exceptional handling
+	 *
+	 * @param exception
+	 * @param result
+	 * @return The HTTP response body
+	 */
+	private ResponseBase buildErrorResponse(Exception exception, Result result) {
+		ResponseBase response = new ResponseBase();
+		response.setResult(result);
+		response.setDescription(exception.getMessage());
+
+		return response;
 	}
 }

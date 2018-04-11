@@ -1,10 +1,12 @@
 package org.antonakospanos.iot.atlas.service;
 
+import javassist.NotFoundException;
 import org.antonakospanos.iot.atlas.dao.converter.AccountConverter;
 import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
+import org.antonakospanos.iot.atlas.web.dto.IdentityDto;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountDto;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountRequest;
 import org.antonakospanos.iot.atlas.web.dto.patch.PatchDto;
@@ -13,7 +15,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.UriComponents;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -138,6 +144,24 @@ public class AccountService {
 			throw new IllegalArgumentException("Account '" + account + "' does not exist!");
 		} else {
 			accountRepository.delete(account);
+		}
+	}
+
+	@Transactional
+	public AccountDto find(String username, String password) throws NotFoundException {
+		List<AccountDto> accounts = list(username);
+
+		if (accounts == null || accounts.isEmpty()) {
+			throw new NotFoundException("No user found with username: '" + username + "'");
+		} else if (accounts.size() > 1) {
+			throw new RuntimeException("Multiple accounts found with username: '" + username + "'");
+		} else {
+			AccountDto accountDto = accounts.get(0);
+			if (!password.equals(accountDto.getPassword())) {
+				throw new AuthorizationServiceException("Invalid password '" + password + "'");
+			} else {
+				return accountDto;
+			}
 		}
 	}
 

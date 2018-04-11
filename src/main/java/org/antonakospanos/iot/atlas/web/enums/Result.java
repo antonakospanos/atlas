@@ -10,6 +10,7 @@ public enum Result {
 	DUPLICATE_REQUEST("The request is duplicate"),
 	TOO_MANY_REQUESTS("Rate limit is violated"),
 	UNAUTHORIZED("The user is not authorized"),
+	NOT_FOUND("The resource is not found"),
 	GENERIC_ERROR("Internal Server Error");
 
 	private String description;
