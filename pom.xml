@@ -90,9 +90,15 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.7.0</version>
 				<configuration>
-					<source>${maven.compiler.source}</source>
-					<target>${maven.compiler.target}</target>
+					<release>${maven.compiler.source}</release>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.ow2.asm</groupId>
+						<artifactId>asm</artifactId>
+						<version>6.1.1</version> <!-- Use newer version of ASM -->
+					</dependency>
+				</dependencies>
 			</plugin>
 			<!-- Adds version file to web app -->
 			<plugin>
