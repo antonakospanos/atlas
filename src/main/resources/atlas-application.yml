@@ -1,5 +1,14 @@
 server:
   contextPath: /
+  port: 8443
+  http:
+    port: 8080
+  ssl:
+    enabled: true
+    key-store: 'classpath:atlas.keystore' #'${catalina.home}/conf/atlas.keystore'
+    keyAlias: atlaskeys
+    key-store-password: iotacsystems
+    keyStoreType: PKCS12
 endpoints:
   jmx:
     domain: atlas
