@@ -7,7 +7,7 @@ server:
     port: 8080
   ssl:
     enabled: true
-    key-store: 'classpath:atlas.keystore' #'${catalina.home}/conf/atlas.keystore'
+    key-store: 'classpath:ssl/atlas.keystore' #'${catalina.home}/conf/atlas.keystore'
     keyAlias: atlaskeys
     key-store-password: iotacsystems
     keyStoreType: PKCS12
