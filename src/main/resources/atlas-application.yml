@@ -8,7 +8,7 @@ server:
   ssl:
     enabled: true
     key-store: 'classpath:ssl/atlas.keystore' #'${catalina.home}/conf/atlas.keystore'
-    keyAlias: atlaskeys
+    keyAlias: iotacsystems.com
     key-store-password: iotacsystems
     keyStoreType: PKCS12
 endpoints:
