@@ -1,7 +1,7 @@
 server:
   # Configuration of Spring Boot embedded Tomcat server (java -jar atlas.war)
   servlet:
-    contextPath: '/atlas'
+    contextPath: ''
   port: 8443
   http:
     port: 8080

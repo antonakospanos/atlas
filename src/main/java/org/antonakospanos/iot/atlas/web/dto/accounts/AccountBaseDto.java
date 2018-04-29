@@ -16,9 +16,6 @@ public class AccountBaseDto {
 	@ApiModelProperty(example = "ckar", required = true)
 	private String username;
 
-	/**
-	 * Hashed password
-	 */
 	@NotEmpty
 	@ApiModelProperty(example = "password", required = true)
 	private String password;

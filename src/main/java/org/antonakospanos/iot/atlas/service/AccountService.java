@@ -6,7 +6,6 @@ import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
-import org.antonakospanos.iot.atlas.web.dto.IdentityDto;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountDto;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountRequest;
 import org.antonakospanos.iot.atlas.web.dto.patch.PatchDto;
@@ -15,11 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponents;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -40,6 +36,9 @@ public class AccountService {
 
 	@Autowired
 	AccountConverter accountConverter;
+
+	@Autowired
+	HashService hashService;
 
 
 	@Transactional
@@ -157,7 +156,7 @@ public class AccountService {
 			throw new RuntimeException("Multiple accounts found with username '" + username + "'");
 		} else {
 			AccountDto accountDto = accounts.get(0);
-			if (!password.equals(accountDto.getPassword())) {
+			if (!hashService.matches(password, accountDto.getPassword())) {
 				throw new AuthorizationServiceException("Invalid password '" + password + "'");
 			} else {
 				return accountDto;

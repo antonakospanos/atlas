@@ -3,8 +3,8 @@ package org.antonakospanos.iot.atlas.dao.converter;
 import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
+import org.antonakospanos.iot.atlas.service.HashService;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountDto;
-import org.antonakospanos.iot.atlas.web.dto.devices.DeviceDto;
 import org.antonakospanos.iot.atlas.web.dto.patch.PatchDto;
 import org.antonakospanos.iot.atlas.web.dto.patch.PatchOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +21,15 @@ public class AccountConverter {
 	@Autowired
 	DeviceRepository deviceRepository;
 
+	@Autowired
+	HashService hashService;
+
 	public void updateAccount(AccountDto accountDto, Account account) {
+		// Store hashed password
+		String hashedPassword = hashService.hashPassword(accountDto.getPassword());
+		account.setPassword(hashedPassword);
+
+		// Add user's devices
 		Set<Device> devices = new HashSet<>();
 
 		List<String> deviceIds = accountDto.getDevices();
@@ -50,7 +58,8 @@ public class AccountConverter {
 		if ("username".equals(field)) {
 			account.setUsername(value);
 		} else if ("password".equals(field)) {
-			account.setPassword(value);
+			String hashedPassword = hashService.hashPassword(value);
+			account.setPassword(hashedPassword);
 		} else if ("name".equals(field)) {
 			account.setName(value);
 		} else if ("email".equals(field)) {

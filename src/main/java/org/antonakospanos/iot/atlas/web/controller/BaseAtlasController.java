@@ -61,6 +61,17 @@ public abstract class BaseAtlasController {
 		return new ResponseEntity<>(resourceError, HttpStatus.NOT_FOUND);
 	}
 
+	@ExceptionHandler(Exception.class)
+	@ResponseBody
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	public ResponseEntity<ResponseBase> handleInternalServerError(Exception exception) {
+		ResponseBase resourceError = buildErrorResponse(exception, Result.GENERIC_ERROR);
+		logger.error(exception.getClass() + " Cause: " + exception.getCause() + " Message: " + exception.getMessage()
+				+ " Stack Trace: ", exception);
+
+		return new ResponseEntity<>(resourceError, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
 	/**
 	 * Builds the HTTP response in case of an exceptional handling
 	 *

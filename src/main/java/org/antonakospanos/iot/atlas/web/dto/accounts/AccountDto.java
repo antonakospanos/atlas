@@ -1,9 +1,11 @@
 package org.antonakospanos.iot.atlas.web.dto.accounts;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.swagger.annotations.ApiModelProperty;
 import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.web.dto.Dto;
+import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
  * AccountDto
  */
 @JsonPropertyOrder({ "id", "username", "password", "name", "email", "cellphone", "devices" })
+@Component
 public class AccountDto extends AccountBaseDto implements Dto<Account> {
 
 	public static List<String> fields = Arrays.asList(AccountBaseDto.class.getDeclaredFields())
@@ -94,6 +97,20 @@ public class AccountDto extends AccountBaseDto implements Dto<Account> {
 		this.id = id;
 	}
 
+	@JsonIgnore
+	@ApiModelProperty(hidden = true)
+	@Override
+	public String getPassword() {
+		return super.getPassword();
+	}
+
+	@JsonIgnore
+	@ApiModelProperty(hidden = true)
+	@Override
+	public void setPassword(String password) {
+		super.setPassword(password);
+	}
+
 	@Override
 	public AccountDto fromEntity(Account account) {
 		this.id = account.getExternalId();
@@ -121,11 +138,10 @@ public class AccountDto extends AccountBaseDto implements Dto<Account> {
 	@Override
 	public Account toEntity(Account account) {
 		account.setUsername(this.getUsername());
-		account.setPassword(this.getPassword());
 		account.setName(this.getName());
 		account.setEmail(this.getEmail());
 		account.setCellphone(this.getCellphone());
-		// DAO: Add devices relationship
+		// DAO: Add devices relationship and hash password
 
 		return account;
 	}
