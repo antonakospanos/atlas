@@ -1,5 +1,8 @@
 package org.antonakospanos.iot.atlas.web.configuration;
 
+import org.antonakospanos.iot.atlas.web.security.filters.AuthorizationFilter;
+import org.antonakospanos.iot.atlas.web.security.filters.ExceptionHandlerFilter;
+import org.antonakospanos.iot.atlas.web.security.filters.LoggingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,15 +15,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	private static final String[] SWAGGER_WHITELIST = {"/swagger-resources/**", "/swagger-ui.html", "docs/api.html",
-			"/v2/api-docs/**", "/docs/**", "/webjars/**", "/configuration/ui", "/configuration/security"};
+	private static final String[] SWAGGER_WHITELIST_REGEX = {"/swagger-resources.*", "/swagger-ui.html", "docs/api.html",
+			"/v2/api-docs.*", "/docs.*", "/webjars.*", "/configuration/ui", "/configuration/security"};
 
-	private static final String[] ATLAS_WHITELIST = new String[]{"/", "/version", "/health", "/ehcache/**", "/metrics/**"};
+	private static final String[] ATLAS_WHITELIST_REGEX = new String[]{"/", "/version", "/health", "/ehcache.*", "/metrics.*"};
 
 	private static final String EVENTS_API = "/events/**";
 	private static final String DEVICES_API = "/devices/**";
@@ -92,8 +96,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //	public void configure(WebSecurity web) throws Exception {
 //		web
 //				.ignoring()
-//				.antMatchers(ATLAS_WHITELIST)
-//				.antMatchers(SWAGGER_WHITELIST)
+//				.antMatchers(ATLAS_WHITELIST_REGEX)
+//				.antMatchers(SWAGGER_WHITELIST_REGEX)
 //				.antMatchers(EVENTS_API)
 //				.antMatchers(DEVICES_API)
 //				.antMatchers(ACTIONS_API);
@@ -101,20 +105,31 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-//		http.authorizeRequests()
-//				.antMatchers("/", "/home").permitAll()
-//				.antMatchers(ADMIN_API).access("hasRole('"+ROLE_ADMIN+"')")
-//				.antMatchers(DEVICE_API).access("hasRole('"+ROLE_ADMIN+"') and hasRole('"+ROLE_DEVICE+"')")
-//				.antMatchers(APPLICATION_API).access("hasRole('"+ROLE_ADMIN+"') and hasRole('"+ROLE_APPLICATION+"')")
-//			.and().formLogin().loginPage("/login")
-//				.usernameParameter("username").passwordParameter("password")
-//			.and().csrf()
-//			.and().exceptionHandling().accessDeniedPage("/Access_Denied");
+		// Logging
+		http.addFilterBefore(new LoggingFilter(), BasicAuthenticationFilter.class);
 
+		// Authentication
 		http.authorizeRequests()
-					.antMatchers(ADMIN_API).hasRole(ROLE_ADMIN) // authenticated()
-					.anyRequest().permitAll() // implicitly permit!
+					.regexMatchers(ATLAS_WHITELIST_REGEX).permitAll()
+					.regexMatchers(SWAGGER_WHITELIST_REGEX).permitAll()
+					// .antMatchers(ADMIN_API).hasAnyAuthority(ROLE_ADMIN) // authenticated()
+					// .antMatchers(DEVICE_API).hasAnyAuthority(ROLE_ADMIN, ROLE_DEVICE) // authenticated()
+					// .antMatchers(APPLICATION_API).hasAnyAuthority(ROLE_ADMIN, ROLE_APPLICATION) // authenticated()
+
+					// implicitly permit!
+					.anyRequest().permitAll()
+					// TODO: implicitly require authentication!
+					// .anyRequest().authenticated()
 				.and()
 					.csrf().disable();
+
+		// API Authorization
+		http.addFilterAfter(new ExceptionHandlerFilter(), BasicAuthenticationFilter.class);
+		http.addFilterAfter(new AuthorizationFilter(), ExceptionHandlerFilter.class);
+
+		// API Authorization for anonymous!
+		// AnonymousAuthenticationFilter anonymousAuthenticationFilter = new AnonymousAuthenticationFilter(UUID.randomUUID().toString());
+		// anonymousAuthenticationFilter.setAuthenticationDetailsSource(new AuthenticationSource());
+		// http.anonymous().authenticationFilter(anonymousAuthenticationFilter);
 	}
 }
