@@ -1,4 +1,4 @@
-package org.antonakospanos.iot.atlas.web.exception;
+package org.antonakospanos.iot.atlas.web.security.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

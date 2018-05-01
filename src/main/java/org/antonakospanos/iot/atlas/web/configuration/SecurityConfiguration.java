@@ -60,7 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.addFilterBefore(new LoggingFilter(), BasicAuthenticationFilter.class);
 
 		// Exception handling
-		http.addFilterAfter(new ExceptionHandlerFilter(), LoggingFilter.class);
+		http.addFilterAfter(new ExceptionHandlerFilter(), BasicAuthenticationFilter.class);
 
 		// Authentication
 		http.addFilterAfter(new AuthenticationFilter(authenticationManager()), ExceptionHandlerFilter.class);

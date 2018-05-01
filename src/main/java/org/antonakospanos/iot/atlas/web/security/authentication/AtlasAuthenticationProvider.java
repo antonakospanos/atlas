@@ -3,7 +3,7 @@ package org.antonakospanos.iot.atlas.web.security.authentication;
 import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.service.AccountService;
 import org.antonakospanos.iot.atlas.web.configuration.SecurityConfiguration;
-import org.antonakospanos.iot.atlas.web.exception.AtlasAuthenticationException;
+import org.antonakospanos.iot.atlas.web.security.exception.AtlasAuthenticationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

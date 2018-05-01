@@ -78,7 +78,7 @@ public class AccountController extends BaseAtlasController {
 			@ApiResponse(code = 500, message = "server error")})
 	public ResponseEntity<ResponseBase> replace(@PathVariable UUID accountId, @Valid @RequestBody AccountRequest request) {
 		ResponseEntity<ResponseBase> response;
-		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId));
+		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId + "\n" + request));
 
 		AccountsValidator.validateAccount(request);
 
@@ -108,7 +108,7 @@ public class AccountController extends BaseAtlasController {
 			@ApiResponse(code = 500, message = "server error")})
 	public ResponseEntity<ResponseBase> update(@PathVariable UUID accountId, @Valid @RequestBody PatchRequest request) {
 		ResponseEntity<ResponseBase> response;
-		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId));
+		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId + "\n" + request));
 
 		AccountsValidator.validateAccount(request);
 

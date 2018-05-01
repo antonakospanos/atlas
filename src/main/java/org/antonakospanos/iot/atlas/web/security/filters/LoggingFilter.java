@@ -1,6 +1,7 @@
 package org.antonakospanos.iot.atlas.web.security.filters;
 
 import org.antonakospanos.iot.atlas.web.support.LoggingUtils;
+import org.antonakospanos.iot.atlas.web.support.MutableHttpServletRequest;
 import org.apache.commons.io.output.TeeOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,18 +31,17 @@ public class LoggingFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        // Cast servlet req/res to HTTP res/res
-        HttpServletRequest httpRequest = ((HttpServletRequest) request);
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        String uid = UUID.randomUUID().toString();
-
-        // Log request
-        LOGGER.debug("Request: " + uid + "\n" + LoggingUtils.serializeRequest(httpRequest));
+        // Wrap servlet request to allow multiple reads on HTTP payload
+        HttpServletRequest httpRequest = new MutableHttpServletRequest((HttpServletRequest) request);
 
         // Initialize HTTP response with empty output stream
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        httpResponse = getHttpResponse(httpResponse, baos);
+        HttpServletResponse httpResponse = createHttpResponse(response, baos);
+
+        // Log request
+        String uid = UUID.randomUUID().toString();
+        LOGGER.debug("Request: " + uid + "\n" + LoggingUtils.serializeRequest(httpRequest));
 
         // Proceed with filters (with wrapped response + request)
         chain.doFilter(httpRequest, httpResponse);
@@ -51,10 +51,11 @@ public class LoggingFilter extends GenericFilterBean {
     }
 
 
-    private HttpServletResponse getHttpResponse(HttpServletResponse response, ByteArrayOutputStream baos) {
+    private HttpServletResponse createHttpResponse(ServletResponse response, ByteArrayOutputStream baos) {
         final PrintStream ps = new PrintStream(baos);
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        response = new HttpServletResponseWrapper(response) {
+        httpResponse = new HttpServletResponseWrapper(httpResponse) {
             @Override
             public ServletOutputStream getOutputStream() throws IOException {
                 return new DelegatingServletOutputStream(new TeeOutputStream(super.getOutputStream(), ps));
@@ -67,6 +68,6 @@ public class LoggingFilter extends GenericFilterBean {
             }
         };
 
-        return response;
+        return httpResponse;
     }
 }
