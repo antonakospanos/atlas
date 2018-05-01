@@ -34,26 +34,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String[] DEVICE_API = new String[]{ EVENTS_API, DEVICES_API };
 	private static final String[] APPLICATION_API = new String[]{ DEVICES_API, ACCOUNTS_API, ACTIONS_API };
 
-	private static final String ROLE_ADMIN = "ROLE_ADMIN";
-	private static final String ROLE_APPLICATION = "ROLE_APPLICATION";
-	private static final String ROLE_DEVICE = "ROLE_DEVICE";
+	public static final String ROLE_ADMIN = "ROLE_ADMIN";
+	public static final String ROLE_APPLICATION = "ROLE_APPLICATION";
+	public static final String ROLE_DEVICE = "ROLE_DEVICE";
 
-
-//	@Autowired
-//	UserDetailsService userDetailsService;
 
 	@Autowired
 	AtlasAuthenticationProvider atlasAuthenticationProvider;
-
-//	@Bean
-//	public UserDetailsService userDetailsService() {
-//		return super.userDetailsService();
-//	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(); // generates a 60char hash using random salt!
 	}
+
+//	@Autowired
+//	UserDetailsService userDetailsService;
+
+//	@Bean
+//	public UserDetailsService userDetailsService() {
+//		return super.userDetailsService();
+//	}
 
 //	@Autowired
 //	public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
@@ -85,7 +85,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		// Authentication
 		http.addFilterAfter(new AuthenticationFilter(authenticationManager()), ExceptionHandlerFilter.class);
-		// http.addFilterAfter(new AuthorizationFilter(), AuthenticationFilter.class);
 
 		http.csrf().disable()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -97,15 +96,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				// .antMatchers(APPLICATION_API).hasRole("APPLICATION")
 				.antMatchers(DEVICE_API).permitAll()
 
-				// implicitly permit!
-				//.anyRequest().permitAll()
-				.anyRequest().authenticated()
+				.anyRequest().authenticated() // implicitly permit with .permitAll()
 				.and()
 				.httpBasic();
-
-		// API Authorization for anonymous!
-		// AnonymousAuthenticationFilter anonymousAuthenticationFilter = new AnonymousAuthenticationFilter(UUID.randomUUID().toString());
-		// anonymousAuthenticationFilter.setAuthenticationDetailsSource(new AtlasAuthenticationDetailsSource());
-		// http.anonymous().authenticationFilter(anonymousAuthenticationFilter);
 	}
 }
