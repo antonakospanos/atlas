@@ -1,4 +1,4 @@
-package org.antonakospanos.iot.atlas.web.controller;
+package org.antonakospanos.iot.atlas.web.api.v1;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -8,6 +8,7 @@ import javassist.NotFoundException;
 import org.antonakospanos.iot.atlas.service.AccountService;
 import org.antonakospanos.iot.atlas.support.ControllerUtils;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
+import org.antonakospanos.iot.atlas.web.api.BaseAtlasController;
 import org.antonakospanos.iot.atlas.web.dto.IdentityDto;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountDto;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountRequest;

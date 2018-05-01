@@ -1,4 +1,4 @@
-package org.antonakospanos.iot.atlas.web.controller;
+package org.antonakospanos.iot.atlas.web.api;
 
 import javassist.NotFoundException;
 import org.antonakospanos.iot.atlas.web.dto.response.ResponseBase;

@@ -1,4 +1,4 @@
-package org.antonakospanos.iot.atlas.web.controller;
+package org.antonakospanos.iot.atlas.web.api.v1;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.antonakospanos.iot.atlas.service.AlertService;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
+import org.antonakospanos.iot.atlas.web.api.BaseAtlasController;
 import org.antonakospanos.iot.atlas.web.dto.alerts.AlertDto;
 import org.antonakospanos.iot.atlas.web.dto.alerts.AlertRequest;
 import org.antonakospanos.iot.atlas.web.dto.response.CreateResponse;

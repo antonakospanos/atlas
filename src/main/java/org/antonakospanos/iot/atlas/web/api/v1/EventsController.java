@@ -1,8 +1,9 @@
-package org.antonakospanos.iot.atlas.web.controller;
+package org.antonakospanos.iot.atlas.web.api.v1;
 
 import io.swagger.annotations.*;
 import org.antonakospanos.iot.atlas.service.EventsService;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
+import org.antonakospanos.iot.atlas.web.api.BaseAtlasController;
 import org.antonakospanos.iot.atlas.web.dto.response.ResponseBase;
 import org.antonakospanos.iot.atlas.web.dto.events.HeartbeatFailureResponse;
 import org.antonakospanos.iot.atlas.web.dto.events.HeartbeatRequest;
