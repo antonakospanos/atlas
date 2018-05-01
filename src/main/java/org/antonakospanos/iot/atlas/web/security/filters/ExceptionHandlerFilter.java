@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Handles exceptions thrown by Filters before Spring MVC takes control. This
+ * Handles exception thrown by Filters before Spring MVC takes control. This
  * mostly covers HTTP Header validations for fields that are required for
  * preprocessing (e.g. authentication).
  */
@@ -45,7 +45,7 @@ public class ExceptionHandlerFilter extends GenericFilterBean {
     }
 
     /**
-     * Handle header exceptions.
+     * Handle header exception.
      *
      * @param request the request
      * @param response the response

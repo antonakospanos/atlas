@@ -193,6 +193,18 @@ public class AccountService {
 	}
 
 	@Transactional
+	public boolean exists(UUID accountExternalId) {
+		boolean exists = false;
+
+		if (accountExternalId != null) {
+			Account account = accountRepository.findByExternalId(accountExternalId);
+			exists = account != null;
+		}
+
+		return exists;
+	}
+
+	@Transactional
 	public List<AccountDto> list(Account account) {
 		List<AccountDto> accountDtos = new ArrayList<>();
 

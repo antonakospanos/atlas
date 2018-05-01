@@ -1,18 +1,17 @@
 package org.antonakospanos.iot.atlas.web.configuration;
 
-import org.antonakospanos.iot.atlas.web.security.filters.AuthorizationFilter;
+import org.antonakospanos.iot.atlas.web.security.authentication.AtlasAuthenticationProvider;
+import org.antonakospanos.iot.atlas.web.security.filters.AuthenticationFilter;
 import org.antonakospanos.iot.atlas.web.security.filters.ExceptionHandlerFilter;
 import org.antonakospanos.iot.atlas.web.security.filters.LoggingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -35,101 +34,78 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String[] DEVICE_API = new String[]{ EVENTS_API, DEVICES_API };
 	private static final String[] APPLICATION_API = new String[]{ DEVICES_API, ACCOUNTS_API, ACTIONS_API };
 
-	private static final String ROLE_ADMIN = "ADMIN_USER";
-	private static final String ROLE_DEVICE = "DEVICE_USER";
-	private static final String ROLE_APPLICATION = "APPLICATION_USER";
+	private static final String ROLE_ADMIN = "ROLE_ADMIN";
+	private static final String ROLE_APPLICATION = "ROLE_APPLICATION";
+	private static final String ROLE_DEVICE = "ROLE_DEVICE";
 
-	@Value("${application.roles.admin.username}")
-	private String adminUsername;
 
-	@Value("${application.roles.admin.password}")
-	private String adminPassword;
-
-	@Value("${application.roles.user.username}")
-	private String applicationUsername;
-
-	@Value("${application.roles.user.password}")
-	private String applicationPassword;
-
+//	@Autowired
+//	UserDetailsService userDetailsService;
 
 	@Autowired
-	UserDetailsService userDetailsService;
+	AtlasAuthenticationProvider atlasAuthenticationProvider;
 
-	@Bean
-	public UserDetailsService userDetailsService() {
-		return super.userDetailsService();
-	}
+//	@Bean
+//	public UserDetailsService userDetailsService() {
+//		return super.userDetailsService();
+//	}
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder(); // generates a 60char hash using random salt!
 	}
 
-	@Autowired
-	public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-		// auth.userDetailsService(userDetailsService);
-		auth.authenticationProvider(authenticationProvider());
-	}
-
-	@Bean
-	public DaoAuthenticationProvider authenticationProvider() {
-		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-		authenticationProvider.setUserDetailsService(userDetailsService);
-		authenticationProvider.setPasswordEncoder(passwordEncoder());
-		return authenticationProvider;
-	}
-
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth
-			.inMemoryAuthentication()
-				.withUser(applicationUsername)
-				.password(applicationPassword)
-				.roles(ROLE_APPLICATION)
-			.and()
-				.withUser(adminUsername)
-				.password(adminPassword)
-				.roles(ROLE_ADMIN);
-	}
-
-//	@Override
-//	public void configure(WebSecurity web) throws Exception {
-//		web
-//				.ignoring()
-//				.antMatchers(ATLAS_WHITELIST_REGEX)
-//				.antMatchers(SWAGGER_WHITELIST_REGEX)
-//				.antMatchers(EVENTS_API)
-//				.antMatchers(DEVICES_API)
-//				.antMatchers(ACTIONS_API);
+//	@Autowired
+//	public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
+//		 auth.userDetailsService(userDetailsService);
+//		auth.authenticationProvider(authenticationProvider());
 //	}
+
+//	@Bean
+//	public DaoAuthenticationProvider authenticationProvider() {
+//		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+//		authenticationProvider.setUserDetailsService(userDetailsService);
+//		authenticationProvider.setPasswordEncoder(passwordEncoder());
+//		return authenticationProvider;
+//	}
+
+	@Autowired
+	@Override
+	public void configure(AuthenticationManagerBuilder auth) {
+		 auth.authenticationProvider(atlasAuthenticationProvider);
+	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// Logging
 		http.addFilterBefore(new LoggingFilter(), BasicAuthenticationFilter.class);
 
+		// Exception handling
+		http.addFilterAfter(new ExceptionHandlerFilter(), LoggingFilter.class);
+
 		// Authentication
-		http.authorizeRequests()
-					.regexMatchers(ATLAS_WHITELIST_REGEX).permitAll()
-					.regexMatchers(SWAGGER_WHITELIST_REGEX).permitAll()
-					// .antMatchers(ADMIN_API).hasAnyAuthority(ROLE_ADMIN) // authenticated()
-					// .antMatchers(DEVICE_API).hasAnyAuthority(ROLE_ADMIN, ROLE_DEVICE) // authenticated()
-					// .antMatchers(APPLICATION_API).hasAnyAuthority(ROLE_ADMIN, ROLE_APPLICATION) // authenticated()
+		http.addFilterAfter(new AuthenticationFilter(authenticationManager()), ExceptionHandlerFilter.class);
+		// http.addFilterAfter(new AuthorizationFilter(), AuthenticationFilter.class);
 
-					// implicitly permit!
-					.anyRequest().permitAll()
-					// TODO: implicitly require authentication!
-					// .anyRequest().authenticated()
+		http.csrf().disable()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
+			.authorizeRequests()
+				.regexMatchers(ATLAS_WHITELIST_REGEX).permitAll()
+				.regexMatchers(SWAGGER_WHITELIST_REGEX).permitAll()
+				.antMatchers(ADMIN_API).hasRole("ADMIN")
+				// .antMatchers(APPLICATION_API).hasRole("APPLICATION")
+				.antMatchers(DEVICE_API).permitAll()
+
+				// implicitly permit!
+				//.anyRequest().permitAll()
+				.anyRequest().authenticated()
 				.and()
-					.csrf().disable();
-
-		// API Authorization
-		http.addFilterAfter(new ExceptionHandlerFilter(), BasicAuthenticationFilter.class);
-		http.addFilterAfter(new AuthorizationFilter(), ExceptionHandlerFilter.class);
+				.httpBasic();
 
 		// API Authorization for anonymous!
 		// AnonymousAuthenticationFilter anonymousAuthenticationFilter = new AnonymousAuthenticationFilter(UUID.randomUUID().toString());
-		// anonymousAuthenticationFilter.setAuthenticationDetailsSource(new AuthenticationSource());
+		// anonymousAuthenticationFilter.setAuthenticationDetailsSource(new AtlasAuthenticationDetailsSource());
 		// http.anonymous().authenticationFilter(anonymousAuthenticationFilter);
 	}
 }
