@@ -1,9 +1,6 @@
 package org.antonakospanos.iot.atlas.web.api.v1;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.antonakospanos.iot.atlas.service.AlertService;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
 import org.antonakospanos.iot.atlas.web.api.BaseAtlasController;
@@ -38,6 +35,14 @@ public class AlertsController extends BaseAtlasController {
 
 	@RequestMapping(value = "", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.POST)
 	@ApiOperation(value = "Creates alerts to be executed by the integrated IoT devices", response = CreateResponse.class)
+	@ApiImplicitParam(
+			name = "Authorization",
+			value = "Bearer <The user's access token obtained upon registration or authentication>",
+			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+			required = true,
+			dataType = "string",
+			paramType = "header"
+	)
 	@ResponseStatus(HttpStatus.CREATED)
 	@ApiResponses(value = {
 			@ApiResponse(code = 201, message = "The alert is created!", response = CreateResponse.class),
@@ -59,6 +64,14 @@ public class AlertsController extends BaseAtlasController {
 
 	@ApiOperation(value = "Deletes the scheduled alert for the integrated IoT device", response = ResponseBase.class)
 	@RequestMapping(value = "/{alertId}", produces = {"application/json"},	method = RequestMethod.DELETE)
+	@ApiImplicitParam(
+			name = "Authorization",
+			value = "Bearer <The user's access token obtained upon registration or authentication>",
+			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+			required = true,
+			dataType = "string",
+			paramType = "header"
+	)
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<ResponseBase> delete(@PathVariable UUID alertId) {
@@ -76,6 +89,14 @@ public class AlertsController extends BaseAtlasController {
 
 	@ApiOperation(value = "Lists the scheduled alerts for the integrated IoT devices", response = AlertDto.class, responseContainer="List")
 	@RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.GET)
+	@ApiImplicitParam(
+			name = "Authorization",
+			value = "Bearer <The user's access token obtained upon registration or authentication>",
+			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+			required = true,
+			dataType = "string",
+			paramType = "header"
+	)
 	public ResponseEntity<Iterable> list(@RequestParam (required=false) UUID accountId) {
 		ResponseEntity<Iterable> response = null;
 		logger.debug(LoggingHelper.logInboundRequest("/alerts?accountId=" + accountId ));

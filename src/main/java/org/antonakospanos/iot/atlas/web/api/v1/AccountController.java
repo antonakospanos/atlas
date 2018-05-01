@@ -1,9 +1,6 @@
 package org.antonakospanos.iot.atlas.web.api.v1;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import javassist.NotFoundException;
 import org.antonakospanos.iot.atlas.service.AccountService;
 import org.antonakospanos.iot.atlas.support.ControllerUtils;
@@ -66,6 +63,14 @@ public class AccountController extends BaseAtlasController {
 
 	@RequestMapping(value = "/{accountId}", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.PUT)
 	@ApiOperation(value = "Replaces the account of the user owning an IoT device", response = ResponseBase.class)
+	@ApiImplicitParam(
+			name = "Authorization",
+			value = "Bearer <The user's access token obtained upon registration or authentication>",
+			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+			required = true,
+			dataType = "string",
+			paramType = "header"
+	)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "The account is replaced!", response = ResponseBase.class),
@@ -88,6 +93,14 @@ public class AccountController extends BaseAtlasController {
 
 	@RequestMapping(value = "/{accountId}", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.PATCH)
 	@ApiOperation(value = "Updates the account of the user owning an IoT device", response = ResponseBase.class)
+	@ApiImplicitParam(
+			name = "Authorization",
+			value = "Bearer <The user's access token obtained upon registration or authentication>",
+			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+			required = true,
+			dataType = "string",
+			paramType = "header"
+	)
 	@ResponseStatus(HttpStatus.OK)
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "The account is updated!", response = ResponseBase.class),
@@ -110,6 +123,14 @@ public class AccountController extends BaseAtlasController {
 
 	@ApiOperation(value = "Deletes the user's account owning an IoT device", response = ResponseBase.class)
 	@RequestMapping(value = "/{accountId}", produces = {"application/json"},	method = RequestMethod.DELETE)
+	@ApiImplicitParam(
+			name = "Authorization",
+			value = "Bearer <The user's access token obtained upon registration or authentication>",
+			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+			required = true,
+			dataType = "string",
+			paramType = "header"
+	)
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<ResponseBase> delete(@PathVariable UUID accountId) {
@@ -155,6 +176,14 @@ public class AccountController extends BaseAtlasController {
 
 	@ApiOperation(value = "Lists all accounts of the integrated IoT devices", response = AccountDto.class, responseContainer="List")
 	@RequestMapping(value = "", produces = {"application/json"},	method = RequestMethod.GET)
+	@ApiImplicitParam(
+			name = "Authorization",
+			value = "Bearer <The user's access token obtained upon registration or authentication>",
+			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+			required = true,
+			dataType = "string",
+			paramType = "header"
+	)
 	public ResponseEntity<Iterable> listAllAccounts() {
 
 		logger.debug(LoggingHelper.logInboundRequest("/accounts"));
@@ -166,6 +195,14 @@ public class AccountController extends BaseAtlasController {
 
 	@ApiOperation(value = "Lists the accounts of the integrated IoT devices", response = AccountDto.class)
 	@RequestMapping(value = "/{accountId}", produces = {"application/json"},	method = RequestMethod.GET)
+	@ApiImplicitParam(
+			name = "Authorization",
+			value = "Bearer <The user's access token obtained upon registration or authentication>",
+			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+			required = true,
+			dataType = "string",
+			paramType = "header"
+	)
 	public ResponseEntity<AccountDto> listAccount(@PathVariable UUID accountId) {
 
 		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId));
@@ -177,6 +214,14 @@ public class AccountController extends BaseAtlasController {
 
 //	@ApiOperation(value = "Lists the accounts of the integrated IoT devices", response = AccountDto.class, responseContainer="List")
 //	@RequestMapping(value = "/{username}", produces = {"application/json"},	method = RequestMethod.GET)
+//	@ApiImplicitParam(
+//			name = "Authorization",
+//			value = "Bearer <The user's access token obtained upon registration or authentication>",
+//			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+//			required = true,
+//			dataType = "string",
+//			paramType = "header"
+//	)
 //	public ResponseEntity<Iterable> listAccount(@PathVariable String username) {
 //
 //		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username));
@@ -188,6 +233,14 @@ public class AccountController extends BaseAtlasController {
 
 //	@RequestMapping(value = "/{username}", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.PUT)
 //	@ApiOperation(value = "Replaces the account of the user owning an IoT device", response = ResponseBase.class)
+//	@ApiImplicitParam(
+//			name = "Authorization",
+//			value = "Bearer <The user's access token obtained upon registration or authentication>",
+//			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+//			required = true,
+//			dataType = "string",
+//			paramType = "header"
+//	)
 //	@ResponseStatus(HttpStatus.OK)
 //	@ApiResponses(value = {
 //			@ApiResponse(code = 200, message = "The account is replaced!", response = ResponseBase.class),
@@ -210,6 +263,14 @@ public class AccountController extends BaseAtlasController {
 //
 //	@RequestMapping(value = "/{username}", produces = {"application/json"}, consumes = {"application/json"},	method = RequestMethod.PATCH)
 //	@ApiOperation(value = "Updates the account of the user owning an IoT device", response = ResponseBase.class)
+//	@ApiImplicitParam(
+//			name = "Authorization",
+//			value = "Bearer <The user's access token obtained upon registration or authentication>",
+//			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+//			required = true,
+//			dataType = "string",
+//			paramType = "header"
+//	)
 //	@ResponseStatus(HttpStatus.OK)
 //	@ApiResponses(value = {
 //			@ApiResponse(code = 200, message = "The account is updated!", response = ResponseBase.class),
@@ -232,6 +293,14 @@ public class AccountController extends BaseAtlasController {
 //
 //	@ApiOperation(value = "Deletes the user's account owning an IoT device", response = ResponseBase.class)
 //	@RequestMapping(value = "/{username}", produces = {"application/json"},	method = RequestMethod.DELETE)
+//	@ApiImplicitParam(
+//			name = "Authorization",
+//			value = "Bearer <The user's access token obtained upon registration or authentication>",
+//			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+//			required = true,
+//			dataType = "string",
+//			paramType = "header"
+//	)
 //	@ResponseBody
 //	@ResponseStatus(HttpStatus.OK)
 //	public ResponseEntity<ResponseBase> delete(@PathVariable String username) {

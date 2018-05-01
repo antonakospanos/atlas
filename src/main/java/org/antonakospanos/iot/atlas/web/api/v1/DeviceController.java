@@ -1,9 +1,6 @@
 package org.antonakospanos.iot.atlas.web.api.v1;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.antonakospanos.iot.atlas.service.DeviceService;
 import org.antonakospanos.iot.atlas.support.ControllerUtils;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
@@ -60,6 +57,14 @@ public class DeviceController extends BaseAtlasController {
 
 	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
 	@RequestMapping(value = "/devices", produces = {"application/json"},	method = RequestMethod.GET)
+	@ApiImplicitParam(
+			name = "Authorization",
+			value = "Bearer <The user's access token obtained upon registration or authentication>",
+			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+			required = true,
+			dataType = "string",
+			paramType = "header"
+	)
 	public ResponseEntity<Iterable> listAllDevices() {
 
 		logger.debug(LoggingHelper.logInboundRequest("/devices/"));
@@ -73,6 +78,14 @@ public class DeviceController extends BaseAtlasController {
 
 	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class)
 	@RequestMapping(value = "/devices/{deviceId}", produces = {"application/json"},	method = RequestMethod.GET)
+	@ApiImplicitParam(
+			name = "Authorization",
+			value = "Bearer <The user's access token obtained upon registration or authentication>",
+			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+			required = true,
+			dataType = "string",
+			paramType = "header"
+	)
 	public ResponseEntity<DeviceDto> listDevice(@PathVariable String deviceId) {
 
 		logger.debug(LoggingHelper.logInboundRequest("/devices/" + deviceId));
@@ -86,6 +99,14 @@ public class DeviceController extends BaseAtlasController {
 
 	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
 	@RequestMapping(value = "/accounts/{accountId}/devices", produces = {"application/json"},	method = RequestMethod.GET)
+	@ApiImplicitParam(
+			name = "Authorization",
+			value = "Bearer <The user's access token obtained upon registration or authentication>",
+			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+			required = true,
+			dataType = "string",
+			paramType = "header"
+	)
 	public ResponseEntity<Iterable> listAccountDevices(@PathVariable UUID accountId) {
 
 		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId + "/devices/"));
@@ -99,6 +120,14 @@ public class DeviceController extends BaseAtlasController {
 
 	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class)
 	@RequestMapping(value = "/accounts/{accountId}/devices/{deviceId}", produces = {"application/json"},	method = RequestMethod.GET)
+	@ApiImplicitParam(
+			name = "Authorization",
+			value = "Bearer <The user's access token obtained upon registration or authentication>",
+			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+			required = true,
+			dataType = "string",
+			paramType = "header"
+	)
 	public ResponseEntity<DeviceDto> listAccountDevice(@PathVariable UUID accountId, @PathVariable String deviceId) {
 
 		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId + "/devices/" + deviceId));
@@ -112,6 +141,14 @@ public class DeviceController extends BaseAtlasController {
 
 //	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
 //	@RequestMapping(value = "/accounts/{username}/devices", produces = {"application/json"},	method = RequestMethod.GET)
+//	@ApiImplicitParam(
+//			name = "Authorization",
+//			value = "Bearer <The user's access token obtained upon registration or authentication>",
+//			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+//			required = true,
+//			dataType = "string",
+//			paramType = "header"
+//	)
 //	public ResponseEntity<Iterable> listAccountDevices(@PathVariable String username) {
 //
 //		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username + "/devices/"));
@@ -125,6 +162,14 @@ public class DeviceController extends BaseAtlasController {
 //
 // 	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
 //	@RequestMapping(value = "/accounts/{username}/devices/{deviceId}", produces = {"application/json"},	method = RequestMethod.GET)
+//	@ApiImplicitParam(
+//			name = "Authorization",
+//			value = "Bearer <The user's access token obtained upon registration or authentication>",
+//			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
+//			required = true,
+//			dataType = "string",
+//			paramType = "header"
+//	)
 //	public ResponseEntity<Iterable> listAccountDevice(@PathVariable String username, @PathVariable String deviceId) {
 //
 //		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username + "/devices/" + deviceId));
