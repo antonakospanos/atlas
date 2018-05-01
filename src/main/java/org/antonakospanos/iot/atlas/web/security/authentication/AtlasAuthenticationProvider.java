@@ -3,6 +3,7 @@ package org.antonakospanos.iot.atlas.web.security.authentication;
 import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.service.AccountService;
 import org.antonakospanos.iot.atlas.web.configuration.SecurityConfiguration;
+import org.antonakospanos.iot.atlas.web.exception.AtlasAuthenticationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,7 +58,12 @@ public class AtlasAuthenticationProvider implements AuthenticationProvider, Seri
 		} else {
 			// Validate that user's access token is listed in Account table
 			authorities.add(new SimpleGrantedAuthority(SecurityConfiguration.ROLE_APPLICATION));
-			UUID uuidToken = UUID.fromString(token);
+			UUID uuidToken;
+			try {
+				uuidToken = UUID.fromString(token);
+			} catch (Exception e) {
+				throw new AtlasAuthenticationException("Invalid HTTP Authorization header Bearer: " + token);
+			}
 
 			account = accountService.find(uuidToken);
 			boolean authenticated = account != null;

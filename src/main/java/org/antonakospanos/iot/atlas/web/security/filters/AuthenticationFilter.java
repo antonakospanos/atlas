@@ -5,7 +5,6 @@ import org.antonakospanos.iot.atlas.web.security.authentication.AtlasAuthenticat
 import org.antonakospanos.iot.atlas.web.security.authentication.AuthenticationDetails;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -37,24 +36,20 @@ public class AuthenticationFilter extends GenericFilterBean {
     }
 
     private boolean authenticate(HttpServletRequest request) {
-        boolean authenticated = false;
+        boolean authenticated;
 
-        try {
-            // Build AuthenticationDetails parsing HTTP Authorization header
-            AuthenticationDetails authDetails = this.atlasAuthenticationDetailsSource.buildDetails(request);
+        // Build AuthenticationDetails parsing HTTP Authorization header
+        AuthenticationDetails authDetails = this.atlasAuthenticationDetailsSource.buildDetails(request);
 
-            // Build AtlasAuthenticationToken using AuthenticationDetails
-            AtlasAuthenticationToken authToken = new AtlasAuthenticationToken();
-            authToken.setDetails(authDetails);
+        // Build AtlasAuthenticationToken using AuthenticationDetails
+        AtlasAuthenticationToken authToken = new AtlasAuthenticationToken();
+        authToken.setDetails(authDetails);
 
-            // Authenticate request using the list of the authentication manager's authentication providers (AtlasAuthenticationProvider)
-            Authentication authResult = this.authenticationManager.authenticate(authToken);
-            SecurityContextHolder.getContext().setAuthentication(authResult);
-            authenticated = true;
+        // Authenticate request using the list of the authentication manager's authentication providers (AtlasAuthenticationProvider)
+        Authentication authResult = this.authenticationManager.authenticate(authToken);
+        SecurityContextHolder.getContext().setAuthentication(authResult);
+        authenticated = true;
 
-        } catch (AuthenticationException failed) {
-            SecurityContextHolder.clearContext();
-        }
 
         return authenticated;
     }
