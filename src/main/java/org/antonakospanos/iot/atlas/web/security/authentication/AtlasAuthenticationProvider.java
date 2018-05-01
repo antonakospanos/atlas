@@ -1,16 +1,21 @@
 package org.antonakospanos.iot.atlas.web.security.authentication;
 
+import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.service.AccountService;
-import org.antonakospanos.iot.atlas.web.exception.AtlasAuthenticationException;
+import org.antonakospanos.iot.atlas.web.configuration.SecurityConfiguration;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -29,32 +34,42 @@ public class AtlasAuthenticationProvider implements AuthenticationProvider, Seri
 	/**
 	 * Authenticate requests to Atlas API
 	 *
-	 * @param authentication the authentication
+	 * @param authenticationRequest the authenticationRequest
 	 *
-	 * @return the authentication
-	 * @throws AuthenticationException the authentication exception
+	 * @return the authenticationRequest
+	 * @throws AuthenticationException the authenticationRequest exception
 	 */
 	@Override
-	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		AuthenticationDetails authDetails = (AuthenticationDetails) authentication.getDetails();
+	public Authentication authenticate(Authentication authenticationRequest) throws AuthenticationException {
+		AuthenticationDetails authDetails = (AuthenticationDetails) authenticationRequest.getDetails();
 
-		// exclude PUT /devices/* and POST /events/heartbeat that are used by IoT devices
-		// exclude POST /accounts (registration) and GET /accounts/id (authentication)
-
+		Account account = null;
+		Collection<GrantedAuthority> authorities = new ArrayList<>();
 		String token = authDetails.getAccessToken();
 		if (StringUtils.isBlank(token)) {
-			throw new AtlasAuthenticationException("API Key not found!");
+			// No token, grant only /devices API
+			authorities.add(new SimpleGrantedAuthority(SecurityConfiguration.ROLE_DEVICE));
+			authenticationRequest.setAuthenticated(true);
 		} else if (adminAccessToken.equals(token)) {
-			// Admin token exception
-			authentication.setAuthenticated(true);
+			// Admin token
+			authorities.add(new SimpleGrantedAuthority(SecurityConfiguration.ROLE_ADMIN));
+			authenticationRequest.setAuthenticated(true);
 		} else {
 			// Validate that user's access token is listed in Account table
+			authorities.add(new SimpleGrantedAuthority(SecurityConfiguration.ROLE_APPLICATION));
 			UUID uuidToken = UUID.fromString(token);
-			boolean authenticated = accountService.exists(uuidToken);
-			authentication.setAuthenticated(authenticated);
+
+			account = accountService.find(uuidToken);
+			boolean authenticated = account != null;
+			authenticationRequest.setAuthenticated(authenticated);
 		}
 
-		return authentication;
+		AtlasAuthenticationToken authenticationResponse = new AtlasAuthenticationToken(authorities);
+		authenticationResponse.setPrincipal(account);
+		authenticationResponse.setDetails(authenticationRequest.getDetails());
+		authenticationResponse.setCredentials(token);
+
+		return authenticationResponse;
 	}
 
 	/**
@@ -65,6 +80,6 @@ public class AtlasAuthenticationProvider implements AuthenticationProvider, Seri
 	 */
 	@Override
 	public boolean supports(Class<?> authentication) {
-		return AuthenticationToken.class.isAssignableFrom(authentication);
+		return AtlasAuthenticationToken.class.isAssignableFrom(authentication);
 	}
 }

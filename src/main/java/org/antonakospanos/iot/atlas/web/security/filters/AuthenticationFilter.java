@@ -1,8 +1,8 @@
 package org.antonakospanos.iot.atlas.web.security.filters;
 
 import org.antonakospanos.iot.atlas.web.security.authentication.AtlasAuthenticationDetailsSource;
+import org.antonakospanos.iot.atlas.web.security.authentication.AtlasAuthenticationToken;
 import org.antonakospanos.iot.atlas.web.security.authentication.AuthenticationDetails;
-import org.antonakospanos.iot.atlas.web.security.authentication.AuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -14,52 +14,48 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AuthenticationFilter extends GenericFilterBean {
 
-	private AtlasAuthenticationDetailsSource atlasAuthenticationDetailsSource;
-	private AuthenticationManager authenticationManager;
+    private AtlasAuthenticationDetailsSource atlasAuthenticationDetailsSource;
+    private AuthenticationManager authenticationManager;
 
-	public AuthenticationFilter(AuthenticationManager authManager) {
-		this.authenticationManager = authManager;
-		this.atlasAuthenticationDetailsSource = new AtlasAuthenticationDetailsSource();
-	}
+    public AuthenticationFilter(AuthenticationManager authManager) {
+        this.authenticationManager = authManager;
+        this.atlasAuthenticationDetailsSource = new AtlasAuthenticationDetailsSource();
+    }
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-		boolean proceed = true;
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-		if (SecurityContextHolder.getContext().getAuthentication() == null) {
-			proceed = authenticate(request, response, chain);
-		}
+        if (authenticate(httpRequest)) {
+            chain.doFilter(request, response);
+        }
+    }
 
-		if (proceed) {
-			chain.doFilter(request, response);
-		}
-	}
+    private boolean authenticate(HttpServletRequest request) {
+        boolean authenticated = false;
 
-	private boolean authenticate(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		boolean proceed = false;
+        try {
+            // Build AuthenticationDetails parsing HTTP Authorization header
+            AuthenticationDetails authDetails = this.atlasAuthenticationDetailsSource.buildDetails(request);
 
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		HttpServletResponse httpResponse = (HttpServletResponse) response;
+            // Build AtlasAuthenticationToken using AuthenticationDetails
+            AtlasAuthenticationToken authToken = new AtlasAuthenticationToken();
+            authToken.setDetails(authDetails);
 
-			try {
-				AuthenticationToken authToken = new AuthenticationToken();
-				AuthenticationDetails details = this.atlasAuthenticationDetailsSource.buildDetails(httpRequest);
-				authToken.setDetails(details);
-				authToken.setCredentials(details.getAccessToken());
-				Authentication authResult = this.authenticationManager.authenticate(authToken);
-				SecurityContextHolder.getContext().setAuthentication(authResult);
-				proceed = true;
+            // Authenticate request using the list of the authentication manager's authentication providers (AtlasAuthenticationProvider)
+            Authentication authResult = this.authenticationManager.authenticate(authToken);
+            SecurityContextHolder.getContext().setAuthentication(authResult);
+            authenticated = true;
 
-			} catch (AuthenticationException failed) {
-				SecurityContextHolder.clearContext();
-			}
+        } catch (AuthenticationException failed) {
+            SecurityContextHolder.clearContext();
+        }
 
-		return proceed;
-	}
+        return authenticated;
+    }
 }

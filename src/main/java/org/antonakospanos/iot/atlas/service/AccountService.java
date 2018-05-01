@@ -205,6 +205,17 @@ public class AccountService {
 	}
 
 	@Transactional
+	public Account find(UUID accountExternalId) {
+		Account account = null;
+
+		if (accountExternalId != null) {
+			account = accountRepository.findByExternalId(accountExternalId);
+		}
+
+		return account;
+	}
+
+	@Transactional
 	public List<AccountDto> list(Account account) {
 		List<AccountDto> accountDtos = new ArrayList<>();
 

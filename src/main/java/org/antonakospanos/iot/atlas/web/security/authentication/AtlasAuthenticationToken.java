@@ -1,13 +1,25 @@
 package org.antonakospanos.iot.atlas.web.security.authentication;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Collection;
 import java.util.Collections;
 
-public class AuthenticationToken extends AbstractAuthenticationToken {
+public class AtlasAuthenticationToken extends AbstractAuthenticationToken {
 
-    public AuthenticationToken() {
+    public AtlasAuthenticationToken() {
         super(Collections.emptyList());
+    }
+
+    /**
+     * Creates a token with the supplied array of authorities.
+     *
+     * @param authorities the collection of <tt>GrantedAuthority</tt>s for the principal
+     *                    represented by this authentication object.
+     */
+    public AtlasAuthenticationToken(Collection<? extends GrantedAuthority> authorities) {
+        super(authorities);
     }
 
     private Object token;

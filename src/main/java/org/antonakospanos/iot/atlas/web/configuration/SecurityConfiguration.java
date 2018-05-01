@@ -7,6 +7,7 @@ import org.antonakospanos.iot.atlas.web.security.filters.LoggingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -47,28 +48,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder(); // generates a 60char hash using random salt!
 	}
 
-//	@Autowired
-//	UserDetailsService userDetailsService;
-
-//	@Bean
-//	public UserDetailsService userDetailsService() {
-//		return super.userDetailsService();
-//	}
-
-//	@Autowired
-//	public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-//		 auth.userDetailsService(userDetailsService);
-//		auth.authenticationProvider(authenticationProvider());
-//	}
-
-//	@Bean
-//	public DaoAuthenticationProvider authenticationProvider() {
-//		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//		authenticationProvider.setUserDetailsService(userDetailsService);
-//		authenticationProvider.setPasswordEncoder(passwordEncoder());
-//		return authenticationProvider;
-//	}
-
 	@Autowired
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) {
@@ -90,12 +69,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.authorizeRequests()
+				// Permit Swagger and Metrics APIs
 				.regexMatchers(ATLAS_WHITELIST_REGEX).permitAll()
 				.regexMatchers(SWAGGER_WHITELIST_REGEX).permitAll()
-				.antMatchers(ADMIN_API).hasRole("ADMIN")
-				// .antMatchers(APPLICATION_API).hasRole("APPLICATION")
-				.antMatchers(DEVICE_API).permitAll()
 
+				// Permit User Authentication API
+				.antMatchers(HttpMethod.POST, "/accounts").permitAll()
+				.antMatchers(HttpMethod.GET, "/accounts/id").permitAll()
+
+				// Authorize rest APIs
+				.antMatchers(ADMIN_API).hasRole("ADMIN")
+				.antMatchers(APPLICATION_API).hasAnyRole("ADMIN", "APPLICATION")
+				.antMatchers(DEVICE_API).hasAnyRole("ADMIN", "APPLICATION", "DEVICE")
+
+				// Authenticate rest APIs
 				.anyRequest().authenticated() // implicitly permit with .permitAll()
 				.and()
 				.httpBasic();
