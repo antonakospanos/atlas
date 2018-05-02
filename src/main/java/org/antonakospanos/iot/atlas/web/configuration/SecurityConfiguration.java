@@ -83,9 +83,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/accounts/id").permitAll()
 
 				// Authorize rest APIs
-				.antMatchers(ADMIN_API).hasRole("ADMIN")
+				.regexMatchers(HttpMethod.PUT, "/devices/.*").hasAnyRole("ADMIN", "APPLICATION", "DEVICE")
+				.regexMatchers(HttpMethod.POST, "/events").hasAnyRole("ADMIN", "APPLICATION", "DEVICE")
 				.antMatchers(APPLICATION_API).hasAnyRole("ADMIN", "APPLICATION")
-				.antMatchers(DEVICE_API).hasAnyRole("ADMIN", "APPLICATION", "DEVICE")
+				.antMatchers(ADMIN_API).hasRole("ADMIN")
 
 				// Authenticate rest APIs
 				.anyRequest().authenticated() // implicitly permit with .permitAll()
