@@ -82,6 +82,7 @@ public class LoggingUtils {
         text.appendln(HORIZONTAL_LINE);
         text.appendln("Body");
         text.appendln(baos.toString());
+        //        text.appendln(new String(baos.toByteArray(), "UTF-8"));
         text.appendln(HORIZONTAL_LINE);
 
         return text.toString();

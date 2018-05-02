@@ -17,6 +17,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -31,9 +36,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	private static final String ACCOUNTS_API = "/accounts/**";
 	private static final String ACTIONS_API = "/actions/**";
 
-	private static final String[] ADMIN_API = new String[]{"/admin/**"};
-	private static final String[] DEVICE_API = new String[]{ EVENTS_API, DEVICES_API };
-	private static final String[] APPLICATION_API = new String[]{ DEVICES_API, ACCOUNTS_API, ACTIONS_API };
+	private static final String[] ADMIN_API = {"/admin/**"};
+	private static final String[] DEVICE_API = { EVENTS_API, DEVICES_API };
+	private static final String[] APPLICATION_API = { DEVICES_API, ACCOUNTS_API, ACTIONS_API };
 
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_APPLICATION = "ROLE_APPLICATION";
@@ -86,5 +91,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.anyRequest().authenticated() // implicitly permit with .permitAll()
 				.and()
 				.httpBasic();
+	}
+
+	public static Collection<String> getPublicApis() {
+		return Set.of(Arrays.asList(APPLICATION_API), Arrays.asList(DEVICE_API))
+				.stream()
+				.flatMap(Collection::stream)
+				.map(api -> api.replace("/**", ".*"))
+				.collect(Collectors.toList());
 	}
 }

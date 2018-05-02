@@ -2,6 +2,7 @@ package org.antonakospanos.iot.atlas.web.security.filters;
 
 import org.antonakospanos.iot.atlas.web.support.LoggingUtils;
 import org.antonakospanos.iot.atlas.web.support.MutableHttpServletRequest;
+import org.antonakospanos.iot.atlas.web.support.SecurityHelper;
 import org.apache.commons.io.output.TeeOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,23 +32,29 @@ public class LoggingFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        String url = SecurityHelper.getRequestUrl((HttpServletRequest) request);
 
-        // Wrap servlet request to allow multiple reads on HTTP payload
-        HttpServletRequest httpRequest = new MutableHttpServletRequest((HttpServletRequest) request);
+        if (!SecurityHelper.isPublicApiUrl(url)) {
+            // Do not log request/response
+            chain.doFilter(request, response);
+        } else {
+            // Wrap servlet request to allow multiple reads on HTTP payload
+            HttpServletRequest httpRequest = new MutableHttpServletRequest((HttpServletRequest) request);
 
-        // Initialize HTTP response with empty output stream
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        HttpServletResponse httpResponse = createHttpResponse(response, baos);
+            // Log request
+            String uid = UUID.randomUUID().toString();
+            LOGGER.debug("Request: " + uid + "\n" + LoggingUtils.serializeRequest(httpRequest));
 
-        // Log request
-        String uid = UUID.randomUUID().toString();
-        LOGGER.debug("Request: " + uid + "\n" + LoggingUtils.serializeRequest(httpRequest));
+            // Initialize HTTP response with empty output stream
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            HttpServletResponse httpResponse = createHttpResponse(response, baos);
 
-        // Proceed with filters (with wrapped response + request)
-        chain.doFilter(httpRequest, httpResponse);
+            // Proceed with filters (with wrapped request + response)
+            chain.doFilter(httpRequest, httpResponse);
 
-        // Log response
-        LOGGER.debug("Response: " + uid + "\n" + LoggingUtils.serializeResponse(httpResponse, baos));
+            // Log response
+            LOGGER.debug("Response: " + uid + "\n" + LoggingUtils.serializeResponse(httpResponse, baos));
+        }
     }
 
 
