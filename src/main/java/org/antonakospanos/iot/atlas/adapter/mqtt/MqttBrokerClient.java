@@ -2,6 +2,7 @@ package org.antonakospanos.iot.atlas.adapter.mqtt;
 
 import org.antonakospanos.iot.atlas.adapter.mqtt.consumer.MqttConsumer;
 import org.antonakospanos.iot.atlas.service.HashService;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -69,11 +70,11 @@ public class MqttBrokerClient {
 			// Authentication
 			options.setUserName(username);
 			String passwd = password;
-			if (hashAlgorithm != null) {
+			if (StringUtils.isNotBlank(hashAlgorithm)) {
 				passwd = hashService.hash(hashAlgorithm, salt, password );
 			}
-			logger.warn("Username':"+ username);
-			logger.warn("Password':"+ passwd);
+			logger.warn("Username: "+ username);
+			logger.warn("Password: "+ passwd);
 			options.setPassword(passwd.toCharArray());
 
 			// A Last Will and Testament (LWT) message can be specified by an MQTT client when connecting to the MQTT broker.

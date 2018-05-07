@@ -20,7 +20,7 @@ From a machine with docker installed + internet access, execute:
 
 Make sure your hosts file maps rdbms to localhost
 
-    127.0.0.1       localhost rdbms broker
+    127.0.0.1       localhost rdbms
 
 Init or migrate the database schema
 
@@ -41,6 +41,10 @@ docker build -t hivemq-broker -f Dockerfile-HiveMQ .
 docker run -p 1883:1883 --name hivemq -d hivemq-broker
 ```
 
+Make sure your hosts file maps rdbms to localhost
+
+    127.0.0.1       localhost broker
+
 ##### Application Configuration
 
 * Default : {PROJECT_HOME}/src/main/resources/atlas-application.yml 
@@ -50,12 +54,12 @@ docker run -p 1883:1883 --name hivemq -d hivemq-broker
 
 Atlas is a Spring Boot application thus can be executed as a standalone application, inside a servlet container (Tomcat 9) or running a docker container:
 ```
-java -jar atlas.jar --spring.config.location=atlas-application.yml
+java -jar atlas.jar   --spring.config.location=atlas-application.yml
 ```
 ```
-$CATALINA_HOME/bin/startup.sh --Dspring.config.location=atlas-application.yml
+$CATALINA_HOME/bin/startup.sh   --Dspring.config.location=atlas-application.yml
 ```
 ```
 docker build -t atlas .
-docker run -p 8080:8080 -p 443:443 -p 80:80 -d --name atlas -d atlas -e SPRING_CONFIG_LOCATION=atlas-application.yml
+docker run -p 8080:8080 -p 443:443 -p 80:80 -d --name atlas -d atlas   -e SPRING_CONFIG_LOCATION=atlas-application.yml
 ```

@@ -52,9 +52,9 @@ mqtt:
     url: "tcp://broker:1883" # tcp://broker.hivemq.com:1883
     auth:
       username: atlas
-      password: atlas
-      hash-algorithm: "SHA-512"
-      hash-salt: "d3d3LmludGVybmV0LW9mLXRoaW5ncy1hbnRvbmFrb3MtY2Fyb3V6b3Mtc3lzdGVtcy5jb20=" # "Base64(www.internet-of-things-antonakos-carouzos-systems.com)"
+      password: atlas #"d3d3LmludGVybmV0LW9mLXRoaW5ncy1hbnRvbmFrb3MtY2Fyb3V6b3Mtc3lzdGVtcy5jb20=" # "Base64(www.internet-of-things-antonakos-carouzos-systems.com)"
+      hash-algorithm: null # "SHA-512"
+      hash-salt: null #"d3d3LmludGVybmV0LW9mLXRoaW5ncy1hbnRvbmFrb3MtY2Fyb3V6b3Mtc3lzdGVtcy5jb20=" # "Base64(www.internet-of-things-antonakos-carouzos-systems.com)"
   client:
     id: "org.iotac.atlas"
   service:

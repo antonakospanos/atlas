@@ -10,20 +10,20 @@ RUN \
     rm -f hivemq-*.zip &&\
     mv /opt/hivemq-* /opt/hivemq
 
-# Install HiveMQ's authentication plugin
-#RUN \
-#    mkdir temp &&\
-#    cd temp &&\
-#    wget --content-disposition https://www.hivemq.com/wp-content/uploads/file-authentication-3.1.1-distribution.zip &&\
-#    unzip file-authentication-3.1.1-distribution.zip -d temp &&\
-#    mv temp/file-authentication-plugin-3.1.1.jar /opt/hivemq/plugins &&\
-#    cd .. &&\
-#    rm -rf temp/
+ Install HiveMQ's authentication plugin
+RUN \
+    mkdir temp &&\
+    cd temp &&\
+    wget --content-disposition https://www.hivemq.com/wp-content/uploads/file-authentication-3.1.1-distribution.zip &&\
+    unzip file-authentication-3.1.1-distribution.zip -d temp &&\
+    mv temp/file-authentication-plugin-3.1.1.jar /opt/hivemq/plugins &&\
+    cd .. &&\
+    rm -rf temp/
 
 # Install the HiveMQ config file
 COPY src/conf/hivemq/config.xml /opt/hivemq/conf/config.xml
-#COPY src/conf/hivemq/credentials.properties /opt/hivemq/conf/credentials.properties
-#COPY src/conf/hivemq/fileAuthConfiguration.properties /opt/hivemq/conf/fileAuthConfiguration.properties
+COPY src/conf/hivemq/credentials.properties /opt/hivemq/conf/credentials.properties
+COPY src/conf/hivemq/fileAuthConfiguration.properties /opt/hivemq/conf/fileAuthConfiguration.properties
 
 # Add default env variables
 ENV HIVEMQ_HOME /opt/hivemq

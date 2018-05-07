@@ -1,5 +1,6 @@
 package org.antonakospanos.iot.atlas.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class HashService {
         String generatedPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance(algorithm);
-            if (salt != null) {
+            if (StringUtils.isNotBlank(salt)) {
                 md.update(salt.getBytes(StandardCharsets.UTF_8));
             }
             byte[] bytes = md.digest(rawPassword.getBytes(StandardCharsets.UTF_8));
