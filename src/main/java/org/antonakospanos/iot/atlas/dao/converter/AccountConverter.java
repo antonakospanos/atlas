@@ -26,7 +26,7 @@ public class AccountConverter {
 
 	public void updateAccount(AccountDto accountDto, Account account) {
 		// Store hashed password
-		String hashedPassword = hashService.hashPassword(accountDto.getPassword());
+		String hashedPassword = hashService.bCryptPassword(accountDto.getPassword());
 		account.setPassword(hashedPassword);
 
 		// Add user's devices
@@ -58,7 +58,7 @@ public class AccountConverter {
 		if ("username".equals(field)) {
 			account.setUsername(value);
 		} else if ("password".equals(field)) {
-			String hashedPassword = hashService.hashPassword(value);
+			String hashedPassword = hashService.bCryptPassword(value);
 			account.setPassword(hashedPassword);
 		} else if ("name".equals(field)) {
 			account.setName(value);

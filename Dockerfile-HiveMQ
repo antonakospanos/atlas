@@ -1,0 +1,49 @@
+FROM openjdk:8-jre
+
+LABEL maintainer="antonakospanos.gmail.com"
+
+# Install wget, unzip and vim then download and install HiveMQ
+RUN \
+    apt-get install -y wget unzip vim &&\
+    wget --content-disposition http://www.hivemq.com/download.php?token=15cfdbf90768ed6f86a9e609fb2edca9 &&\
+    unzip hivemq-*.zip -d /opt/ &&\
+    rm -f hivemq-*.zip &&\
+    mv /opt/hivemq-* /opt/hivemq
+
+# Install HiveMQ's authentication plugin
+#RUN \
+#    mkdir temp &&\
+#    cd temp &&\
+#    wget --content-disposition https://www.hivemq.com/wp-content/uploads/file-authentication-3.1.1-distribution.zip &&\
+#    unzip file-authentication-3.1.1-distribution.zip -d temp &&\
+#    mv temp/file-authentication-plugin-3.1.1.jar /opt/hivemq/plugins &&\
+#    cd .. &&\
+#    rm -rf temp/
+
+# Install the HiveMQ config file
+COPY src/conf/hivemq/config.xml /opt/hivemq/conf/config.xml
+#COPY src/conf/hivemq/credentials.properties /opt/hivemq/conf/credentials.properties
+#COPY src/conf/hivemq/fileAuthConfiguration.properties /opt/hivemq/conf/fileAuthConfiguration.properties
+
+# Add default env variables
+ENV HIVEMQ_HOME /opt/hivemq
+ENV \
+    HIVEMQ_KEYSTORE_PASSWORD="atlas" \
+    HIVEMQ_PRIVATE_KEY_PASSWORD="atlas" \
+    HIVEMQ_TRUSTSTORE_PASSWORD="atlas" \
+    HIVEMQ_TLS_CLIENT_AUTHENTICATION_MODE="NONE" \
+    HIVEMQ_TCP_PORT="1883" \
+    HIVEMQ_TCP_TLS_PORT="8883" \
+    HIVEMQ_WEBSOCKET_PORT="8000" \
+    HIVEMQ_WEBSOCKET_TLS_PORT="8001" \
+    HIVEMQ_PERSISTENCE_MODE="in-memory"
+
+# Expose MQTT port and Web Socket port
+EXPOSE 1883
+EXPOSE 8000
+
+# Default container's working directory
+WORKDIR /opt/hivemq
+
+# Run HiveMQ server
+CMD ["/opt/hivemq/bin/run.sh"]
