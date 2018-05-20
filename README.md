@@ -16,7 +16,7 @@ The events describe the state of the devices and may result to an auto-executed 
 
 From a machine with docker installed + internet access, execute:
 
-    docker run -p 5432:5432 --name rdbms  -d postgres:9.4 -e POSTGRES_PASSWORD=postgres
+    docker run -p 5432:5432 --name rdbms -e POSTGRES_PASSWORD=postgres -d postgres:9.4
 
 Make sure your hosts file maps rdbms to localhost
 
