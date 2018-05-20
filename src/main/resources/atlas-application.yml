@@ -1,7 +1,7 @@
 server:
   # Configuration of Spring Boot embedded Tomcat server (java -jar atlas.war)
   servlet:
-    contextPath: ''
+    contextPath: '/atlas'
   port: 8443
   http:
     port: 8080
@@ -17,6 +17,8 @@ endpoints:
 logging:
   config: 'classpath:atlas-logback.xml'
 spring:
+  jmx:
+    default-domain: atlas
   data:
     rest:
       defaultMediaType: application/json
