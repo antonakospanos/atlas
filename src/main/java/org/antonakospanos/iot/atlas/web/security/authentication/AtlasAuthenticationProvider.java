@@ -68,6 +68,9 @@ public class AtlasAuthenticationProvider implements AuthenticationProvider, Seri
 			account = accountService.find(uuidToken);
 			boolean authenticated = account != null;
 			authenticationRequest.setAuthenticated(authenticated);
+			if (!authenticated) {
+				throw new AtlasAuthenticationException("Invalid token: " + token);
+			}
 		}
 
 		AtlasAuthenticationToken authenticationResponse = new AtlasAuthenticationToken(authorities);
