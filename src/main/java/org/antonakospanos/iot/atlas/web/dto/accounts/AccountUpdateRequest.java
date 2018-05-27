@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-public class AccountRequest {
+public class AccountUpdateRequest {
 
 	@ApiModelProperty(example = "2017-11-19T16:52:40.000 UTC")
 	private String timestamp;
@@ -15,7 +15,7 @@ public class AccountRequest {
 	@Valid
 	@NotNull
 	@ApiModelProperty(required = true)
-	private AccountBaseDto account;
+	private AccountDto account;
 
 	public String getTimestamp() {
 		return timestamp;
@@ -25,20 +25,20 @@ public class AccountRequest {
 		this.timestamp = timestamp;
 	}
 
-	public AccountBaseDto getAccount() {
+	public AccountDto getAccount() {
 		return account;
 	}
 
-	public void setAccount(AccountBaseDto account) {
+	public void setAccount(AccountDto account) {
 		this.account = account;
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof AccountRequest)) return false;
+		if (!(o instanceof AccountUpdateRequest)) return false;
 
-		AccountRequest that = (AccountRequest) o;
+		AccountUpdateRequest that = (AccountUpdateRequest) o;
 
 		if (!timestamp.equals(that.timestamp)) return false;
 		return account.equals(that.account);

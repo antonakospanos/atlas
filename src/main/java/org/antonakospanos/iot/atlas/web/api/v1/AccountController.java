@@ -7,8 +7,9 @@ import org.antonakospanos.iot.atlas.support.ControllerUtils;
 import org.antonakospanos.iot.atlas.support.LoggingHelper;
 import org.antonakospanos.iot.atlas.web.api.BaseAtlasController;
 import org.antonakospanos.iot.atlas.web.dto.IdentityDto;
+import org.antonakospanos.iot.atlas.web.dto.accounts.AccountCreateRequest;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountDto;
-import org.antonakospanos.iot.atlas.web.dto.accounts.AccountRequest;
+import org.antonakospanos.iot.atlas.web.dto.accounts.AccountUpdateRequest;
 import org.antonakospanos.iot.atlas.web.dto.patch.PatchRequest;
 import org.antonakospanos.iot.atlas.web.dto.response.CreateResponse;
 import org.antonakospanos.iot.atlas.web.dto.response.CreateResponseData;
@@ -45,11 +46,9 @@ public class AccountController extends BaseAtlasController {
 			@ApiResponse(code = 201, message = "The account is created!", response = CreateResponse.class),
 			@ApiResponse(code = 400, message = "The request is invalid!"),
 			@ApiResponse(code = 500, message = "server error")})
-	public ResponseEntity<CreateResponse> create(UriComponentsBuilder uriBuilder, @Valid @RequestBody AccountRequest request) {
+	public ResponseEntity<CreateResponse> create(UriComponentsBuilder uriBuilder, @Valid @RequestBody AccountCreateRequest request) {
 		ResponseEntity<CreateResponse> response;
 		logger.debug(LoggingHelper.logInboundRequest(request));
-
-		AccountsValidator.validateAccount(request);
 
 		CreateResponseData data = service.create(request);
 		UriComponents uriComponents =	uriBuilder.path("/accounts/{id}").buildAndExpand(data.getId());
@@ -76,11 +75,9 @@ public class AccountController extends BaseAtlasController {
 			@ApiResponse(code = 200, message = "The account is replaced!", response = ResponseBase.class),
 			@ApiResponse(code = 400, message = "The request is invalid!"),
 			@ApiResponse(code = 500, message = "server error")})
-	public ResponseEntity<ResponseBase> replace(@PathVariable UUID accountId, @Valid @RequestBody AccountRequest request) {
+	public ResponseEntity<ResponseBase> replace(@PathVariable UUID accountId, @Valid @RequestBody AccountUpdateRequest request) {
 		ResponseEntity<ResponseBase> response;
 		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId + "\n" + request));
-
-		AccountsValidator.validateAccount(request);
 
 		service.replace(accountId, request);
 		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
@@ -112,8 +109,8 @@ public class AccountController extends BaseAtlasController {
 
 		AccountsValidator.validateAccount(request);
 
-		service.update(accountId, request.getPatches());
-		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
+		CreateResponseData data = service.update(accountId, request.getPatches());
+		CreateResponse responseBase = CreateResponse.Builder().build(Result.SUCCESS).data(data);
 		response = ResponseEntity.ok().body(responseBase);
 
 		logger.debug(LoggingHelper.logInboundResponse(response));
@@ -246,7 +243,7 @@ public class AccountController extends BaseAtlasController {
 //			@ApiResponse(code = 200, message = "The account is replaced!", response = ResponseBase.class),
 //			@ApiResponse(code = 400, message = "The request is invalid!"),
 //			@ApiResponse(code = 500, message = "server error")})
-//	public ResponseEntity<ResponseBase> replace(@PathVariable String username, @Valid @RequestBody AccountRequest request) {
+//	public ResponseEntity<ResponseBase> replace(@PathVariable String username, @Valid @RequestBody AccountCreateRequest request) {
 //		ResponseEntity<ResponseBase> response;
 //		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId));
 //

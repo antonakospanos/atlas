@@ -1,17 +1,11 @@
 package org.antonakospanos.iot.atlas.web.validator;
 
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountDto;
-import org.antonakospanos.iot.atlas.web.dto.accounts.AccountRequest;
 import org.antonakospanos.iot.atlas.web.dto.patch.PatchOperation;
 import org.antonakospanos.iot.atlas.web.dto.patch.PatchRequest;
 import org.apache.commons.lang3.StringUtils;
 
 public class AccountsValidator {
-
-	public static void validateAccount(AccountRequest create) {
-
-		// Nothing yet
-	}
 
 	public static void validateAccount(PatchRequest request) {
 

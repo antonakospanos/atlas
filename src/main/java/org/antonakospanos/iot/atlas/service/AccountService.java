@@ -6,8 +6,9 @@ import org.antonakospanos.iot.atlas.dao.model.Account;
 import org.antonakospanos.iot.atlas.dao.model.Device;
 import org.antonakospanos.iot.atlas.dao.repository.AccountRepository;
 import org.antonakospanos.iot.atlas.dao.repository.DeviceRepository;
+import org.antonakospanos.iot.atlas.web.dto.accounts.AccountCreateRequest;
 import org.antonakospanos.iot.atlas.web.dto.accounts.AccountDto;
-import org.antonakospanos.iot.atlas.web.dto.accounts.AccountRequest;
+import org.antonakospanos.iot.atlas.web.dto.accounts.AccountUpdateRequest;
 import org.antonakospanos.iot.atlas.web.dto.patch.PatchDto;
 import org.antonakospanos.iot.atlas.web.dto.response.CreateResponseData;
 import org.apache.commons.lang3.StringUtils;
@@ -42,7 +43,7 @@ public class AccountService {
 
 
 	@Transactional
-	public CreateResponseData create(AccountRequest request) {
+	public CreateResponseData create(AccountCreateRequest request) {
 
 		AccountDto accountDto = new AccountDto(request.getAccount());
 		Account account = accountRepository.findByUsername(accountDto.getUsername());
@@ -52,8 +53,8 @@ public class AccountService {
 		} else {
 			// Add new Account in DB
 			account = accountDto.toEntity();
-			accountConverter.updateAccount(accountDto, account);
-
+			accountConverter.setPassword(accountDto, account);
+			accountConverter.addDevices(accountDto, account);
 			accountRepository.save(account);
 		}
 
@@ -61,9 +62,9 @@ public class AccountService {
 	}
 
 	@Transactional
-	public void replace(String username, AccountRequest request) {
+	public void replace(String username, AccountUpdateRequest request) {
 
-		AccountDto accountDto = new AccountDto(request.getAccount());
+		AccountDto accountDto = request.getAccount();
 		validateAccount(username);
 
 		// Update Account in DB
@@ -73,9 +74,9 @@ public class AccountService {
 
 
 	@Transactional
-	public void replace(UUID accountExternalId, AccountRequest request) {
+	public void replace(UUID accountExternalId, AccountUpdateRequest request) {
 
-		AccountDto accountDto = new AccountDto(request.getAccount());
+		AccountDto accountDto = request.getAccount();
 		validateAccount(accountExternalId);
 
 		// Update Account in DB
@@ -88,28 +89,28 @@ public class AccountService {
 		validateNewUsername(account.getUsername(), accountDto.getUsername());
 
 		accountDto.toEntity(account);
-		accountConverter.updateAccount(accountDto, account);
+		accountConverter.addDevices(accountDto, account);
 		accountRepository.save(account);
 	}
 
 	@Transactional
-	public void update(String username, List<PatchDto> patches) {
+	public CreateResponseData update(String username, List<PatchDto> patches) {
 		validateAccount(username);
 		Account account = accountRepository.findByUsername(username);
 
-		update(account, patches);
+		return update(account, patches);
 	}
 
 	@Transactional
-	public void update(UUID accountExternalId, List<PatchDto> patches) {
+	public CreateResponseData update(UUID accountExternalId, List<PatchDto> patches) {
 		validateAccount(accountExternalId);
 		Account account = accountRepository.findByExternalId(accountExternalId);
 
-		update(account, patches);
+		return update(account, patches);
 	}
 
 	@Transactional
-	public void update(Account account, List<PatchDto> patches) {
+	public CreateResponseData update(Account account, List<PatchDto> patches) {
 
 		patches.stream().forEach(patchDto -> {
 			// Validate Account patches
@@ -119,10 +120,12 @@ public class AccountService {
 				validateNewDevice(patchDto.getValue());
 			}
 			// Update Account in DB
-			accountConverter.updateAccount(patchDto, account);
+			accountConverter.patchAccount(patchDto, account);
 		});
 
 		accountRepository.save(account);
+
+		return new CreateResponseData(account.getExternalId().toString());
 	}
 
 	@Transactional

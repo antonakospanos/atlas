@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Component
 public class AccountConverter {
@@ -24,16 +25,15 @@ public class AccountConverter {
 	@Autowired
 	HashService hashService;
 
-	public void updateAccount(AccountDto accountDto, Account account) {
-		// Store hashed password
+	public void setPassword(AccountDto accountDto, Account account) {
 		String hashedPassword = hashService.bCryptPassword(accountDto.getPassword());
 		account.setPassword(hashedPassword);
+	}
 
-		// Add user's devices
+	public void addDevices(AccountDto accountDto, Account account) {
 		Set<Device> devices = new HashSet<>();
 
 		List<String> deviceIds = accountDto.getDevices();
-
 		if (deviceIds != null) {
 			deviceIds
 				.stream()
@@ -50,7 +50,7 @@ public class AccountConverter {
 		account.setDevices(devices);
 	}
 
-	public void updateAccount(PatchDto patchDto, Account account) {
+	public void patchAccount(PatchDto patchDto, Account account) {
 		String field = patchDto.getField();
 		PatchOperation operation = patchDto.getOperation();
 		String value = patchDto.getValue();
@@ -60,6 +60,7 @@ public class AccountConverter {
 		} else if ("password".equals(field)) {
 			String hashedPassword = hashService.bCryptPassword(value);
 			account.setPassword(hashedPassword);
+			account.setExternalId(UUID.randomUUID()); // Update externalId used in Authentication Bearer too!
 		} else if ("name".equals(field)) {
 			account.setName(value);
 		} else if ("email".equals(field)) {
