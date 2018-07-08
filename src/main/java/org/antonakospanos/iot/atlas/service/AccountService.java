@@ -64,7 +64,7 @@ public class AccountService {
 	@Transactional
 	public void replace(String username, AccountUpdateRequest request) {
 
-		AccountDto accountDto = request.getAccount();
+		AccountDto accountDto = new AccountDto(request.getAccount());
 		validateAccount(username);
 
 		// Update Account in DB
@@ -76,7 +76,7 @@ public class AccountService {
 	@Transactional
 	public void replace(UUID accountExternalId, AccountUpdateRequest request) {
 
-		AccountDto accountDto = request.getAccount();
+		AccountDto accountDto = new AccountDto(request.getAccount());
 		validateAccount(accountExternalId);
 
 		// Update Account in DB

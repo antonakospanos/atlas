@@ -15,7 +15,7 @@ public class AccountUpdateRequest {
 	@Valid
 	@NotNull
 	@ApiModelProperty(required = true)
-	private AccountDto account;
+	private AccountBaseDto account;
 
 	public String getTimestamp() {
 		return timestamp;
@@ -25,11 +25,11 @@ public class AccountUpdateRequest {
 		this.timestamp = timestamp;
 	}
 
-	public AccountDto getAccount() {
+	public AccountBaseDto getAccount() {
 		return account;
 	}
 
-	public void setAccount(AccountDto account) {
+	public void setAccount(AccountBaseDto account) {
 		this.account = account;
 	}
 

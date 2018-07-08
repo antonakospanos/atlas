@@ -1,0 +1,23 @@
+<div ng-controller="ActionsReviewCtrl as ctrl" ng-init="ctrl.init()">
+    <div class="config-control-panel config-panel-margin main-width "/>
+
+    <div ng-repeat="item in model.data" class="panel panel-default control-panel config-control-panel config-panel-margin main-width md-whiteframe-6dp review-panel review-item-container">
+        <button class="md-button-toggle md-button md-ink-ripple review-item-button" type="button" ng-click="toggled = !toggled" aria-controls="docs-menu-{{item.title}}" aria-expanded="form.item.toggled" aria-label="item.id">
+            <div flex layout="row" class="ng-binding ng-scope layout-row flex">
+                Action {{item.id}}
+                <span flex class="flex"></span>
+                Uptime {{item.uptime}} sec
+                <span aria-hidden="true" class="md-toggle-icon" ng-class="{'toggled' : toggled}">
+                    <md-icon md-svg-icon="md-toggle-arrow"></md-icon>
+                </span>
+            </div>
+        </button>
+
+        <div id="docs-menu-{{item.title}}" class="menu-toggle-list" ng-class="{'toggled' : !toggled}">
+            <div class="config-overview-contents">
+                <div class="panel-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
