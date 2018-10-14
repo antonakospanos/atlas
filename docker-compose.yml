@@ -1,0 +1,38 @@
+version: "3.3"
+services:
+  rdbms:
+    build:
+      context: .
+      dockerfile: Dockerfile-db
+    image: atlas-db-image
+    ports:
+    - "5432:5432"
+    container_name: atlas-db
+  broker:
+    build:
+      context: .
+      dockerfile: Dockerfile-HiveMQ
+    image: atlas-broker-image
+    ports:
+    - "1883:1883"
+    container_name: atlas-broker
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: atlas-webapp-image
+    ports:
+    - "80:80"
+    - "443:443"
+    - "8080:8080"
+    - "8444:8443"
+    depends_on:
+    - "rdbms"
+    - "broker"
+    volumes:
+    - /applogs/atlas:/applogs/atlas
+    - /applogs/atlas:/usr/local/tomcat/logs
+    links:
+    - rdbms
+    - broker
+    container_name: atlas-webapp

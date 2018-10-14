@@ -6,7 +6,7 @@ The events describe the state of the devices and may result to an auto-executed 
 
 ##### Technology Stack
 
-* Java 10
+* Java 11
 * Spring Boot 2
 * PostgreSQL 9.4
 * MQTT Broker
