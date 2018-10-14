@@ -16,7 +16,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(deviceWebSocketHandler(), "/sockets/heartbeat");
+        registry.addHandler(deviceWebSocketHandler(), "/api/sockets/heartbeat");
     }
 
     @Bean

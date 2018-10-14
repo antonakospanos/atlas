@@ -31,7 +31,7 @@ import java.util.UUID;
 
 @RestController
 @Api(value = "Accounts API", tags = "accounts", position = 2, description = "Account Management")
-@RequestMapping(value = "/accounts")
+@RequestMapping(value = "/api/accounts")
 public class AccountController extends BaseAtlasController {
 
 	private final static Logger logger = LoggerFactory.getLogger(AccountController.class);

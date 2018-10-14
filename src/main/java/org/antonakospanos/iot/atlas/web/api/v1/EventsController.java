@@ -23,7 +23,7 @@ import javax.validation.Valid;
 @RestController
 @Deprecated
 @Api(value = "Events API", tags = "events", position = 0 , description = "Event Management of integrated IoT devices")
-@RequestMapping(value = "/events")
+@RequestMapping(value = "/api/events")
 public class EventsController extends BaseAtlasController {
 
     private final static Logger logger = LoggerFactory.getLogger(EventsController.class);

@@ -23,7 +23,7 @@ import java.util.UUID;
 
 @RestController
 @Api(value = "Devices API", tags = "devices", position = 3, description = "Device Management")
-@RequestMapping(value = "/")
+@RequestMapping(value = "/api/")
 public class DeviceController extends BaseAtlasController {
 
 	private final static Logger logger = LoggerFactory.getLogger(DeviceController.class);

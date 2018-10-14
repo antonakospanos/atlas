@@ -26,7 +26,7 @@ import java.util.UUID;
 
 @RestController
 @Api(value = "Actions API", tags = "actions", position = 1, description = "Action Management")
-@RequestMapping(value = "/actions")
+@RequestMapping(value = "/api/actions")
 public class ActionsController extends BaseAtlasController {
 
 	private final static Logger logger = LoggerFactory.getLogger(ActionsController.class);

@@ -31,12 +31,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	private static final String[] ATLAS_WHITELIST_REGEX = new String[]{"/", "/version", "/health", "/ehcache.*", "/metrics.*"};
 
-	private static final String EVENTS_API = "/events/**";
-	private static final String DEVICES_API = "/devices/**";
-	private static final String ACCOUNTS_API = "/accounts/**";
-	private static final String ACTIONS_API = "/actions/**";
+	private static final String EVENTS_API = "/api/events/**";
+	private static final String DEVICES_API = "/api/devices/**";
+	private static final String ACCOUNTS_API = "/api/accounts/**";
+	private static final String ACTIONS_API = "/api/actions/**";
 
-	private static final String[] ADMIN_API = {"/admin/**"};
+	private static final String[] ADMIN_API = {"/api/admin/**"};
 	private static final String[] DEVICE_API = { EVENTS_API, DEVICES_API };
 	private static final String[] APPLICATION_API = { DEVICES_API, ACCOUNTS_API, ACTIONS_API };
 
@@ -79,12 +79,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.regexMatchers(SWAGGER_WHITELIST_REGEX).permitAll()
 
 				// Permit User Authentication API
-				.antMatchers(HttpMethod.POST, "/accounts").permitAll()
-				.antMatchers(HttpMethod.GET, "/accounts/id").permitAll()
+				.antMatchers(HttpMethod.POST, "/api/accounts").permitAll()
+				.antMatchers(HttpMethod.GET, "/api/accounts/id").permitAll()
 
 				// Authorize rest APIs
-				.regexMatchers(HttpMethod.PUT, "/devices/.*").hasAnyRole("ADMIN", "APPLICATION", "DEVICE")
-				.regexMatchers(HttpMethod.POST, "/events").hasAnyRole("ADMIN", "APPLICATION", "DEVICE")
+				.regexMatchers(HttpMethod.PUT, "/api/devices/.*").hasAnyRole("ADMIN", "APPLICATION", "DEVICE")
+				.regexMatchers(HttpMethod.POST, "/api/events").hasAnyRole("ADMIN", "APPLICATION", "DEVICE")
 				.antMatchers(APPLICATION_API).hasAnyRole("ADMIN", "APPLICATION")
 				.antMatchers(ADMIN_API).hasRole("ADMIN")
 

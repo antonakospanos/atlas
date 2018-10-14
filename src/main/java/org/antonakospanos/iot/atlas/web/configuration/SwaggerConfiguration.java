@@ -63,10 +63,10 @@ public class SwaggerConfiguration {
 	}
 
 	private Predicate<String> apiV1Paths() {
-		return or(regex("/(accounts|devices|actions|alerts|events).*"));
+		return or(regex("/api/(accounts|devices|actions|alerts|events).*"));
 	}
 
 	private Predicate<String> apiV2Paths() {
-		return or(regex("/v2/.*"));
+		return or(regex("/api/v2/.*"));
 	}
 }

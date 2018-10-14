@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @RestController
 @Api(value = "Alerts API", tags = "alerts", position = 1, description = "Alert Management")
-@RequestMapping(value = "/alerts")
+@RequestMapping(value = "/api/alerts")
 public class AlertsController extends BaseAtlasController {
 
 	private final static Logger logger = LoggerFactory.getLogger(AlertsController.class);
