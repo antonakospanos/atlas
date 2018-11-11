@@ -1,4 +1,4 @@
-package org.antonakospanos.iot.atlas.support;
+package org.antonakospanos.iot.atlas.web.support;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

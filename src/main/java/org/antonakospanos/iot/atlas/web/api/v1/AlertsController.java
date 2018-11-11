@@ -2,7 +2,6 @@ package org.antonakospanos.iot.atlas.web.api.v1;
 
 import io.swagger.annotations.*;
 import org.antonakospanos.iot.atlas.service.AlertService;
-import org.antonakospanos.iot.atlas.support.LoggingHelper;
 import org.antonakospanos.iot.atlas.web.api.BaseAtlasController;
 import org.antonakospanos.iot.atlas.web.dto.alerts.AlertDto;
 import org.antonakospanos.iot.atlas.web.dto.alerts.AlertRequest;
@@ -49,17 +48,11 @@ public class AlertsController extends BaseAtlasController {
 			@ApiResponse(code = 400, message = "The request is invalid!"),
 			@ApiResponse(code = 500, message = "server error")})
 	public ResponseEntity<CreateResponse> create(UriComponentsBuilder uriBuilder, @Valid @RequestBody AlertRequest request) {
-		ResponseEntity<CreateResponse> response;
-		logger.debug(LoggingHelper.logInboundRequest(request));
-
 		CreateResponseData data = service.create(request);
 		UriComponents uriComponents =	uriBuilder.path("/alerts/{id}").buildAndExpand(data.getId());
 		CreateResponse createResponse = CreateResponse.Builder().build(Result.SUCCESS).data(data);
-		response = ResponseEntity.created(uriComponents.toUri()).body(createResponse);
 
-		logger.debug(LoggingHelper.logInboundResponse(response));
-
-		return response;
+		return ResponseEntity.created(uriComponents.toUri()).body(createResponse);
 	}
 
 	@ApiOperation(value = "Deletes the scheduled alert for the integrated IoT device", response = ResponseBase.class)
@@ -75,16 +68,10 @@ public class AlertsController extends BaseAtlasController {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<ResponseBase> delete(@PathVariable UUID alertId) {
-		ResponseEntity<ResponseBase> response;
-		logger.debug(LoggingHelper.logInboundRequest("/alerts/" + alertId));
-
 		service.delete(alertId);
 		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
-		response = ResponseEntity.status(HttpStatus.OK).body(responseBase);
 
-		logger.debug(LoggingHelper.logInboundResponse(response));
-
-		return response;
+		return ResponseEntity.status(HttpStatus.OK).body(responseBase);
 	}
 
 	@ApiOperation(value = "Lists the scheduled alerts for the integrated IoT devices", response = AlertDto.class, responseContainer="List")
@@ -98,8 +85,7 @@ public class AlertsController extends BaseAtlasController {
 			paramType = "header"
 	)
 	public ResponseEntity<Iterable> list(@RequestParam (required=false) UUID accountId) {
-		ResponseEntity<Iterable> response = null;
-		logger.debug(LoggingHelper.logInboundRequest("/alerts?accountId=" + accountId ));
+		ResponseEntity<Iterable> response;
 
 		List<AlertDto> alerts = service.list(accountId);
 		if (alerts != null && !alerts.isEmpty()) {
@@ -107,8 +93,6 @@ public class AlertsController extends BaseAtlasController {
 		} else {
 			response = ResponseEntity.status(HttpStatus.NOT_FOUND).body(alerts);
 		}
-
-		logger.debug(LoggingHelper.logInboundResponse(response));
 
 		return response;
 	}

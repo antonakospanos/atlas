@@ -1,4 +1,4 @@
-package org.antonakospanos.iot.atlas.support.ehcache;
+package org.antonakospanos.iot.atlas.dao.ehcache;
 
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;

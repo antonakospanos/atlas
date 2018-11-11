@@ -2,8 +2,7 @@ package org.antonakospanos.iot.atlas.web.api.v1;
 
 import io.swagger.annotations.*;
 import org.antonakospanos.iot.atlas.service.DeviceService;
-import org.antonakospanos.iot.atlas.support.ControllerUtils;
-import org.antonakospanos.iot.atlas.support.LoggingHelper;
+import org.antonakospanos.iot.atlas.web.support.ControllerUtils;
 import org.antonakospanos.iot.atlas.web.api.BaseAtlasController;
 import org.antonakospanos.iot.atlas.web.dto.devices.DeviceDto;
 import org.antonakospanos.iot.atlas.web.dto.devices.DeviceRequest;
@@ -38,20 +37,12 @@ public class DeviceController extends BaseAtlasController {
 			@ApiResponse(code = 400, message = "The request is invalid!"),
 			@ApiResponse(code = 500, message = "server error")})
 	public ResponseEntity<ResponseBase> update(@PathVariable String deviceId, @Valid @RequestBody DeviceRequest request) {
-		logger.debug(LoggingHelper.logInboundRequest(request));
-		ResponseEntity<ResponseBase> response;
-
 		DeviceDto deviceDto = new DeviceDto(deviceId, request.getDevice());
 		DeviceValidator.validateDeviceRequest(deviceDto);
 
 		service.put(deviceDto, true);
 
-		ResponseBase responseBase = ResponseBase.Builder().build(Result.SUCCESS);
-		response = ResponseEntity.ok().body(responseBase);
-
-		logger.debug(LoggingHelper.logInboundResponse(response));
-
-		return response;
+		return ResponseEntity.ok().body(ResponseBase.Builder().build(Result.SUCCESS));
 	}
 
 	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
@@ -65,14 +56,9 @@ public class DeviceController extends BaseAtlasController {
 			paramType = "header"
 	)
 	public ResponseEntity<Iterable> listAllDevices() {
-
-		logger.debug(LoggingHelper.logInboundRequest("/devices/"));
 		List<DeviceDto> devices = service.listAll();
 
-		ResponseEntity<Iterable> response = ControllerUtils.listResources(devices);
-		logger.debug(LoggingHelper.logInboundResponse(response));
-
-		return response;
+		return ControllerUtils.listResources(devices);
 	}
 
 	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class)
@@ -86,13 +72,8 @@ public class DeviceController extends BaseAtlasController {
 			paramType = "header"
 	)
 	public ResponseEntity<DeviceDto> listDevice(@PathVariable String deviceId) {
-
-		logger.debug(LoggingHelper.logInboundRequest("/devices/" + deviceId));
 		List<DeviceDto> devices = service.list(deviceId);
 
-		ResponseEntity<DeviceDto> response = ControllerUtils.listResource(devices);
-		logger.debug(LoggingHelper.logInboundResponse(response));
-
-		return response;
+		return ControllerUtils.listResource(devices);
 	}
 }
