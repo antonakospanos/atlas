@@ -47,6 +47,8 @@
                         }
                     });
             } else {
+                setConfigCheck('none')
+                setConfigAlert('initial')
                 setConfigPrompt("Log in or register to the IoT platform ..");
             }
         }

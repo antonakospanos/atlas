@@ -1,6 +1,7 @@
 <div ng-controller="DevicesReviewCtrl as ctrl" ng-init="ctrl.init()">
     <div class="config-control-panel config-panel-margin main-width "/>
 
+    <!-- List of user's Devices -->
     <div ng-repeat="item in model.data" class="panel panel-default control-panel config-control-panel config-panel-margin main-width md-whiteframe-6dp review-panel review-item-container">
         <button class="md-button-toggle md-button md-ink-ripple review-item-button" type="button" ng-click="toggled = !toggled" aria-controls="docs-menu-{{item.title}}" aria-expanded="form.item.toggled" aria-label="item.id">
             <div flex layout="row" class="ng-binding ng-scope layout-row flex">
@@ -12,35 +13,34 @@
                 </span>
             </div>
         </button>
-
         <div id="docs-menu-{{item.title}}" class="menu-toggle-list" ng-class="{'toggled' : !toggled}">
             <div class="config-overview-contents">
                 <div class="panel-body">
+
+                    <!-- List of device's modules -->
                     <div ng-repeat="module in item.modules" class="panel panel-default control-panel config-control-panel config-panel-margin main-width md-whiteframe-6dp review-panel review-item-container">
-                        <div flex layout="row" class="ng-binding ng-scope layout-row flex">
-                            <table>
-                                <tr>
-                                    <td>Module &nbsp;</td>
-                                    <td>{{module.name}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Type &nbsp;</td>
-                                    <td>{{module.type}}</td>
-                                </tr>
-                            </table>
-
-                            <span flex class="flex"></span>
-
-                            <table class="form-button">
-                                <tr>
-                                    <td>State &nbsp;</td>
-                                    <td>{{module.state}}</td>
-                                </tr>
-                                <tr>
-                                    <td>Value &nbsp;</td>
-                                    <td>{{module.value}}</td>
-                                </tr>
-                            </table>
+                        <button class="md-button-toggle md-button md-ink-ripple review-item-button" type="button" ng-click="toggled = !toggled"
+                                aria-controls="docs-menu-{{item.title}}" aria-expanded="form.item.toggled" aria-label="item.id">
+                            <div flex layout="row" class="ng-binding ng-scope layout-row flex">
+                                {{module.name}}
+                                <span flex class="flex"></span>
+                                {{module.type}}
+                                <span aria-hidden="true" class="md-toggle-icon" ng-class="{'toggled' : toggled}">
+                                    <md-icon md-svg-icon="md-toggle-arrow"></md-icon>
+                                </span>
+                            </div>
+                        </button>
+                        <div id="docs-menu-{{module.name}}" class="menu-toggle-list" ng-class="{'toggled' : !toggled}">
+                            <div class="config-overview-contents panel-body">
+                                <div flex layout="row" class="ng-binding ng-scope layout-row flex">
+                                    State &nbsp; {{module.state}}
+                                    <span flex class="flex"></span>
+                                    Value &nbsp; {{module.value}}
+                                    <span aria-hidden="true" class="md-toggle-icon" ng-class="{'toggled' : toggled}">
+                                    <md-icon md-svg-icon="md-toggle-arrow"></md-icon>
+                                </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <!--<div ng-init="ctrl.findVote(item)" ng-hide="ctrl.hideVotingButtons()" id="voting-buttons">-->
