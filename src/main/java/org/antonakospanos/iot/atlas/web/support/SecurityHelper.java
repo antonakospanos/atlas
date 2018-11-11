@@ -1,11 +1,14 @@
 package org.antonakospanos.iot.atlas.web.support;
 
 import org.antonakospanos.iot.atlas.web.configuration.SecurityConfiguration;
+import org.antonakospanos.iot.atlas.web.security.exception.AtlasAuthenticationException;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.UUID;
 
 public class SecurityHelper {
+
 
     /**
      * Checks if is url protected.
@@ -40,5 +43,43 @@ public class SecurityHelper {
         }
 
         return result;
+    }
+
+    /**
+     * Parses the HTTP Authorization header and returns, if found, the user's access token
+     *
+     * @param authorizationHeader
+     * @return The UUID access-token
+     */
+    public static String getAccessToken(String authorizationHeader) {
+        return StringUtils.substringAfter(authorizationHeader, "Bearer ");
+    }
+
+
+    /**
+     * Parses the HTTP Authorization header and returns, if found, the user's access token
+     *
+     * @param authorizationHeader
+     * @return The UUID access-token
+     */
+    public static UUID getUuidToken(String authorizationHeader) {
+        String token =  getAccessToken(authorizationHeader);
+        return convertAccessToken(token);
+    }
+
+    /**
+     * Converts the parsed access-token, from HTTP Authorization header, to UUID
+     *
+     * @param token
+     * @return The UUID access-token
+     */
+    public static UUID convertAccessToken(String token) {
+        UUID accessToken;
+        try {
+            accessToken = UUID.fromString(token);
+        } catch (Exception e) {
+            throw new AtlasAuthenticationException("Invalid HTTP Authorization header Bearer: " + token);
+        }
+        return accessToken;
     }
 }

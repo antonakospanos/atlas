@@ -1,6 +1,6 @@
 package org.antonakospanos.iot.atlas.web.security.filters;
 
-import org.antonakospanos.iot.atlas.web.support.LoggingUtils;
+import org.antonakospanos.iot.atlas.web.support.ApiLoggingHelper;
 import org.antonakospanos.iot.atlas.web.support.MutableHttpServletRequest;
 import org.antonakospanos.iot.atlas.web.support.SecurityHelper;
 import org.apache.commons.io.output.TeeOutputStream;
@@ -22,6 +22,7 @@ import java.util.UUID;
 public class LoggingFilter extends GenericFilterBean {
 
     private final Logger LOGGER = LoggerFactory.getLogger(LoggingFilter.class);
+    private static final String CONTENT_TYPE_BINARY = "multipart/form-data";
 
     /*
      * (non-Javadoc)
@@ -42,8 +43,10 @@ public class LoggingFilter extends GenericFilterBean {
             HttpServletRequest httpRequest = new MutableHttpServletRequest((HttpServletRequest) request);
 
             // Log request
+            String reqContentType = httpRequest.getHeader("Content-Type");
+            boolean isReqBinary = reqContentType != null && reqContentType.startsWith(CONTENT_TYPE_BINARY);
             String uid = UUID.randomUUID().toString();
-            LOGGER.debug("Request: " + uid + "\n" + LoggingUtils.serializeRequest(httpRequest));
+            LOGGER.debug("Request: " + uid + "\n" + ApiLoggingHelper.serializeRequest(httpRequest, isReqBinary));
 
             // Initialize HTTP response with empty output stream
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -53,7 +56,9 @@ public class LoggingFilter extends GenericFilterBean {
             chain.doFilter(httpRequest, httpResponse);
 
             // Log response
-            LOGGER.debug("Response: " + uid + "\n" + LoggingUtils.serializeResponse(httpResponse, baos));
+            String resContentType = httpResponse.getHeader("Content-Type");
+            boolean isResBinary = resContentType != null && resContentType.startsWith(CONTENT_TYPE_BINARY);
+            LOGGER.debug("Response: " + uid + "\n" + ApiLoggingHelper.serializeResponse(httpResponse, baos, isResBinary));
         }
     }
 
