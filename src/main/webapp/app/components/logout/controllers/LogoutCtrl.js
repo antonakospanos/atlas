@@ -17,6 +17,7 @@
 
         function logout() {
             AuthenticationService.Logout();
+            $scope.refreshDevices();
             $scope.loggedOut();
         };
     }

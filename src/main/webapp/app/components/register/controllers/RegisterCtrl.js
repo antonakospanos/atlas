@@ -19,6 +19,7 @@
                     if (response.data.result === 'SUCCESS') {
                         AuthenticationService.Authorize(ctrl.username, response.data.data.id);
                         $scope.loggedIn();
+                        $scope.refreshDevices();
                         $state.go("devices_review");
                         // $location.path("/");
                     }

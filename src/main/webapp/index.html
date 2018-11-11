@@ -62,6 +62,7 @@
 
     <script src="app/services/UserService.js"></script>
     <script src="app/services/AuthenticationService.js"></script>
+    <script src="app/services/Utils.js"></script>
 </head>
 
 <body ng-controller="RootController" class="full">
@@ -78,22 +79,22 @@
                 <md-button class="menu-width" ui-sref="devices_add">Add Device</md-button>
 
                 <!-- Actions -->
-                <md-menu class="menu-flows menu-width" md-offset="0 44">
-                    <md-button md-menu-origin ng-click="$mdOpenMenu($event)">Actions</md-button>
-                    <md-menu-content width="4" style="max-height: 600px;" flex>
-                        <md-menu-item><md-button ui-sref="actions_add">Add</md-button></md-menu-item>
-                        <md-menu-item><md-button ui-sref="actions_review">Review</md-button></md-menu-item>
-                    </md-menu-content>
-                </md-menu>
+                <!--<md-menu class="menu-flows menu-width" md-offset="0 44">-->
+                    <!--<md-button md-menu-origin ng-click="$mdOpenMenu($event)">Actions</md-button>-->
+                    <!--<md-menu-content width="4" style="max-height: 600px;" flex>-->
+                        <!--<md-menu-item><md-button ui-sref="actions_add">Add</md-button></md-menu-item>-->
+                        <!--<md-menu-item><md-button ui-sref="actions_review">Review</md-button></md-menu-item>-->
+                    <!--</md-menu-content>-->
+                <!--</md-menu>-->
 
                 <!-- Alerts -->
-                <md-menu class="menu-flows menu-width" md-offset="0 44">
-                    <md-button md-menu-origin ng-click="$mdOpenMenu($event)">Alerts</md-button>
-                    <md-menu-content width="4" style="max-height: 600px;" flex>
-                        <md-menu-item><md-button ui-sref="alerts_add">Add</md-button></md-menu-item>
-                        <md-menu-item><md-button ui-sref="alerts_review">Review</md-button></md-menu-item>
-                    </md-menu-content>
-                </md-menu>
+                <!--<md-menu class="menu-flows menu-width" md-offset="0 44">-->
+                    <!--<md-button md-menu-origin ng-click="$mdOpenMenu($event)">Alerts</md-button>-->
+                    <!--<md-menu-content width="4" style="max-height: 600px;" flex>-->
+                        <!--<md-menu-item><md-button ui-sref="alerts_add">Add</md-button></md-menu-item>-->
+                        <!--<md-menu-item><md-button ui-sref="alerts_review">Review</md-button></md-menu-item>-->
+                    <!--</md-menu-content>-->
+                <!--</md-menu>-->
             </div>
 
             <span flex> </span>

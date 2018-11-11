@@ -22,6 +22,7 @@
                     if (response.data && response.data.id !== undefined) {
                         AuthenticationService.Authorize(ctrl.username, response.data.id);
                         $scope.loggedIn();
+                        $scope.refreshDevices();
                         $scope.createToast("User '" + ctrl.username + "' logged in successfully")
                         $state.go("devices_review");
                         // $location.path("/");

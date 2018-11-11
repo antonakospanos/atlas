@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @Api(value = "Devices API", tags = "devices", position = 3, description = "Device Management")
@@ -96,88 +95,4 @@ public class DeviceController extends BaseAtlasController {
 
 		return response;
 	}
-
-	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
-	@RequestMapping(value = "/accounts/{accountId}/devices", produces = {"application/json"},	method = RequestMethod.GET)
-	@ApiImplicitParam(
-			name = "Authorization",
-			value = "Bearer <The user's access token obtained upon registration or authentication>",
-			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
-			required = true,
-			dataType = "string",
-			paramType = "header"
-	)
-	public ResponseEntity<Iterable> listAccountDevices(@PathVariable UUID accountId) {
-
-		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId + "/devices/"));
-		List<DeviceDto> devices = service.listByAccountId(null, accountId);
-
-		ResponseEntity<Iterable> response = ControllerUtils.listResources(devices);
-		logger.debug(LoggingHelper.logInboundResponse(response));
-
-		return response;
-	}
-
-	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class)
-	@RequestMapping(value = "/accounts/{accountId}/devices/{deviceId}", produces = {"application/json"},	method = RequestMethod.GET)
-	@ApiImplicitParam(
-			name = "Authorization",
-			value = "Bearer <The user's access token obtained upon registration or authentication>",
-			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
-			required = true,
-			dataType = "string",
-			paramType = "header"
-	)
-	public ResponseEntity<DeviceDto> listAccountDevice(@PathVariable UUID accountId, @PathVariable String deviceId) {
-
-		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + accountId + "/devices/" + deviceId));
-		List<DeviceDto> devices = service.listByAccountId(deviceId, accountId);
-
-		ResponseEntity<DeviceDto> response = ControllerUtils.listResource(devices);
-		logger.debug(LoggingHelper.logInboundResponse(response));
-
-		return response;
-	}
-
-//	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
-//	@RequestMapping(value = "/accounts/{username}/devices", produces = {"application/json"},	method = RequestMethod.GET)
-//	@ApiImplicitParam(
-//			name = "Authorization",
-//			value = "Bearer <The user's access token obtained upon registration or authentication>",
-//			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
-//			required = true,
-//			dataType = "string",
-//			paramType = "header"
-//	)
-//	public ResponseEntity<Iterable> listAccountDevices(@PathVariable String username) {
-//
-//		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username + "/devices/"));
-//		List<DeviceDto> deviceDtos = service.listByUsername(null, username);
-//
-//		ResponseEntity<Iterable> response = ControllerUtils.listResources(deviceDtos);
-//		logger.debug(LoggingHelper.logInboundResponse(response));
-//
-//		return response;
-//	}
-//
-// 	@ApiOperation(value = "Lists the integrated IoT devices", response = DeviceDto.class, responseContainer="List")
-//	@RequestMapping(value = "/accounts/{username}/devices/{deviceId}", produces = {"application/json"},	method = RequestMethod.GET)
-//	@ApiImplicitParam(
-//			name = "Authorization",
-//			value = "Bearer <The user's access token obtained upon registration or authentication>",
-//			example = "Bearer 6b6f2985-ae5b-46bc-bad1-f9176ab90171",
-//			required = true,
-//			dataType = "string",
-//			paramType = "header"
-//	)
-//	public ResponseEntity<Iterable> listAccountDevice(@PathVariable String username, @PathVariable String deviceId) {
-//
-//		logger.debug(LoggingHelper.logInboundRequest("/accounts/" + username + "/devices/" + deviceId));
-//	  List<DeviceDto> deviceDtos = service.listByUsername(deviceId, username);
-//
-//	  ResponseEntity<DeviceDto> response = ControllerUtils.listResource(deviceDtos);
-//		logger.debug(LoggingHelper.logInboundResponse(response));
-//
-//		return response;
-//	}
 }

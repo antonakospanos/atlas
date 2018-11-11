@@ -3,23 +3,18 @@
 
 		<!-- Header Start -->
 		<div class="controls controls-row">
-			<h3 class="panel-title add-panel-title">Add New Device</h3>
+			<h3 class="panel-title add-panel-title">Add Device</h3>
 		</div>
 
 		<!-- Form Start -->
 		<form name="addDeviceForm" class="panel-body form-group margin-row">
 			<md-content layout="column" class="md-padding">
 				<md-input-container>
-					<label>Name</label>
-					<input required="" name="name" ng-model="device.name">
+					<label>ID</label>
+					<input required="" name="id" ng-model="device.id">
 					<div ng-messages="addDeviceForm.name.$error">
 						<div ng-message="required">This is required</div>
 					</div>
-				</md-input-container>
-
-				<md-input-container>
-					<label>Description</label>
-					<input name="description" ng-model="device.description">
 				</md-input-container>
 			</md-content>
 		</form>

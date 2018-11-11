@@ -3,9 +3,9 @@
     "use strict";
     angular
         .module("AtlasUi")
-        .controller("FooterCtrl", ["$rootScope", "$scope", "$http", "$mdToast", FooterCtrl]);
+        .controller("FooterCtrl", ["$rootScope", "$scope", "$http", "$mdToast", "$cookies", FooterCtrl]);
 
-    function FooterCtrl($rootScope, $scope, $http, $mdToast) {
+    function FooterCtrl($rootScope, $scope, $http, $mdToast, $cookies) {
 
         // Auto refresh footer every 5 seconds to re-calculate backend changes
         // $scope.intervalTimer = setInterval(function () {
@@ -19,31 +19,36 @@
         $scope.initFooter = function initFooter() {
             setConfigCheck('none')
             setConfigAlert('initial')
-            setConfigPrompt("The backend server is starting...");
+            setConfigPrompt("Log in or register to the IoT platform ..");
             setProgressBar('none')
             refreshDevices();
         }
 
         function refreshDevices() {
-            var devicesUrl = $rootScope.backend_protocol + "://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/devices";
+            var accountsUrl = $rootScope.backend_protocol + "://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/accounts";
 
-            // Lookup for /devices
-            $http.get(devicesUrl)
-                .then(function successCallback(response) {
-                    $rootScope.devices = response.data.length;
-                    setConfigCheck('initial')
-                    setConfigAlert('none')
-                    setConfigPrompt($rootScope.devices + " devices in the IoT platform");
-                }, function errorCallback(response) {
-                   $rootScope.devices = response.data.length;
-                    setConfigCheck('none')
-                    setConfigAlert('initial')
-                    if ($rootScope.devices === undefined) {
-                        setConfigPrompt("Could not find devices in IoT platform");
-                    } else {
-                        setConfigPrompt($rootScope.devices + " devices in the IoT platform");
-                    }
-                });
+            if ($cookies.getObject('globals')) {
+                // Lookup for /devices
+                var token = $cookies.getObject('globals').currentUser.token
+                $http.get(accountsUrl + "/" + token + "/devices" )
+                    .then(function successCallback(response) {
+                        $rootScope.devices = response.data.length;
+                        setConfigCheck('initial')
+                        setConfigAlert('none')
+                        setConfigPrompt($rootScope.devices + " devices registered in the IoT platform");
+                    }, function errorCallback(response) {
+                        $rootScope.devices = response.data.length;
+                        setConfigCheck('none')
+                        setConfigAlert('initial')
+                        if ($rootScope.devices) {
+                            setConfigPrompt($rootScope.devices + " devices registered in the IoT platform");
+                        } else {
+                            setConfigPrompt("0 devices registered in the IoT platform");
+                        }
+                    });
+            } else {
+                setConfigPrompt("Log in or register to the IoT platform ..");
+            }
         }
 
         function setConfigCheck(display) {

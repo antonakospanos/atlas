@@ -242,6 +242,17 @@ public class AccountService {
 	}
 
 	@Transactional
+	public void addDevice(UUID accountId, String deviceId) {
+		validateNewDevice(deviceId);
+
+		Account account = find(accountId);
+		Device device = deviceRepository.findByExternalId(deviceId);
+		account.addDevice(device);
+
+		accountRepository.save(account);
+	}
+
+	@Transactional
 	public void validateAccount(String username) {
 		if (StringUtils.isNotBlank(username)) {
 			Account account = accountRepository.findByUsername(username);

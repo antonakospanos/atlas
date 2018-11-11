@@ -2,11 +2,11 @@
 	"use strict";
 	angular
 		.module("AtlasUi")
-		.controller("DevicesAddCtrl", ["$rootScope", "$scope", "$http", "$state", DevicesAddCtrl]);
+		.controller("DevicesAddCtrl", ["$rootScope", "$scope", "$http", "$state", "$cookies", "Utils", DevicesAddCtrl]);
 
-	function DevicesAddCtrl($rootScope, $scope, $http, $state) {
+	function DevicesAddCtrl($rootScope, $scope, $http, $state, $cookies, Utils) {
         var ctrl = this;
-        ctrl.addDeviceUrl = $rootScope.backend_protocol + "://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/devices";
+        ctrl.accountsUrl = $rootScope.backend_protocol + "://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/accounts";
 
         ctrl.init = function() {
             $scope.device = {};
@@ -54,16 +54,21 @@
         }
 
         ctrl.add = function() {
-            var message = "This will publish '"+$scope.device.title +"'. Proceed?";
+            var message = "This will register device with id '"+$scope.device.id +"' to your account. Proceed?";
             var config = {
                 headers : {
-                    'Content-Type': 'application/json;charset=utf-8;'
+                    "Authorization": $http.defaults.headers.common.Authorization
                 },
             }
+
             $scope.modalWarning(message, "ADD")
                 .then(function (response) {
                     if (response === true) {
-                        $http.post(ctrl.addDeviceUrl, $scope.device, config)
+
+                        // var token = Utils.decode($cookies.get('globals')).currentUser.token;
+                        var token = $cookies.getObject('globals').currentUser.token
+                        var addDeviceUrl = ctrl.accountsUrl + "/" + token + "/devices/" + $scope.device.id;
+                        $http.post(addDeviceUrl, null, config)
                             .then(function successCallback(response) {
                                 $scope.refreshDevices();
                                 $state.go("devices_review");
