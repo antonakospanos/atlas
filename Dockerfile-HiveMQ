@@ -2,15 +2,15 @@ FROM openjdk:8-jre
 
 LABEL maintainer="antonakospanos.gmail.com"
 
-# Install wget, unzip and vim then download and install HiveMQ
+# Install wget, unzip then download and install HiveMQ
 RUN \
-    apt-get install -y wget unzip vim &&\
+    apt-get install -y wget unzip &&\
     wget --content-disposition http://www.hivemq.com/download.php?token=15cfdbf90768ed6f86a9e609fb2edca9 &&\
     unzip hivemq-*.zip -d /opt/ &&\
     rm -f hivemq-*.zip &&\
     mv /opt/hivemq-* /opt/hivemq
 
- Install HiveMQ's authentication plugin
+# Install HiveMQ's authentication plugin
 RUN \
     mkdir temp &&\
     cd temp &&\
