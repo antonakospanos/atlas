@@ -20,6 +20,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        deployment: ${deployment}
     image: atlas-webapp-image
     ports:
     - "80:80"

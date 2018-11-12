@@ -18,6 +18,12 @@ RUN mkdir $CATALINA_HOME/conf-apps
 ADD src/main/resources/atlas-* $CATALINA_HOME/conf-apps/
 RUN rm -rf $CATALINA_HOME/webapps/ROOT*
 COPY --from=build-stage /usr/src/myapp/target/atlas*.war $CATALINA_HOME/webapps/ROOT.war
+RUN cd $CATALINA_HOME/webapps && unzip ROOT.war -d ROOT
+
+# Build for 'dev' (API: http://localhost:8080/api) or 'prod' environment (API: https://iotacsystems.com:443/api)
+ARG deployment=dev
+COPY src/conf/tomcat/params.yml $CATALINA_HOME/conf/params.yml
+RUN if [ "$deployment" = "prod" ]; then mv $CATALINA_HOME/conf/params.yml $CATALINA_HOME/webapps/ROOT/conf/params.yml; fi
 
 # Expose Ports
 EXPOSE 80
