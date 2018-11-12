@@ -2,9 +2,9 @@ server:
   # Configuration of Spring Boot embedded Tomcat server (java -jar atlas.war)
   servlet:
     contextPath: '/'
-  port: 8443
+  port: 443
   http:
-    port: 8080
+    port: 80
   ssl:
     enabled: true
     key-store: 'classpath:ssl/atlas.keystore' #'${catalina.home}/conf/atlas.keystore'
