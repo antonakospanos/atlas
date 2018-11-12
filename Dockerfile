@@ -16,7 +16,8 @@ COPY src/conf/tomcat/setenv.sh $CATALINA_HOME/bin/setenv.sh
 # Provision Tomcat with webapp and default configuration
 RUN mkdir $CATALINA_HOME/conf-apps
 ADD src/main/resources/atlas-* $CATALINA_HOME/conf-apps/
-COPY --from=build-stage /usr/src/myapp/target/atlas*.war $CATALINA_HOME/webapps/atlas.war
+RUN rm -rf $CATALINA_HOME/webapps/ROOT*
+COPY --from=build-stage /usr/src/myapp/target/atlas*.war $CATALINA_HOME/webapps/ROOT.war
 
 # Expose Ports
 EXPOSE 80

@@ -16,7 +16,8 @@ The events describe the state of the devices and may result to an auto-executed 
 
 From a machine with docker installed + internet access, execute:
 
-    docker run -p 5432:5432 --name rdbms -e POSTGRES_PASSWORD=postgres -d postgres:9.4
+    docker build -t atlas-db-image -f Dockerfile-db .
+    docker run -p 5432:5432 --name rdbms -d atlas-db-image
 
 Make sure your hosts file maps rdbms to localhost
 
@@ -34,14 +35,14 @@ Init or migrate the database schema
 
 From a machine with docker installed + internet access, download image 'peez/hivemq' or create a new one using DockerFile-HiveMQ:
 ```
-docker run -p 1883:1883 --name hivemq -d peez/hivemq
+docker run -p 1883:1883 --name broker -d peez/hivemq
 ```
 ```
-docker build -t hivemq-broker -f Dockerfile-HiveMQ .
-docker run -p 1883:1883 --name hivemq -d hivemq-broker
+docker build -t atlas-broker-image -f Dockerfile-HiveMQ .
+docker run -p 1883:1883 --name broker -d atlas-broker-image
 ```
 
-Make sure your hosts file maps rdbms to localhost
+Make sure your hosts file maps broker to localhost
 
     127.0.0.1       localhost broker
 
@@ -62,6 +63,10 @@ mvn spring-boot:run --spring.config.location=/path/to/conf/
 $CATALINA_HOME/bin/startup.sh --Dspring.config.location=/path/to/conf/
 ```
 ```
-docker build -t atlas .
-docker run -p 8080:8080 -p 443:443 -p 80:80 --name atlas --link rdbms --link hivemq -d atlas
+docker build -t atlas-webapp-image .
+docker run -p 8080:8080 -p 443:443 -p 80:80 --name atlas --link rdbms --link broker -d atlas-webapp-image
+```
+or simply execute to run all containers:
+```
+docker-compose up -d
 ```
