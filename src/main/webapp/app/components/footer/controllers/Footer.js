@@ -25,7 +25,7 @@
         }
 
         function refreshDevices() {
-            var accountsUrl = $rootScope.backend_protocol + "://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/accounts";
+            var accountsUrl = $rootScope.backend_api + "/accounts";
 
             if ($cookies.getObject('globals')) {
                 // Lookup for /devices

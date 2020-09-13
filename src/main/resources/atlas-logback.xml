@@ -7,12 +7,12 @@
 	</appender>
 
 	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>/applogs/atlas/atlas.log</file>
+		<file>${LOG_PATH:-log/}atlas.log</file>
 		<append>true</append>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<!-- daily rollover -->
-			<fileNamePattern>/applogs/atlas/atlas-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
-			<!-- keep 20 days worth of history -->
+			<fileNamePattern>${LOG_PATH:-log/}atlas-%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+			<!-- keep 2 days worth of history -->
 			<maxHistory>2</maxHistory>
 		</rollingPolicy>
 		<encoder>
@@ -27,17 +27,17 @@
 	<!--<logger name="org.eclipse.paho" level="debug"/>-->
 
 	<logger name="org.flywaydb" level="debug">
-		<!--<appender-ref ref="console"/>-->
-		<appender-ref ref="file"/>
+		<appender-ref ref="console"/>
+<!--		<appender-ref ref="file"/>-->
 	</logger>
 
 	<logger name="org.antonakospanos.iot.atlas" level="debug" additivity="false">
-		<!--<appender-ref ref="console"/>-->
-		<appender-ref ref="file"/>
+		<appender-ref ref="console"/>
+<!--		<appender-ref ref="file"/>-->
 	</logger>
 
 	<root level="info">
-		<!--<appender-ref ref="console"/>-->
-		<appender-ref ref="file"/>
+		<appender-ref ref="console"/>
+<!--		<appender-ref ref="file"/>-->
 	</root>
 </configuration>

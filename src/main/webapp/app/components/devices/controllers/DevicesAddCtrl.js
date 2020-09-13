@@ -6,7 +6,7 @@
 
 	function DevicesAddCtrl($rootScope, $scope, $http, $state, $cookies, Utils) {
         var ctrl = this;
-        ctrl.accountsUrl = $rootScope.backend_protocol + "://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/accounts";
+        ctrl.accountsUrl = $rootScope.backend_api + "/accounts";
 
         ctrl.init = function() {
             $scope.device = {};

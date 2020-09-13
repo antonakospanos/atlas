@@ -9,11 +9,7 @@
         var listDevicesUrl;
 
         if ($rootScope.globals.currentUser) {
-            listDevicesUrl = $rootScope.backend_protocol + "://" +
-                             $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path +
-                             "/accounts/" +
-                             $rootScope.globals.currentUser.token +
-                             "/devices";
+            listDevicesUrl = $rootScope.backend_api + "/accounts/" + $rootScope.globals.currentUser.token + "/devices";
         }
 
         // Initialization

@@ -17,8 +17,8 @@ COPY src/conf/tomcat/setenv.sh $CATALINA_HOME/bin/setenv.sh
 RUN mkdir $CATALINA_HOME/conf-apps
 ADD src/main/resources/atlas-* $CATALINA_HOME/conf-apps/
 RUN rm -rf $CATALINA_HOME/webapps/ROOT*
-COPY --from=build-stage /usr/src/myapp/target/atlas*.war $CATALINA_HOME/webapps/ROOT.war
-RUN cd $CATALINA_HOME/webapps && unzip ROOT.war -d ROOT
+COPY --from=build-stage /usr/src/myapp/target/atlas*.jar $CATALINA_HOME/webapps/ROOT.jar
+RUN cd $CATALINA_HOME/webapps && unzip ROOT.jar -d ROOT
 
 # Build for 'dev' (API: http://localhost:8080/api) or 'prod' environment (API: https://iotacsystems.com:443/api)
 ARG deployment=dev

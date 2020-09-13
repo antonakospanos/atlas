@@ -9,9 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@EnableAutoConfiguration//(exclude={DataSourceAutoConfiguration.class})
 @EnableScheduling
-@ComponentScan(basePackages = {"org.antonakospanos.iot.atlas"})
 public class AtlasApplication extends SpringBootServletInitializer {
 
 	private static final String CONFIG_NAME = "atlas-application";

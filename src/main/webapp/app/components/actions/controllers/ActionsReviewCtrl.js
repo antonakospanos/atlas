@@ -9,9 +9,7 @@
         var listActionsUrl;
 
         if ($rootScope.globals.currentUser) {
-            listActionsUrl = $rootScope.backend_protocol + "://" +
-                             $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path +
-                             "/actions?accountId=" + $rootScope.globals.currentUser.token;
+            listActionsUrl = $rootScope.backend_api + "/actions?accountId=" + $rootScope.globals.currentUser.token;
         }
 
         // Initialization

@@ -1,8 +1,12 @@
+# IDE custom settings
 .idea/
-target/
 atlas.iml
 .classpath
 .project
 .settings/
+
+target/
+log
+
+# Macos metadata on dirs
 **/.DS_Store
-**/.lck

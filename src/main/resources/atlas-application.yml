@@ -1,16 +1,10 @@
 server:
-  # Configuration of Spring Boot embedded Tomcat server (java -jar atlas.war)
+  # Configuration of Spring Boot embedded Tomcat server (java -jar atlas.jar)
   servlet:
-    contextPath: '/'
-  port: 443
+    contextPath: ''
+  port: "${PORT:8443}"
   http:
-    port: 80
-  ssl:
-    enabled: true
-    key-store: 'classpath:ssl/atlas.keystore' #'${catalina.home}/conf/atlas.keystore'
-    keyAlias: iotacsystems.com
-    key-store-password: iotacsystems
-    keyStoreType: PKCS12
+    port: 8080
 endpoints:
   jmx:
     domain: atlas
@@ -24,13 +18,13 @@ spring:
       defaultMediaType: application/json
   jpa:
     show-sql: true
-#    generate-ddl: true
-#    hibernate:
-#      ddl-auto: update # none | create | update | validate | create-drop
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update # none | create | update | validate | create-drop
     properties:
       net.sf.ehcache.configurationResourceName: atlas-ehcache.xml
       hibernate:
-        default_schema: atlas
+        default_schema: public
         generate_statistics: false
         show_sql: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -41,16 +35,18 @@ spring:
           use_second_level_cache: true
           region.factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
   datasource:
-    url: 'jdbc:postgresql://rdbms:5432/atlas?currentSchema=atlas'
-    username: atlas
-    password: atlas
+    url: "${DB_URL:jdbc:postgresql://rdbms:5432/atlas}"
+    username: "${DB_USERNAME:atlas}"
+    password: "${DB_PASSWORD:atlas}"
     driver-class-name: org.postgresql.Driver
   flyway:
+    # https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#data-migration-properties
     enabled: true
     sqlMigrationSuffix: .sql
-    validate-on-migrate: true
-    table: DB_MIGRATION_HISTORY # flyway_schema_history
+    validate-on-migrate: false
+    table: DB_MIGRATION_HISTORY
     baselineOnMigrate: true
+    schemas: public
 mqtt:
   broker:
     url: "tcp://broker:1883" # tcp://broker.hivemq.com:1883

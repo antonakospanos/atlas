@@ -9,9 +9,7 @@
         var listAlertsUrl;
 
         if ($rootScope.globals.currentUser) {
-            listAlertsUrl = $rootScope.backend_protocol + "://" +
-                             $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path +
-                             "/alerts?accountId=" + $rootScope.globals.currentUser.token;
+            listAlertsUrl = $rootScope.backend_api + "/alerts?accountId=" + $rootScope.globals.currentUser.token;
         }
 
         // Initialization

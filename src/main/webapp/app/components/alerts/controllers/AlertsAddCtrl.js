@@ -6,7 +6,7 @@
 
 	function AlertsAddCtrl($rootScope, $scope, $http, $state) {
         var ctrl = this;
-        ctrl.addAlertUrl = $rootScope.backend_protocol + "://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/alerts";
+        ctrl.addAlertUrl = $rootScope.backend_api + "/alerts";
 
         ctrl.init = function() {
             $scope.alert = {};

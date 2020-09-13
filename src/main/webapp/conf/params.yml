@@ -1,4 +1,0 @@
-backend_protocol: http
-backend_ip: localhost
-backend_port: 80
-backend_context_path: api

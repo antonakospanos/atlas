@@ -7,7 +7,7 @@
 	<groupId>org.antonakospanos.iot</groupId>
 	<artifactId>atlas</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -122,14 +122,9 @@
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
 				<version>2.2.4</version>
-				<executions>
-					<execution>
-						<id>get-the-git-infos</id>
-						<goals>
-							<goal>revision</goal>
-						</goals>
-					</execution>
-				</executions>
+				<configuration>
+					<generateGitPropertiesFile>false</generateGitPropertiesFile>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -265,24 +260,6 @@
 						</configuration>
 						<inherited>false</inherited>
 					</execution>
-					<!-- need to connect with module user in order to create schema in module database -->
-					<execution>
-						<id>init-db-schema</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<url>${db.module.url}</url>
-							<username>${db.module.userId}</username>
-							<password>${db.module.password}</password>
-							<sqlCommand>
-								CREATE SCHEMA atlas AUTHORIZATION ${db.module.userId};
-							</sqlCommand>
-							<skip>${init.database.skip}</skip>
-						</configuration>
-						<inherited>false</inherited>
-					</execution>
 				</executions>
 			</plugin>
 			<!-- Executes the sql scripts that initialize or migrate the database -->
@@ -300,7 +277,7 @@
 					<table>DB_MIGRATION_HISTORY</table>
 					<outOfOrder>true</outOfOrder>
 					<schemas>
-						<schema>atlas</schema>
+						<schema>public</schema>
 					</schemas>
 				</configuration>
 

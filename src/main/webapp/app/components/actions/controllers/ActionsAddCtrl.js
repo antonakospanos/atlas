@@ -6,7 +6,7 @@
 
 	function ActionsAddCtrl($rootScope, $scope, $http, $state) {
         var ctrl = this;
-        ctrl.addActionUrl = $rootScope.backend_protocol + "://" + $rootScope.backend_ip + ":" + $rootScope.backend_port + "/" + $rootScope.backend_context_path + "/actions";
+        ctrl.addActionUrl = $rootScope.backend_api + "/actions";
 
         ctrl.init = function() {
             $scope.action = {};
